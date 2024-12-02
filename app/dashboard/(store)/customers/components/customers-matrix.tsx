@@ -49,7 +49,7 @@ export default async function CustomersMatrix() {
     },
     {
       title: 'Banned',
-      count: 2,
+      count: 10,
       icon: <CogIcon className='h-4 w-4' />,
       gradientFrom: 'from-red-700',
       gradientTo: 'to-red-400',
@@ -61,7 +61,7 @@ export default async function CustomersMatrix() {
   const totalProducts = metrics[0].count;
 
   return (
-    <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+    <div className='grid gap-6 grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
       {metrics.map((metric, index) => (
         <Card key={index} className='bg-accent/20 border-[0.1px] shadow-none'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>

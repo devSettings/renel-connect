@@ -97,7 +97,7 @@ export default function CustomerList() {
 
         <div className='space-y-4'>
           {filteredCustomers.map((customer) => (
-            <Card key={customer.id} className='overflow-hidden'>
+            <Card key={customer.id} className='overflow-hidden bg-accent/20'>
               <CardContent className='p-0'>
                 <Button
                   variant='ghost'
