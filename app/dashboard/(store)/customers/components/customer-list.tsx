@@ -1,19 +1,10 @@
 'use client';
 
-import * as React from 'react';
-import {
-  ChevronRight,
-  Search,
-  Phone,
-  DollarSign,
-  ShoppingCart,
-  Filter,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { ChevronRight, DollarSign, Phone, ShoppingCart } from 'lucide-react';
+import * as React from 'react';
 
 interface Customer {
   id: string;
@@ -77,49 +68,44 @@ export default function CustomerList() {
   return (
     <div className='space-y-4'>
       {filteredCustomers.map((customer) => (
-        <Card key={customer.id} className='overflow-hidden bg-accent/20'>
+        <Card key={customer.id} className='overflow-hidden bg-accent/20 '>
           <CardContent className='p-0'>
-            <Button
-              variant='ghost'
-              className='w-full justify-start text-left p-4 h-auto hover:bg-transparent'
-            >
-              <div className='flex items-center space-x-4 w-full'>
-                <Avatar className='h-10 w-10'>
-                  <AvatarFallback>
-                    {customer.name
-                      .split(' ')
-                      .map((n) => n[0])
-                      .join('')}
-                  </AvatarFallback>
-                </Avatar>
-                <div className='flex-1 space-y-1'>
-                  <p className='text-sm font-medium leading-none'>
-                    {customer.name}
-                  </p>
-                  <div className='flex items-center text-sm text-muted-foreground'>
-                    {customer.phone ? (
-                      <Phone className='mr-1 h-3 w-3' />
-                    ) : (
-                      <span className='mr-1' aria-hidden='true'>
-                        📞
-                      </span>
-                    )}
-                    <span>{customer.phone || 'No phone'}</span>
-                  </div>
+            <div className='flex  p-2 space-x-2 w-full'>
+              <Avatar className='h-8 w-8'>
+                <AvatarFallback>
+                  {customer.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')}
+                </AvatarFallback>
+              </Avatar>
+              <div className='flex-1 space-y-1'>
+                <p className='text-sm font-medium leading-none'>
+                  {customer.name}
+                </p>
+                <div className='flex items-center text-sm text-muted-foreground'>
+                  {customer.phone ? (
+                    <Phone className='mr-1 h-3 w-3' />
+                  ) : (
+                    <span className='mr-1' aria-hidden='true'>
+                      📞
+                    </span>
+                  )}
+                  <span>{customer.phone || 'No phone'}</span>
                 </div>
-                <div className='flex flex-col items-end space-y-1'>
-                  <div className='flex items-center text-sm'>
-                    <ShoppingCart className='mr-1 h-3 w-3' />
-                    <span>{customer.totalOrders}</span>
-                  </div>
-                  <div className='flex items-center text-sm text-muted-foreground'>
-                    <DollarSign className='mr-1 h-3 w-3' />
-                    <span>{customer.totalSpend.toFixed(2)}</span>
-                  </div>
-                </div>
-                <ChevronRight className='h-5 w-5 text-muted-foreground' />
               </div>
-            </Button>
+              <div className='flex flex-col items-end space-y-1'>
+                <div className='flex items-center text-sm'>
+                  <ShoppingCart className='mr-1 h-3 w-3' />
+                  <span>{customer.totalOrders}</span>
+                </div>
+                <div className='flex items-center text-sm text-muted-foreground'>
+                  <DollarSign className='mr-1 h-3 w-3' />
+                  <span>{customer.totalSpend.toFixed(2)}</span>
+                </div>
+              </div>
+              {/* <ChevronRight className='h-5 w-5 text-muted-foreground' /> */}
+            </div>
           </CardContent>
         </Card>
       ))}

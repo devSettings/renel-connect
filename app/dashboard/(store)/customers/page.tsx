@@ -1,11 +1,11 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Suspense } from 'react';
-import CustomersTable, { CustomerTable } from './components/customers-table';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import CustomersMatrix from './components/customers-matrix';
 import Search from '@/components/search';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Suspense } from 'react';
+import MobileFilterDrawer from '../../components/mobile-filter-drawer';
 import CustomerList from './components/customer-list';
-import { Button } from '@/components/ui/button';
+import CustomersMatrix from './components/customers-matrix';
+import CustomersTable, { CustomerTable } from './components/customers-table';
 export const customers: CustomerTable[] = [
   {
     customerId: 'CUST001',
@@ -25,7 +25,7 @@ export const customers: CustomerTable[] = [
     status: 'INACTIVE',
     totalOrders: 5,
     totalSpend: 250.75,
-    phoneNumber: undefined,
+    phoneNumber: '3930-93847-39',
     membership: 'SILVER',
     lastPurchaseDate: new Date('2024-10-10'),
   },
@@ -63,11 +63,10 @@ export const customers: CustomerTable[] = [
     lastPurchaseDate: new Date('2024-11-30'),
   },
 ];
-import { FaFilter } from 'react-icons/fa';
 
 const HomePage = () => {
   return (
-    <ScrollArea className='h-screen lg:h-[86vh]'>
+    <ScrollArea className='h-[86vh]'>
       <div className='space-y-8'>
         <CustomersMatrix />
         <Card className='shadow-none  flex-1 overflow-hidden  bg-accent/20'>
@@ -77,9 +76,7 @@ const HomePage = () => {
                 <Suspense fallback={<div>Loading search...</div>}>
                   <Search />
                 </Suspense>
-                <Button>
-                  <FaFilter />
-                </Button>
+                <MobileFilterDrawer />
               </div>
             </div>
           </CardHeader>
