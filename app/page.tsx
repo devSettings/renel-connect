@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 const HomePage = () => {
   return (
     <div>
-      <Button>Test Mode</Button>
+      <Link href='/dashboard'>Dashboard</Link>
     </div>
   );
 };

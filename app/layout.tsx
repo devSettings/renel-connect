@@ -3,6 +3,7 @@ import './globals.css';
 
 import { cn } from '@/lib/utils';
 import { GeistSans } from 'geist/font/sans';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
   title: 'Renel Connect',
@@ -15,14 +16,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body
         className={cn(
           GeistSans.className,
           'antialiased min-h-screen bg-background'
         )}
       >
-        {children}
+        <ThemeProvider attribute='class' defaultTheme='dark'>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
