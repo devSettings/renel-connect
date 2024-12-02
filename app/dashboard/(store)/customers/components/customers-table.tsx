@@ -69,7 +69,7 @@ export default function CustomersTable({
   }
 
   return (
-    <Card className=' border-[0.1px] overflow-hidden bg-accent/20'>
+    <Card className=' border-[0.1px] overflow-hidden '>
       <CardContent className='pt-4'>
         <Table>
           <TableHeader>

@@ -61,7 +61,7 @@ export default async function CustomersMatrix() {
   return (
     <div className='grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
       {metrics.map((metric, index) => (
-        <Card key={index} className='bg-accent/20  shadow-none'>
+        <Card key={index} className='bg-[#0a0a0a] border-[0.1px]  shadow-none'>
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-sm font-medium'>
               {metric.title}

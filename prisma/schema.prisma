@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum PermissionName {
+  CREATE_USER
+  VIEW_USER
+  UPDATE_USER
+  DELETE_USER
+  MANAGE_USER_PERMISSIONS
+  RESET_USER_PASSWORD
+  CREATE_PRODUCT
+  VIEW_PRODUCT
+  UPDATE_PRODUCT
+  DELETE_PRODUCT
+  MANAGE_PRODUCT_PRICING
+  MANAGE_PRODUCT_DISCOUNTS
+  VIEW_INVENTORY
+  UPDATE_INVENTORY
+  MANAGE_SUPPLIERS
+  VIEW_SUPPLY_CHAIN
+  CREATE_TRANSACTION
+  VIEW_TRANSACTION
+  UPDATE_TRANSACTION
+  DELETE_TRANSACTION
+  PROCESS_REFUND
+  APPLY_DISCOUNT
+  CREATE_CUSTOMER
+  VIEW_CUSTOMER
+  UPDATE_CUSTOMER
+  DELETE_CUSTOMER
+  VIEW_SALES_REPORTS
+  VIEW_INVENTORY_REPORTS
+  VIEW_FINANCIAL_REPORTS
+  EXPORT_REPORTS
+  MANAGE_SETTINGS
+  MANAGE_PAYMENT_METHODS
+  MANAGE_TAX_SETTINGS
+  CONFIGURE_NOTIFICATIONS
+  CONFIGURE_AUDIT_LOGS
+  VIEW_PERMISSIONS
+  ASSIGN_PERMISSIONS
+  MANAGE_ROLES
+  VIEW_AUDIT_LOGS
+  MANAGE_TWO_FACTOR_AUTH
+  VIEW_SYSTEM_LOGS
+  DEBUG_SYSTEM
+  DEPLOY_UPDATES
+  ACCESS_API
+  PERFORM_BACKUP
+  CONFIGURE_INTEGRATIONS
+}
+
+enum RoleName {
+  CUSTOMER
+  CASHIER
+  MANAGER
+  SUPERVISOR
+  ADMIN
+  DEVELOPER
+}
+
+model Permission {
+  id          String         @id @default(uuid())
+  label       String         @unique @db.VarChar(250)
+  value       PermissionName @unique
+  description String
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  label       String   @unique
+  value       RoleName @unique
+  description String?
+  User        User[]
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  BANNED
+}
+
+enum Language {
+  FRENCH
+  ENGLISH
+  SPANISH
+  CREOLE
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model User {
+  id                String            @id @default(cuid())
+  firstName         String            @map("first_name") @db.VarChar(50)
+  lastName          String            @map("last_name") @db.VarChar(50)
+  email             String?           @db.VarChar(100)
+  fullNameSlug      String            @unique @db.VarChar(255)
+  birthDate         DateTime?         @map("birth_date") @db.Date
+  gender            Gender
+  preferredLanguage Language          @default(ENGLISH) @map("preferred_language")
+  status            UserStatus        @default(INACTIVE)
+  lastLogin         DateTime?         @map("last_login")
+  customer          Customer?
+  idProvided        AcceptedTypeOfID? @map("id_provided")
+  idNumber          String?           @db.VarChar(20)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  Role              Role[]
+
+  @@unique([idProvided, idNumber])
+  @@unique([firstName, lastName])
+  @@index([firstName, lastName])
+}
+
+enum AcceptedTypeOfID {
+  PASSPORT
+  DRIVERS_LICENSE
+  GOVERMENT_ISSUED_ID
+  STUDENT_ID
+}
+
+enum Membership {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+model Customer {
+  id               String     @id @default(cuid())
+  phoneNumber      String     @map("phone_number") @db.VarChar(20)
+  membership       Membership @default(BRONZE)
+  loyaltyPoints    BigInt     @default(0) @map("loyalty_points") @db.BigInt
+  lastPurchaseDate String?    @map("last_purchase_date")
+  totalOrders      Int        @default(0) @map("total_orders")
+  totalSpend       BigInt     @default(0) @map("total_spend") @db.BigInt
+  user             User       @relation(fields: [userId], references: [id])
+  userId           String     @unique @map("user_id")
+
+  @@unique([phoneNumber])
+}

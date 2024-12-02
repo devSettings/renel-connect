@@ -43,17 +43,18 @@ const data = {
       isActive: true,
       items: [
         {
+          title: 'Products',
+          url: '/dashboard/products',
+        },
+        {
           title: 'Customers',
           url: '/dashboard/customers',
         },
         {
-          title: 'Starred',
-          url: '#',
+          title: 'Orders',
+          url: '/dashboard/orders',
         },
-        {
-          title: 'Settings',
-          url: '#',
-        },
+        { title: 'Reports', url: '/dashboard/reports' },
       ],
     },
     {
@@ -161,7 +162,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size='lg' asChild>
               <a href='#'>
-                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
+                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground'>
                   <Command className='size-4' />
                 </div>
                 <div className='grid flex-1 text-left text-sm leading-tight'>

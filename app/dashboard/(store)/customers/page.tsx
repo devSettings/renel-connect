@@ -6,6 +6,7 @@ import MobileFilterDrawer from '../../components/mobile-filter-drawer';
 import CustomerList from './components/customer-list';
 import CustomersMatrix from './components/customers-matrix';
 import CustomersTable, { CustomerTable } from './components/customers-table';
+import CreateCustomer from './components/create-customer';
 export const customers: CustomerTable[] = [
   {
     customerId: 'CUST001',
@@ -69,7 +70,7 @@ const HomePage = () => {
     <ScrollArea className='h-[86vh]'>
       <div className='space-y-8'>
         <CustomersMatrix />
-        <Card className='shadow-none  flex-1 overflow-hidden  bg-accent/20'>
+        <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]   bg-[#0a0a0a] '>
           <CardHeader>
             <div className='flex items-center gap-2 justify-between'>
               <div className='flex items-center gap-4'>
@@ -78,6 +79,7 @@ const HomePage = () => {
                 </Suspense>
                 <MobileFilterDrawer />
               </div>
+              <CreateCustomer />
             </div>
           </CardHeader>
           <CardContent>
