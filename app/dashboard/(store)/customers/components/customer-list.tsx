@@ -75,7 +75,7 @@ export default function CustomerList() {
   );
 
   return (
-    <Card className='w-full max-w-md mx-auto'>
+    <Card className=' mx-auto'>
       <CardHeader>
         <CardTitle>Customer List</CardTitle>
       </CardHeader>
