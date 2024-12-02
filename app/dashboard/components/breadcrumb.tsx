@@ -21,7 +21,7 @@ export default function Breadcrumb() {
             <li key={segment} className='flex items-center'>
               <ChevronRight className='w-4 h-4 text-muted-foreground mx-1' />
               {isLast ? (
-                <span className='font-medium text-gray-800' aria-current='page'>
+                <span className='font-medium' aria-current='page'>
                   {segment.charAt(0).toUpperCase() + segment.slice(1)}
                 </span>
               ) : (

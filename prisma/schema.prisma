@@ -116,6 +116,8 @@ model User {
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   Role              Role[]
+  Product           Product[]
+  Order             Order[]
 
   @@unique([idProvided, idNumber])
   @@unique([firstName, lastName])
@@ -146,6 +148,147 @@ model Customer {
   totalSpend       BigInt     @default(0) @map("total_spend") @db.BigInt
   user             User       @relation(fields: [userId], references: [id])
   userId           String     @unique @map("user_id")
+  Order            Order[]
 
   @@unique([phoneNumber])
+}
+
+// Producs
+enum ProductType {
+  INVENTORY
+  SERVICE
+  NON_INVENTORY
+  DIGITAL
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  Product   Product[]
+
+  @@index([name])
+}
+
+model Product {
+  id               String             @id @default(cuid())
+  name             String             @unique
+  slug             String             @unique
+  sku              String             @unique
+  sellingPrice     Float              @map("selling_price")
+  category         Category           @relation(fields: [categoryId], references: [id])
+  type             ProductType
+  status           ProductStatus
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  categoryId       String
+  createdBy        User               @relation(fields: [createdById], references: [id])
+  createdById      String             @map("created_by_id")
+  InventoryProduct InventoryProduct[]
+  ServicesProduct  ServicesProduct?
+  OrderItem        OrderItem[]
+
+  @@index([slug])
+  @@index([name])
+}
+
+model InventoryProduct {
+  id                   String   @id @default(cuid())
+  product              Product  @relation(fields: [productId], references: [id])
+  productId            String   @unique @map("product_id")
+  quantityInStock      Int      @default(0) @map("quantity_in_stock")
+  averageUnitCostPrice Decimal  @default(0) @db.Decimal(10, 2)
+  reorderLevel         Int      @map("reorder_level")
+  createdAt            DateTime @default(now()) @map("created_at")
+  lastPurchaseDate     String?  @map("last_purchase_date")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+}
+
+model ServicesProduct {
+  id              String   @id @default(cuid())
+  product         Product  @relation(fields: [productId], references: [id])
+  productId       String   @unique
+  serviceLocation String
+  serviceDuration Int
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+}
+
+model Supplier {
+  id               String   @id @unique @default(cuid())
+  name             String   @unique
+  slug             String   @unique
+  email            String   @unique
+  phone            String   @unique
+  product_supplied String?  @db.Text()
+  address          String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  @@index([slug])
+  @@index([email])
+  @@index([name])
+}
+
+// Orders
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderSource {
+  WEB
+  MOBILE
+  POS
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  CHECK
+  WIRE_TRANSFER
+}
+
+model Order {
+  id             String        @id @default(cuid())
+  reference      String        @unique @db.VarChar(10)
+  cashier        User?         @relation(fields: [cashierId], references: [id])
+  cashierId      String?       @map("cashier_id")
+  customer       Customer?     @relation(fields: [customerId], references: [id])
+  customerId     String?       @map("customer_id")
+  paymentMethod  PaymentMethod
+  status         OrderStatus   @default(PENDING)
+  source         OrderSource
+  totalPrice     BigInt        @map("total_price") @db.BigInt
+  totalItems     Int           @map("total_items")
+  orderDate      String        @map("order_date")
+  amountReceived Float         @map("amount_received")
+  change         Float         @map("change")
+  OrderItem      OrderItem[]
+  createdAt      DateTime      @map("created_at")
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+  orderId   String   @map("order_id")
+  quantity  Int      @map("quantity")
+  unitPrice Decimal  @map("unit_price") @db.Decimal(10, 2)
+  totalCost Decimal  @map("total_cost") @db.Decimal(10, 2)
+  discount  Float?   @map("discount")
+  createdAt DateTime @default(now()) @map("created_at")
+  productId String   @map("product_id")
 }

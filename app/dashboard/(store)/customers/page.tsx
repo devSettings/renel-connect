@@ -1,12 +1,11 @@
 import Search from '@/components/search';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Suspense } from 'react';
 import MobileFilterDrawer from '../../components/mobile-filter-drawer';
+import CreateCustomer from './components/create-customer';
 import CustomerList from './components/customer-list';
 import CustomersMatrix from './components/customers-matrix';
 import CustomersTable, { CustomerTable } from './components/customers-table';
-import CreateCustomer from './components/create-customer';
 export const customers: CustomerTable[] = [
   {
     customerId: 'CUST001',
@@ -67,37 +66,35 @@ export const customers: CustomerTable[] = [
 
 const HomePage = () => {
   return (
-    <ScrollArea className='h-[86vh]'>
-      <div className='space-y-8'>
-        <CustomersMatrix />
-        <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]   bg-[#0a0a0a] '>
-          <CardHeader>
-            <div className='flex items-center gap-2 justify-between'>
-              <div className='flex items-center gap-4'>
-                <Suspense fallback={<div>Loading search...</div>}>
-                  <Search />
-                </Suspense>
-                <MobileFilterDrawer />
-              </div>
-              <CreateCustomer />
+    <div className='space-y-8'>
+      <CustomersMatrix />
+      <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]   bg-[#0a0a0a] '>
+        <CardHeader>
+          <div className='flex items-center gap-2 justify-between'>
+            <div className='flex items-center gap-4'>
+              <Suspense fallback={<div>Loading search...</div>}>
+                <Search />
+              </Suspense>
+              <MobileFilterDrawer />
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className='block lg:hidden'>
-              <CustomerList />
-            </div>
-            <div className='hidden lg:block'>
-              <CustomersTable
-                customers={customers}
-                totalPages={1}
-                currentPage={1}
-                itemsPerPage={1}
-              />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </ScrollArea>
+            <CreateCustomer />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className='block lg:hidden'>
+            <CustomerList />
+          </div>
+          <div className='hidden lg:block'>
+            <CustomersTable
+              customers={customers}
+              totalPages={1}
+              currentPage={1}
+              itemsPerPage={1}
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
