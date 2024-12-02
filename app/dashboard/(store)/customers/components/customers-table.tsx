@@ -15,6 +15,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
+import Pagination from '@/app/dashboard/components/pagination';
+import CustomerMembershipBadge from './customer-membership-badge';
+import CustomerStatusBadge from './customer-status-badge';
 // import EmptyTableItems from '../components/empty-table-items';
 // import CustomerTable from '../types/customer-table';
 // import CustomerMembershipBadge from './customer-membership-badge';
@@ -35,11 +38,11 @@ export type CustomerTable = {
   customerId: string;
   firstName: string;
   lastName: string;
-  status: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'BANNED';
   totalOrders: number;
   totalSpend: number;
   phoneNumber: string | undefined;
-  membership: string;
+  membership: 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM';
   lastPurchaseDate: Date | null;
 };
 
@@ -66,7 +69,7 @@ export default function CustomersTable({
   }
 
   return (
-    <Card className=' border-[0.1px] overflow-hidden'>
+    <Card className=' border-[0.1px] overflow-hidden bg-accent/20'>
       <CardContent className='pt-4'>
         <Table>
           <TableHeader>
@@ -86,7 +89,7 @@ export default function CustomersTable({
               <TableRow
                 key={customer.customerId}
                 className={cn('cursor-pointer h-14', {
-                  'bg-[#0D0E10]': index % 2 === 0,
+                  'bg-accent/10': index % 2 === 0,
                 })}
               >
                 <TableCell>
@@ -96,7 +99,7 @@ export default function CustomersTable({
                 <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
                 <TableCell>{customer.phoneNumber}</TableCell>
                 <TableCell>
-                  {/* <CustomerStatusBadge status={customer.status} /> */}
+                  <CustomerStatusBadge status={customer.status} />
                 </TableCell>
                 <TableCell className='text-center'>
                   {customer.totalOrders}
@@ -105,7 +108,7 @@ export default function CustomersTable({
                   {customer.totalSpend}
                 </TableCell>
                 <TableCell>
-                  {/* <CustomerMembershipBadge membership={customer.membership} /> */}
+                  <CustomerMembershipBadge membership={customer.membership} />
                 </TableCell>
                 <TableCell className='text-center'>
                   {customer.lastPurchaseDate?.toLocaleDateString() || 'N/A'}
@@ -118,13 +121,13 @@ export default function CustomersTable({
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter className='bg-zinc-950 overflow-hidden'>
-        {/* <Pagination
+      {/* <CardFooter className='overflow-hidden bg-accent/20'>
+        <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
           itemsPerPage={itemsPerPage}
-        /> */}
-      </CardFooter>
+        />
+      </CardFooter> */}
     </Card>
   );
 }

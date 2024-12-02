@@ -13,6 +13,7 @@ import {
   Settings2,
   SquareTerminal,
 } from 'lucide-react';
+import { FaStoreAlt } from 'react-icons/fa';
 
 import { NavMain } from '@/components/nav-main';
 import { NavProjects } from '@/components/nav-projects';
@@ -38,7 +39,7 @@ const data = {
     {
       title: 'Store',
       url: '#',
-      icon: SquareTerminal,
+      icon: FaStoreAlt,
       isActive: true,
       items: [
         {

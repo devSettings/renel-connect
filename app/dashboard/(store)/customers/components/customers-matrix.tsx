@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Box, CogIcon, Package2, ShoppingCart } from 'lucide-react';
 // import getProductSummary from '../actions/get-product-summary';
+import { FaUserAlt } from 'react-icons/fa';
 
 interface ProductMetric {
   title: string;
@@ -20,40 +21,40 @@ export default async function CustomersMatrix() {
 
   const metrics: ProductMetric[] = [
     {
-      title: 'Total Products',
-      count: 0,
-      icon: <ShoppingCart className='h-4 w-4' />,
-      gradientFrom: 'from-indigo-700',
-      gradientTo: 'to-indigo-400',
+      title: 'Customers',
+      count: 100,
+      icon: <FaUserAlt className='h-4 w-4' />,
+      gradientFrom: 'from-blue-700',
+      gradientTo: 'to-blue-400',
       badge:
-        'bg-indigo-500/20 text-indigo-400 border-indigo-500/50 hover:bg-indigo-500/30 hover:border-indigo-400',
+        'bg-blue-500/30 text-blue-600 border-blue-500/50 hover:bg-blue-500/30 hover:border-blue-400',
     },
     {
-      title: 'Inventory Products',
-      count: 0,
+      title: 'Active',
+      count: 80,
       icon: <Box className='h-4 w-4' />,
       gradientFrom: 'from-blue-700',
       gradientTo: 'to-blue-400',
       badge:
-        'bg-blue-500/20 text-blue-400 border-blue-500/50 hover:bg-blue-500/30 hover:border-blue-400',
+        'bg-emerald-500/30 text-emerald-600 border-emerald-500/50 hover:bg-emerald-500/30 hover:border-emerald-400',
     },
     {
-      title: 'Non Inventory',
-      count: 0,
+      title: 'Inactive',
+      count: 18,
       icon: <Package2 className='h-4 w-4' />,
-      gradientFrom: 'from-orange-700',
-      gradientTo: 'to-orange-400',
+      gradientFrom: 'from-yellow-700',
+      gradientTo: 'to-yellow-400',
       badge:
-        'bg-orange-500/20 text-orange-400 border-orange-500/50 hover:bg-orange-500/30 hover:border-orange-400',
+        'bg-yellow-500/20 text-yellow-600 border-yellow-500/50 hover:bg-yellow-500/30 hover:border-yellow-400',
     },
     {
-      title: 'Services',
-      count: 0,
+      title: 'Banned',
+      count: 2,
       icon: <CogIcon className='h-4 w-4' />,
-      gradientFrom: 'from-purple-700',
-      gradientTo: 'to-purple-400',
+      gradientFrom: 'from-red-700',
+      gradientTo: 'to-red-400',
       badge:
-        'bg-purple-500/20 text-purple-400 border-purple-500/50 hover:bg-purple-500/30 hover:border-purple-400',
+        'bg-red-500/30 text-red-600 border-red-500/50 hover:bg-red-500/30 hover:border-red-400',
     },
   ];
 
@@ -69,7 +70,7 @@ export default async function CustomersMatrix() {
             </CardTitle>
             <div
               className={cn(
-                'p-2 text-xs font-medium border-[0.1px] transition-colors duration-200 shadow-lg rounded-sm',
+                'p-2 text-xs font-medium  transition-colors duration-200 shadow-lg rounded-sm',
                 metric.badge
               )}
             >
