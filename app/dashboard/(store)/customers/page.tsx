@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import CustomersMatrix from './components/customers-matrix';
 import Search from '@/components/search';
 import CustomerList from './components/customer-list';
+import { Button } from '@/components/ui/button';
 export const customers: CustomerTable[] = [
   {
     customerId: 'CUST001',
@@ -62,26 +63,23 @@ export const customers: CustomerTable[] = [
     lastPurchaseDate: new Date('2024-11-30'),
   },
 ];
+import { FaFilter } from 'react-icons/fa';
 
 const HomePage = () => {
   return (
     <ScrollArea className='h-screen lg:h-[86vh]'>
       <div className='space-y-8'>
         <CustomersMatrix />
-        <Card className='shadow-none border-[0.1px] flex-1 overflow-hidden  bg-accent/20'>
+        <Card className='shadow-none  flex-1 overflow-hidden  bg-accent/20'>
           <CardHeader>
             <div className='flex items-center gap-2 justify-between'>
               <div className='flex items-center gap-4'>
                 <Suspense fallback={<div>Loading search...</div>}>
                   <Search />
                 </Suspense>
-                <div className='flex items-center gap-4'>
-                  {/* <CustomerStatusSelector /> */}
-                  {/* <CustomerMembershipSelector /> */}
-                </div>
-              </div>
-              <div className='items-center gap-4 flex'>
-                {/* <FormDialog /> */}
+                <Button>
+                  <FaFilter />
+                </Button>
               </div>
             </div>
           </CardHeader>

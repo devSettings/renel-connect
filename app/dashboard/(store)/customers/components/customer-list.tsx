@@ -81,7 +81,7 @@ export default function CustomerList() {
           <CardContent className='p-0'>
             <Button
               variant='ghost'
-              className='w-full justify-start text-left p-4 h-auto'
+              className='w-full justify-start text-left p-4 h-auto hover:bg-transparent'
             >
               <div className='flex items-center space-x-4 w-full'>
                 <Avatar className='h-10 w-10'>
