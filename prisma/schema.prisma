@@ -106,7 +106,6 @@ model User {
   idProvided        AcceptedTypeOfID? @map("id_provided")
   idNumber          String?           @db.VarChar(20)
   createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
   Role              Role
   Product           Product[]
   Order             Order[]
@@ -266,9 +265,9 @@ model Order {
   totalItems     Int           @map("total_items")
   orderDate      String        @map("order_date")
   amountReceived Float         @map("amount_received")
-  change         Float         @map("change")
+  change         Float         @default(0) @map("change")
   OrderItem      OrderItem[]
-  createdAt      DateTime      @map("created_at")
+  createdAt      DateTime      @default(now()) @map("created_at")
 }
 
 model OrderItem {

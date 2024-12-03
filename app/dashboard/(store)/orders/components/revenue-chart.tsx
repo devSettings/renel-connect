@@ -18,6 +18,10 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Revenue } from '../types/order';
+// const chartData = [
+//   { date: '2024-04-01', revenue: 222 },
+//   { date: '2024-04-02', revenue: 97 },
+// ];
 
 const chartConfig = {
   visitors: {
@@ -39,7 +43,9 @@ export function RevenueChart({ data }: Props) {
       <CardHeader className='flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row'>
         <div className='grid flex-1 gap-1 text-center sm:text-left'>
           <CardTitle>Area Chart - Interactive</CardTitle>
-          <CardDescription>Showing total revenue By period</CardDescription>
+          <CardDescription>
+            Showing total revenue for the last 3 months
+          </CardDescription>
         </div>
       </CardHeader>
       <CardContent className='px-2 pt-4 sm:px-6 sm:pt-6'>
