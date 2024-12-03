@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import {
   BookOpen,
   Bot,
@@ -11,8 +10,8 @@ import {
   PieChart,
   Send,
   Settings2,
-  SquareTerminal,
 } from 'lucide-react';
+import * as React from 'react';
 import { FaStoreAlt } from 'react-icons/fa';
 
 import { NavMain } from '@/components/nav-main';
@@ -56,6 +55,7 @@ const data = {
           url: '/dashboard/orders',
         },
         { title: 'Reports', url: '/dashboard/reports' },
+        { title: 'Transactions', url: '/dashboard/transactions' },
       ],
     },
     {

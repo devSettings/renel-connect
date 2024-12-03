@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { UserCog, UserRoundCheck, Users, UserX } from 'lucide-react';
-// import getProductSummary from '../actions/get-product-summary';
+import getCustomerMetics from '../actions/get-customer-status-metrics';
 
 interface ProductMetric {
   title: string;
@@ -17,7 +17,7 @@ export default async function CustomersMatrix() {
   //   if (!reponse.success) {
   //     return <p className='text-red'>error fetching...</p>;
   //   }
-
+  await getCustomerMetics();
   const metrics: ProductMetric[] = [
     {
       title: 'Customers',
@@ -56,8 +56,6 @@ export default async function CustomersMatrix() {
     },
   ];
 
-  const totalProducts = metrics[0].count;
-
   return (
     <div className='grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
       {metrics.map((metric, index) => (
@@ -78,16 +76,6 @@ export default async function CustomersMatrix() {
           <CardContent>
             <div className='text-2xl font-bold mb-2'>
               {metric.count.toLocaleString()}
-            </div>
-            {/* <div className='h-2 mb-2 bg-white dark:bg-gray-800 rounded-full overflow-hidden'>
-              <div
-                className={`h-full bg-gradient-to-r ${metric.gradientFrom} ${metric.gradientTo}`}
-                style={{ width: `${(metric.count / totalProducts) * 100}%` }}
-              />
-            </div> */}
-            <div className='flex justify-between text-xs '>
-              <span>{totalProducts.toLocaleString()} total</span>
-              <span>{((metric.count / totalProducts) * 100).toFixed(1)}%</span>
             </div>
           </CardContent>
         </Card>

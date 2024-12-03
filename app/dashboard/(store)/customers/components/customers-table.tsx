@@ -4,6 +4,7 @@ import { EllipsisIcon as EllipsisHorizontal } from 'lucide-react';
 
 // import Pagination from '@/components/pagination';
 import EmptyTable from '@/app/dashboard/components/empty-table';
+import Pagination from '@/app/dashboard/components/pagination';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -15,39 +16,23 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
-import Pagination from '@/app/dashboard/components/pagination';
+import { Customer } from '../types/customers';
 import CustomerMembershipBadge from './customer-membership-badge';
 import CustomerStatusBadge from './customer-status-badge';
-// import EmptyTableItems from '../components/empty-table-items';
-// import CustomerTable from '../types/customer-table';
-// import CustomerMembershipBadge from './customer-membership-badge';
-// import CustomerStatusBadge from './customer-status-badge';
 
 const TABLE_HEADS = [
   'Customer',
-  'Phone Number',
   'Status',
+  'Phone Number',
   'Total Orders',
   'Total Spend',
   'Membership',
-  'Last Order Date',
+  // 'Last Order Date',
   'Action',
 ] as const;
 
-export type CustomerTable = {
-  customerId: string;
-  firstName: string;
-  lastName: string;
-  status: 'ACTIVE' | 'INACTIVE' | 'BANNED';
-  totalOrders: number;
-  totalSpend: number;
-  phoneNumber: string | undefined;
-  membership: 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM';
-  lastPurchaseDate: Date | null;
-};
-
 interface Props {
-  customers: CustomerTable[];
+  customers: Customer[];
   totalPages: number;
   currentPage: number;
   itemsPerPage: number;
@@ -69,7 +54,7 @@ export default function CustomersTable({
   }
 
   return (
-    <Card className=' border-[0.1px] overflow-hidden '>
+    <Card className=' border-[0.1px]  bg-black overflow-hidden '>
       <CardContent className='pt-4'>
         <Table>
           <TableHeader>
@@ -87,7 +72,7 @@ export default function CustomersTable({
           <TableBody>
             {customers.map((customer, index) => (
               <TableRow
-                key={customer.customerId}
+                key={customer.id}
                 className={cn('cursor-pointer h-14', {
                   'bg-accent/10': index % 2 === 0,
                 })}
@@ -96,11 +81,11 @@ export default function CustomersTable({
                   <Checkbox className='border-[0.1px] rounded-md' />
                 </TableCell>
 
-                <TableCell>{`${customer.firstName} ${customer.lastName}`}</TableCell>
-                <TableCell>{customer.phoneNumber}</TableCell>
+                <TableCell>{customer.name}</TableCell>
                 <TableCell>
                   <CustomerStatusBadge status={customer.status} />
                 </TableCell>
+                <TableCell>{customer.phoneNumber}</TableCell>
                 <TableCell className='text-center'>
                   {customer.totalOrders}
                 </TableCell>
@@ -110,9 +95,11 @@ export default function CustomersTable({
                 <TableCell>
                   <CustomerMembershipBadge membership={customer.membership} />
                 </TableCell>
-                <TableCell className='text-center'>
-                  {customer.lastPurchaseDate?.toLocaleDateString() || 'N/A'}
-                </TableCell>
+                {/* <TableCell className='text-center'>
+                  {customer.lastPurchaseDate
+                    ? customer.lastPurchaseDate
+                    : 'N/A'}
+                </TableCell> */}
                 <TableCell>
                   <EllipsisHorizontal className='w-4 h-4' />
                 </TableCell>
@@ -121,13 +108,13 @@ export default function CustomersTable({
           </TableBody>
         </Table>
       </CardContent>
-      {/* <CardFooter className='overflow-hidden bg-accent/20'>
+      <CardFooter className='overflow-hidden bg-accent/20'>
         <Pagination
           totalPages={totalPages}
           currentPage={currentPage}
           itemsPerPage={itemsPerPage}
         />
-      </CardFooter> */}
+      </CardFooter>
     </Card>
   );
 }

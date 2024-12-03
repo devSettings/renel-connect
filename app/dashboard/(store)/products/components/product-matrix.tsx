@@ -79,16 +79,6 @@ export default async function ProductsMatrix() {
             <div className='text-2xl font-bold mb-2'>
               {metric.count.toLocaleString()}
             </div>
-            {/* <div className='h-2 mb-2 bg-white dark:bg-gray-800 rounded-full overflow-hidden'>
-              <div
-                className={`h-full bg-gradient-to-r ${metric.gradientFrom} ${metric.gradientTo}`}
-                style={{ width: `${(metric.count / totalProducts) * 100}%` }}
-              />
-            </div> */}
-            <div className='flex justify-between text-xs '>
-              <span>{totalProducts.toLocaleString()} total</span>
-              <span>{((metric.count / totalProducts) * 100).toFixed(1)}%</span>
-            </div>
           </CardContent>
         </Card>
       ))}

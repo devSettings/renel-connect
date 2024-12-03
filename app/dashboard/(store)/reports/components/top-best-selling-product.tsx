@@ -79,7 +79,7 @@ export function TopBestSellingPrducts() {
               dataKey='visitors'
               strokeWidth={2}
               radius={8}
-              activeIndex={2}
+              // activeIndex={2}
               activeBar={({ ...props }) => {
                 return (
                   <Rectangle

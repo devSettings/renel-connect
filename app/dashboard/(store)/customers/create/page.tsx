@@ -1,16 +1,13 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { CreateUserCustomerForm } from './create-customer-form';
 
 const CreateCustomer = () => {
   return (
-    <ScrollArea className='h-[83vh]'>
-      <Card className='bg-[#0a0a0a]'>
-        <CardContent className='mt-4'>
-          <CreateUserCustomerForm />
-        </CardContent>
-      </Card>
-    </ScrollArea>
+    <Card className='border-[0.1px] bg-[#0a0a0a] max-w-[60rem] mx-auto px-8'>
+      <CardContent className='mt  mt-10  rounded-md'>
+        <CreateUserCustomerForm />
+      </CardContent>
+    </Card>
   );
 };
 

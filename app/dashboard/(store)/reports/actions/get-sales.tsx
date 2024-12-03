@@ -3,8 +3,15 @@
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { Sale } from '../types/report';
+import { OrderCategory } from '@prisma/client';
 
 const getSales = async (): Promise<ActionResponse<Sale[]>> => {
+  const categoryFormatter = (category: OrderCategory) => {
+    if (category === 'DRINK') return 'Drink';
+    if (category === 'FOOD') return 'Food';
+    if (category === 'ROOM') return 'Room';
+    return 'Other';
+  };
   try {
     const rawOrders = await prisma.order.findMany({
       select: {
@@ -36,7 +43,7 @@ const getSales = async (): Promise<ActionResponse<Sale[]>> => {
       cashier: order.cashier
         ? `${order.cashier.firstName} ${order.cashier.lastName}`
         : 'Unassigned',
-      category: order.category,
+      category: categoryFormatter(order.category),
     }));
 
     return { success: true, data: sales };

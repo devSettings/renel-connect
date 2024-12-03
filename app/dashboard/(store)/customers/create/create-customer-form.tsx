@@ -120,7 +120,11 @@ export function CreateUserCustomerForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)}>
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6 lg:p-4'>
+        <div
+          className={cn('grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6', {
+            // 'gap-y-3': form.formState.errors,
+          })}
+        >
           <FormField
             control={form.control}
             name='firstName'
@@ -131,7 +135,7 @@ export function CreateUserCustomerForm() {
                   <Input placeholder='John' {...field} />
                 </FormControl>
 
-                <FormMessage />
+                {/* <FormMessage /> */}
               </FormItem>
             )}
           />
@@ -145,7 +149,7 @@ export function CreateUserCustomerForm() {
                   <Input placeholder='Doe' {...field} />
                 </FormControl>
 
-                <FormMessage />
+                {/* <FormMessage /> */}
               </FormItem>
             )}
           />
@@ -250,7 +254,7 @@ export function CreateUserCustomerForm() {
                     <SelectItem value='FEMALE'>Female</SelectItem>
                   </SelectContent>
                 </Select>
-                <FormMessage />
+                {/* <FormMessage /> */}
               </FormItem>
             )}
           />
@@ -280,7 +284,7 @@ export function CreateUserCustomerForm() {
                 <FormControl>
                   <Input placeholder='50900000000' {...field} />
                 </FormControl>
-                <FormMessage />
+                {/* <FormMessage /> */}
               </FormItem>
             )}
           />
@@ -445,7 +449,7 @@ export function CreateUserCustomerForm() {
           <Button
             type='submit'
             size='lg'
-            className='font-normal w-full lg:w-fit  transition-colors ease-in-out duration-300'
+            className='font-normal w-full lg:w-fit bg-blue-700 hover:bg-blue-900  transition-colors ease-in-out duration-300 text-white'
           >
             {form.formState.isSubmitting ? (
               <div className='flex items-center gap-2'>
