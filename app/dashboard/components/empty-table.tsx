@@ -5,9 +5,9 @@ interface Props {
 
 const EmptyTable = ({ heading, description }: Props) => {
   return (
-    <div className='border border-dashed bg-muted/20 h-[21rem] flex flex-col gap-8 items-center justify-center rounded-lg'>
+    <div className='border border-dashed bg-card h-[21rem] flex flex-col gap-8 items-center justify-center rounded-lg'>
       <div className='flex flex-col items-center justify-center text-center gap-y-3'>
-        <h2 className='font-black text-4xl text-red-700'>{heading}</h2>
+        <h2 className='font-black text-4xl text-red-600'>{heading}</h2>
         <p className='font-medium text-muted-foreground'>{description}</p>
       </div>
     </div>

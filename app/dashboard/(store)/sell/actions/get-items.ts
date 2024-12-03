@@ -24,7 +24,9 @@ const getItems = async (
         name: true,
         sellingPrice: true,
         category: { select: { name: true } },
-        InventoryProduct: { select: { quantityInStock: true } },
+        InventoryProduct: {
+          select: { productId: true, quantityInStock: true },
+        },
         type: true,
       },
       where: {
@@ -40,7 +42,11 @@ const getItems = async (
       name: product.name,
       sellingPrice: product.sellingPrice,
       category: product.category.name,
-      quantityInStock: 1,
+      quantityInStock:
+        product.type === 'INVENTORY'
+          ? product.InventoryProduct.find((p) => p.productId === product.id)
+              ?.quantityInStock || 0
+          : INFINITE_STOCK,
     }));
     console.log(products);
     return { success: true, data: products };

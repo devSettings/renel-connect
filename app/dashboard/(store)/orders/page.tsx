@@ -1,83 +1,60 @@
 import Search from '@/components/search';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Suspense } from 'react';
-import OrdersMatrix from './components/orders-matrix';
+import getOrders from './actions/get-orders';
+import getRevenue from './actions/get-revenue';
+import OrderCashierFilter from './components/order-cashier-filter';
+import OrdersMatrix from './components/order-metrics';
+import OrderPaymentMethodFilter from './components/order-payment-method-filter';
 import OrdersTable from './components/orders-table';
-type OrderStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED' | 'RETURNED';
-type OrderSource = 'ONLINE' | 'IN_STORE' | 'MOBILE_APP' | 'PHONE';
+import { RevenueChart } from './components/revenue-chart';
+import OrderError from './error';
 
-export const orders = [
-  {
-    order_id: 'ORD001',
-    customer: 'John Doe',
-    status: 'COMPLETED',
-    source: 'ONLINE',
-    quanity_of_items: 3,
-    total: 120.5,
-    date: '2024-12-01',
-  },
-  {
-    order_id: 'ORD002',
-    customer: 'Jane Smith',
-    status: 'PENDING',
-    source: 'MOBILE_APP',
-    quanity_of_items: 2,
-    total: 49.99,
-    date: '2024-12-02',
-  },
-  {
-    order_id: 'ORD003',
-    customer: 'Alice Johnson',
-    status: 'CANCELLED',
-    source: 'PHONE',
-    quanity_of_items: 1,
-    total: 19.99,
-    date: '2024-11-30',
-  },
-  {
-    order_id: 'ORD004',
-    customer: 'Bob Brown',
-    status: 'COMPLETED',
-    source: 'IN_STORE',
-    quanity_of_items: 10,
-    total: 299.99,
-    date: '2024-11-28',
-  },
-  {
-    order_id: 'ORD005',
-    customer: 'Clara Wilson',
-    status: 'RETURNED',
-    source: 'ONLINE',
-    quanity_of_items: 5,
-    total: 150.0,
-    date: '2024-11-27',
-  },
-];
-const OrderaPage = () => {
+export default async function OrdersPage() {
+  const [ordersResponse, revenueResponse] = await Promise.all([
+    getOrders(),
+    getRevenue(),
+  ]);
+
+  if (!ordersResponse.success) {
+    return <OrderError error={ordersResponse.error as string} />;
+  }
+
+  if (!revenueResponse.success) {
+    return <OrderError error={revenueResponse.error as string} />;
+  }
+
   return (
     <div className='space-y-8'>
-      <OrdersMatrix />
-      <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]   bg-[#0a0a0a] '>
+      <Suspense fallback={'Loading Metrics'}>
+        <OrdersMatrix />
+      </Suspense>
+      <Suspense fallback={'Laoding Revenue Charts'}>
+        <RevenueChart data={revenueResponse.data} />
+      </Suspense>
+      <Card className='shadow-none flex-1 overflow-hidden border-[0.1px] bg-[#0a0a0a]'>
         <CardHeader>
-          <div className='flex items-center gap-2 justify-between'>
+          <div className='flex items-center justify-between gap-2'>
             <div className='flex items-center gap-4'>
               <Suspense fallback={<div>Loading search...</div>}>
                 <Search />
               </Suspense>
-              {/* <MobileFilterDrawer /> */}
+              <OrderPaymentMethodFilter />
+              <OrderCashierFilter />
             </div>
-            {/* <CreateCustomer /> */}
           </div>
         </CardHeader>
         <CardContent>
-          <div className='block lg:hidden'>{/* <CustomerList /> */}</div>
+          <div className='block lg:hidden'>
+            {/* TODO: Implement mobile view */}
+          </div>
           <div className='hidden lg:block'>
-            <OrdersTable orders={orders} />
+            <Suspense fallback={<div>Loading orders...</div>}>
+              <OrdersTable orders={ordersResponse.data} />
+            </Suspense>
           </div>
         </CardContent>
       </Card>
     </div>
   );
-};
-
-export default OrderaPage;
+}

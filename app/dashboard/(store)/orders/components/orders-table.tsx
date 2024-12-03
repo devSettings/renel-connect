@@ -7,25 +7,15 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+import EmptyTable from '@/app/dashboard/components/empty-table';
+import Pagination from '@/app/dashboard/components/pagination';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
 import { EllipsisIcon } from 'lucide-react';
 import { Suspense } from 'react';
-import Pagination from '@/app/dashboard/components/pagination';
-import { OrderSource, OrderStatus } from '@prisma/client';
+import { Order } from '../types/order';
 import OrderSourceBadge from './order-source-badge';
-import OrderStatusBadge from './order-status-badge';
-
-type Order = {
-  order_id: string;
-  customer: string;
-  status: OrderStatus;
-  source: OrderSource;
-  quanity_of_items: number;
-  total: number;
-  date: string;
-};
 
 interface Props {
   orders: Order[];
@@ -34,17 +24,25 @@ interface Props {
 const tableHeads = [
   'Order ID',
   'Customer',
-  'Status',
+  'Cashier',
   'Items',
   'Total',
   'Source',
   'Date',
+  'Method',
   'Action',
 ];
 
 export default function OrdersTable({ orders }: Props) {
+  if (orders.length === 0)
+    return (
+      <EmptyTable
+        heading={'No Orders found.'}
+        description={'New orders will apear here!'}
+      />
+    );
   return (
-    <Card className='bg-black border-[0.1px] overflow-hidden'>
+    <Card className='border-[0.1px] overflow-hidden'>
       <CardContent className='pt-4'>
         <Table>
           <TableHeader>
@@ -62,7 +60,7 @@ export default function OrdersTable({ orders }: Props) {
           <TableBody>
             {orders.map((order, index) => (
               <TableRow
-                key={order.order_id}
+                key={order.id}
                 className={cn('cursor-pointer h-14', {
                   'bg-[#0D0E10]': index % 2 === 0,
                 })}
@@ -70,17 +68,16 @@ export default function OrdersTable({ orders }: Props) {
                 <TableCell>
                   <Checkbox className='border-[0.1px] rounded-md' />
                 </TableCell>
-                <TableCell>{order.order_id}</TableCell>
+                <TableCell>{order.id}</TableCell>
                 <TableCell>{order.customer}</TableCell>
-                <TableCell>
-                  <OrderStatusBadge status={order.status} />
-                </TableCell>
-                <TableCell>{order.quanity_of_items}</TableCell>
-                <TableCell>{order.total}</TableCell>
+                <TableCell>{order.cashier}</TableCell>
+                <TableCell>{order.items}</TableCell>
+                <TableCell>{order.amount}</TableCell>
                 <TableCell>
                   <OrderSourceBadge source={order.source} />
                 </TableCell>
                 <TableCell>{order.date}</TableCell>
+                <TableCell>Cash</TableCell>
                 <TableCell aria-disabled={true}>
                   <EllipsisIcon className='w-4 h-4' />
                 </TableCell>
@@ -89,7 +86,7 @@ export default function OrdersTable({ orders }: Props) {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter className=' bg-zinc-950 overflow-hidden'>
+      <CardFooter className='overflow-hidden'>
         <Suspense fallback={<div>Loading pagination...</div>}>
           <Pagination totalPages={10} currentPage={1} itemsPerPage={10} />
         </Suspense>

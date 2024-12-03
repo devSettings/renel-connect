@@ -26,7 +26,7 @@ const CartItem = ({ item }: CartItemProps) => {
   return (
     <div
       key={item.product.id}
-      className='rounded-lg space-y-2  bg-muted/20 border-[0.1px]  p-3 mb-2 transition-all duration-300 '
+      className='rounded-lg space-y-2  bg-muted/20 border-[0.1px] p-3 mb-3 transition-all duration-300 '
     >
       <div className='flex items-center justify-between '>
         <h4 className='text-sm truncate max-w-[60%]'>{item.product.name}</h4>
@@ -38,7 +38,7 @@ const CartItem = ({ item }: CartItemProps) => {
         </p>
       </div>
       <div className='flex items-center justify-between text-muted-foreground'>
-        <div className='flex items-center  text-sm text-blue-600 font-medium'>
+        <div className='flex items-center  text-sm  font-medium'>
           <p> {item.product.sellingPrice}</p> <span className='mx-1'>x</span>
           <p>{item.quantity}</p>
         </div>

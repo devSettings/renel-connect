@@ -261,7 +261,6 @@ model Order {
   customer       Customer      @relation(fields: [customerId], references: [id])
   customerId     String        @map("customer_id")
   paymentMethod  PaymentMethod
-  status         OrderStatus   @default(PENDING)
   source         OrderSource
   totalPrice     BigInt        @map("total_price") @db.BigInt
   totalItems     Int           @map("total_items")

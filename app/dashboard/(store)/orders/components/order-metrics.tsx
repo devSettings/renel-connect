@@ -1,9 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { UserCog, UserRoundCheck, Users, UserX } from 'lucide-react';
-// import getProductSummary from '../actions/get-product-summary';
+import { BadgeDollarSign, Coins, Contact, Package } from 'lucide-react';
+import getOrderMetrics from '../actions/get-order-metrics';
+import OrderError from '../error';
 
-interface ProductMetric {
+interface OrderMetric {
   title: string;
   count: number;
   icon: React.ReactNode;
@@ -12,47 +13,52 @@ interface ProductMetric {
   badge: string;
 }
 
-export default async function OrdersMatrix() {
-  //   const reponse = await getProductSummary();
-  //   if (!reponse.success) {
-  //     return <p className='text-red'>error fetching...</p>;
-  //   }
+export default async function OrderMetrics() {
+  const reponse = await getOrderMetrics();
+  if (!reponse.success) {
+    return <OrderError error={reponse.error as string} />;
+  }
 
-  const metrics: ProductMetric[] = [
+  const { totalOrders, totalCustomers, averageSpent, totalIncome } =
+    reponse.data;
+
+  const metrics: OrderMetric[] = [
     {
-      title: 'Customers',
-      count: 100,
-      icon: <Users className='h-5 w-5' />,
+      title: 'Total Orders',
+      count: totalOrders,
+      icon: <Package className='h-5 w-5' />,
       gradientFrom: 'from-blue-700',
       gradientTo: 'to-blue-400',
       badge:
         ' text-blue-600 border-blue-500/50 hover:bg-blue-500/30 hover:border-blue-400',
     },
     {
-      title: 'Active',
-      count: 80,
-      icon: <UserRoundCheck className='h-5 w-5' />,
+      title: 'Total Income',
+      count: totalIncome,
+      icon: <BadgeDollarSign className='h-5 w-5' />,
       gradientFrom: 'from-blue-700',
       gradientTo: 'to-blue-400',
       badge:
         ' text-emerald-600 border-emerald-500/50 hover: hover:border-emerald-400',
     },
+
     {
-      title: 'Inactive',
-      count: 18,
-      icon: <UserX className='h-5 w-5' />,
+      title: 'Customers',
+      count: totalCustomers,
+      icon: <Contact className='h-5 w-5' />,
+      gradientFrom: 'from-red-700',
+      gradientTo: 'to-red-400',
+      badge:
+        ' text-purple-600 border-purle-500/50 hover: hover:border-purle-400',
+    },
+    {
+      title: 'Average Spent',
+      count: averageSpent,
+      icon: <Coins className='h-5 w-5' />,
       gradientFrom: 'from-yellow-700',
       gradientTo: 'to-yellow-400',
       badge:
         'text-yellow-600 border-yellow-500/50 hover:bg-yellow-500/30 hover:border-yellow-400',
-    },
-    {
-      title: 'Banned',
-      count: 10,
-      icon: <UserCog className='h-5 w-5' />,
-      gradientFrom: 'from-red-700',
-      gradientTo: 'to-red-400',
-      badge: ' text-red-600 border-red-500/50 hover: hover:border-red-400',
     },
   ];
 
@@ -79,16 +85,11 @@ export default async function OrdersMatrix() {
             <div className='text-2xl font-bold mb-2'>
               {metric.count.toLocaleString()}
             </div>
-            {/* <div className='h-2 mb-2 bg-white dark:bg-gray-800 rounded-full overflow-hidden'>
-              <div
-                className={`h-full bg-gradient-to-r ${metric.gradientFrom} ${metric.gradientTo}`}
-                style={{ width: `${(metric.count / totalProducts) * 100}%` }}
-              />
-            </div> */}
-            <div className='flex justify-between text-xs '>
+
+            {/* <div className='flex justify-between text-xs '>
               <span>{totalProducts.toLocaleString()} total</span>
               <span>{((metric.count / totalProducts) * 100).toFixed(1)}%</span>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       ))}
