@@ -1,4 +1,4 @@
-import { OrderSource } from '@prisma/client';
+import { OrderSource, PaymentMethod } from '@prisma/client';
 
 export type Order = {
   id: string;
@@ -8,7 +8,7 @@ export type Order = {
   amount: number;
   source: OrderSource;
   date: string;
-  method: string;
+  method: PaymentMethod;
 };
 
 export type OrderMetrics = {

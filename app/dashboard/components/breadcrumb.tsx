@@ -11,7 +11,7 @@ export default function Breadcrumb() {
 
   return (
     <nav aria-label='Breadcrumb' className=' px-4'>
-      <ol className='flex items-center space-x-2 text-sm'>
+      <ol className='flex items-center space-x-2 text-base'>
         <SidebarTrigger className='-ml-1' />
 
         {segments.map((segment, index) => {

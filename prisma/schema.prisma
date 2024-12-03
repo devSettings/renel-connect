@@ -252,9 +252,17 @@ enum PaymentMethod {
   WIRE_TRANSFER
 }
 
+enum OrderCategory {
+  ROOM
+  DRINK
+  FOOD
+  OTHER
+}
+
 model Order {
   id             String        @id @default(cuid())
   reference      String        @unique @db.VarChar(10)
+  category       OrderCategory @default(OTHER)
   cashier        User          @relation(fields: [cashierId], references: [id])
   cashierId      String        @map("cashier_id")
   customer       Customer      @relation(fields: [customerId], references: [id])
