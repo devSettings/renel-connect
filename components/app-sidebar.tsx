@@ -42,6 +42,7 @@ const data = {
       icon: FaStoreAlt,
       isActive: true,
       items: [
+        { title: 'Sell', url: '/dashboard/sell' },
         {
           title: 'Products',
           url: '/dashboard/products',
@@ -162,11 +163,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size='lg' asChild>
               <a href='#'>
-                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sidebar-primary-foreground'>
+                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-700 text-primary'>
                   <Command className='size-4' />
                 </div>
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='truncate font-semibold'>Acme Inc</span>
+                  <span className='truncate font-semibold'>Renel Connect</span>
                   <span className='truncate text-xs'>Enterprise</span>
                 </div>
               </a>

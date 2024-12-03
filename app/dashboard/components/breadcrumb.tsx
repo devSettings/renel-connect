@@ -10,8 +10,8 @@ export default function Breadcrumb() {
   const segments = pathname.split('/').filter((segment) => segment !== '');
 
   return (
-    <nav aria-label='Breadcrumb' className='py-3 px-4'>
-      <ol className='flex items-center space-x-2 text-base'>
+    <nav aria-label='Breadcrumb' className=' px-4'>
+      <ol className='flex items-center space-x-2 text-sm'>
         <SidebarTrigger className='-ml-1' />
 
         {segments.map((segment, index) => {
@@ -21,13 +21,16 @@ export default function Breadcrumb() {
             <li key={segment} className='flex items-center'>
               <ChevronRight className='w-4 h-4 text-muted-foreground mx-1' />
               {isLast ? (
-                <span className='font-medium' aria-current='page'>
+                <span
+                  className='font-medium text-muted-foreground'
+                  aria-current='page'
+                >
                   {segment.charAt(0).toUpperCase() + segment.slice(1)}
                 </span>
               ) : (
                 <Link
                   href={href}
-                  className='text-primary hover:text-primary/50 transition-colors duration-200 ease-linear'
+                  className='text-blue-700 hover:text-blue-500 transition-colors duration-200 ease-linear'
                 >
                   {segment.charAt(0).toUpperCase() + segment.slice(1)}
                 </Link>

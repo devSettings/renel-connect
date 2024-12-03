@@ -242,7 +242,7 @@ export function CreateUserCustomerForm() {
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder='Select a gender' />
+                      <SelectValue placeholder='Gender' />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -311,7 +311,7 @@ export function CreateUserCustomerForm() {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name='roleId'
               render={({ field }) => (
@@ -338,7 +338,7 @@ export function CreateUserCustomerForm() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
           </div>
           <div className='flex gap-4 w-full'>
             <FormField

@@ -68,7 +68,7 @@ const HomePage = () => {
   return (
     <div className='space-y-8'>
       <CustomersMatrix />
-      <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]   bg-[#0a0a0a] '>
+      <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]  bg-[#0a0a0a] '>
         <CardHeader>
           <div className='flex items-center gap-2 justify-between'>
             <div className='flex items-center gap-4'>

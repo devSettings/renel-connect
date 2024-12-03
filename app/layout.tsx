@@ -4,6 +4,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'Renel Connect',
@@ -25,6 +26,7 @@ export default function RootLayout({
       >
         <ThemeProvider attribute='class' defaultTheme='dark'>
           {children}
+          <Toaster position='top-right' richColors />
         </ThemeProvider>
       </body>
     </html>

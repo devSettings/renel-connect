@@ -9,13 +9,13 @@ const LayOut = ({ children }: PropsWithChildren) => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className='flex h-16 shrink-0 items-center  bg-black'>
+        <header className='flex h-14 shrink-0 items-center bg-black '>
           <div className='flex items-center gap-2 px-4 '>
             <Breadcrumb />
           </div>
         </header>
-        <div className='flex  pt-4  flex-1 flex-col gap-4 p-4  bg-black overflow-hidden'>
-          <ScrollArea className='h-[80vh]'>{children}</ScrollArea>
+        <div className='flex flex-1 flex-col gap-4 p-4 pt-0   bg-black overflow-hidden'>
+          <ScrollArea className='h-[85vh]'>{children}</ScrollArea>
         </div>
       </SidebarInset>
     </SidebarProvider>

@@ -56,15 +56,6 @@ enum PermissionName {
   CONFIGURE_INTEGRATIONS
 }
 
-enum RoleName {
-  CUSTOMER
-  CASHIER
-  MANAGER
-  SUPERVISOR
-  ADMIN
-  DEVELOPER
-}
-
 model Permission {
   id          String         @id @default(uuid())
   label       String         @unique @db.VarChar(250)
@@ -72,12 +63,13 @@ model Permission {
   description String
 }
 
-model Role {
-  id          String   @id @default(uuid())
-  label       String   @unique
-  value       RoleName @unique
-  description String?
-  User        User[]
+enum Role {
+  CUSTOMER
+  CASHIER
+  MANAGER
+  SUPERVISOR
+  ADMIN
+  DEVELOPER
 }
 
 enum UserStatus {
@@ -115,7 +107,7 @@ model User {
   idNumber          String?           @db.VarChar(20)
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
-  Role              Role[]
+  Role              Role
   Product           Product[]
   Order             Order[]
 
@@ -264,10 +256,10 @@ enum PaymentMethod {
 model Order {
   id             String        @id @default(cuid())
   reference      String        @unique @db.VarChar(10)
-  cashier        User?         @relation(fields: [cashierId], references: [id])
-  cashierId      String?       @map("cashier_id")
-  customer       Customer?     @relation(fields: [customerId], references: [id])
-  customerId     String?       @map("customer_id")
+  cashier        User          @relation(fields: [cashierId], references: [id])
+  cashierId      String        @map("cashier_id")
+  customer       Customer      @relation(fields: [customerId], references: [id])
+  customerId     String        @map("customer_id")
   paymentMethod  PaymentMethod
   status         OrderStatus   @default(PENDING)
   source         OrderSource
@@ -281,14 +273,14 @@ model Order {
 }
 
 model OrderItem {
-  id        String   @id @default(cuid())
-  order     Order    @relation(fields: [orderId], references: [id])
-  product   Product  @relation(fields: [productId], references: [id])
-  orderId   String   @map("order_id")
-  quantity  Int      @map("quantity")
-  unitPrice Decimal  @map("unit_price") @db.Decimal(10, 2)
-  totalCost Decimal  @map("total_cost") @db.Decimal(10, 2)
-  discount  Float?   @map("discount")
-  createdAt DateTime @default(now()) @map("created_at")
-  productId String   @map("product_id")
+  id         String   @id @default(cuid())
+  order      Order    @relation(fields: [orderId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+  orderId    String   @map("order_id")
+  quantity   Int      @map("quantity")
+  unitPrice  Decimal  @map("unit_price") @db.Decimal(10, 2)
+  totalPrice Decimal  @map("total_cost") @db.Decimal(10, 2)
+  discount   Float?   @default(0) @map("discount")
+  createdAt  DateTime @default(now()) @map("created_at")
+  productId  String   @map("product_id")
 }
