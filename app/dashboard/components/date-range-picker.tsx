@@ -74,10 +74,11 @@ export default function DatePickerWithRange({
                 onSelect={setDate}
                 numberOfMonths={2}
               />
-              <div className='flex justify-end gap-2 p-3 bg-muted/20'>
+              <div className='flex justify-end gap-2 p-3 bg-muted/50'>
                 <Button
                   type='button'
                   variant='outline'
+                  className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(3)}
                 >
@@ -86,6 +87,7 @@ export default function DatePickerWithRange({
                 <Button
                   type='button'
                   variant='outline'
+                  className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(6)}
                 >
@@ -94,6 +96,7 @@ export default function DatePickerWithRange({
                 <Button
                   type='button'
                   variant='outline'
+                  className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(9)}
                 >
@@ -102,6 +105,7 @@ export default function DatePickerWithRange({
                 <Button
                   type='button'
                   variant='outline'
+                  className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(12)}
                 >
@@ -110,6 +114,7 @@ export default function DatePickerWithRange({
                 <Button
                   type='button'
                   variant='outline'
+                  className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(24)}
                 >
@@ -118,6 +123,7 @@ export default function DatePickerWithRange({
                 <Button
                   type='button'
                   variant='outline'
+                  className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(36)}
                 >

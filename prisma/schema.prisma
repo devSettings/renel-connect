@@ -180,6 +180,7 @@ model Product {
   slug             String             @unique
   sku              String             @unique
   sellingPrice     Float              @map("selling_price")
+  department       Collection         @default(OTHER)
   category         Category           @relation(fields: [categoryId], references: [id])
   type             ProductType
   status           ProductStatus
@@ -259,7 +260,7 @@ enum PaymentMethod {
   WIRE_TRANSFER
 }
 
-enum OrderCategory {
+enum Collection {
   ROOM
   DRINK
   FOOD
@@ -269,7 +270,7 @@ enum OrderCategory {
 model Order {
   id             String        @id @default(cuid())
   reference      String        @unique @db.VarChar(10)
-  category       OrderCategory @default(OTHER)
+  category       Collection    @default(OTHER)
   cashier        User          @relation(fields: [cashierId], references: [id])
   cashierId      String        @map("cashier_id")
   customer       Customer      @relation(fields: [customerId], references: [id])

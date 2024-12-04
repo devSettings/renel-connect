@@ -7,9 +7,10 @@ import useQueryParameter from '@/hooks/use-query-parameter';
 
 interface Props {
   placeholder?: string;
+  className?: string;
 }
 
-const Search = ({ placeholder }: Props) => {
+const Search = ({ placeholder, className }: Props) => {
   const { handleQuery } = useQueryParameter('searchQuery');
   return (
     <div className='relative w-full md:w-auto'>
@@ -19,8 +20,9 @@ const Search = ({ placeholder }: Props) => {
         id='search'
         onChange={(e) => handleQuery(e.target.value)}
         className={cn(
-          'flex h-11 w-full lg:min-w-[25rem] text-base rounded-md border-[0.1px]  border-input bg-background px-3 py-2 pl-8  ring-offset-background transition-all ease-linear duration-300',
-          'placeholder:text-muted-foreground'
+          'flex h-11 w-full bg-black lg:min-w-[20rem] text-base rounded-md border-[0.1px]  border-input bg-background px-3 py-2 pl-8  ring-offset-background transition-all ease-linear duration-300',
+          'placeholder:text-muted-foreground',
+          className
         )}
         placeholder={placeholder || 'Enter your Query'}
       />

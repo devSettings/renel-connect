@@ -12,23 +12,15 @@ import Pagination from '@/app/dashboard/components/pagination';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { EllipsisIcon } from 'lucide-react';
 import { Suspense } from 'react';
+import { Product } from '../types/product';
 import ProductStatusBadge from './product-status.badge';
 import ProductTypeBadge from './product-type-badge';
-import { EllipsisIcon } from 'lucide-react';
-
-type Products = {
-  id: string;
-  code: string;
-  name: string;
-  category: string;
-  sellingPrice: number;
-  status: 'ACTIVE' | 'INACTIVE' | 'DRAFT' | 'ARCHIVED';
-  type: 'INVENTORY' | 'NON_INVENTRORY' | 'SERVICE' | 'DIGITAL';
-};
+import TableAction from './table-action';
 
 interface Props {
-  products: Products[];
+  products: Product[];
   totalPages: number;
   currentPage: number;
   itemsPerPage: number;
@@ -48,7 +40,6 @@ export default function ProductsTable({
   products,
   totalPages,
   currentPage,
-  itemsPerPage,
 }: Props) {
   if (products.length === 0) {
     return (
@@ -71,7 +62,7 @@ export default function ProductsTable({
                 {tableHeads.map((head, index) => (
                   <TableHead
                     key={index}
-                    className={cn('text-sm   font-normal')}
+                    className={cn('text-sm text-nowrap  font-normal')}
                   >
                     {head}
                   </TableHead>
@@ -83,39 +74,38 @@ export default function ProductsTable({
                 <TableRow
                   key={product.name}
                   className={cn('cursor-pointer h-14 boorder-[0.1px]', {
-                    'bg-slate-50/50 dark:bg-[#0D0E10]': index % 2 === 0,
+                    'bg-slate-50/50  bg-[#0a0a0a]': index % 2 === 0,
                   })}
                 >
                   <TableCell>
                     <Checkbox className='border-[0.1px] rounded-md shadow-none' />
                   </TableCell>
-                  <TableCell>{product.code}</TableCell>
+                  <TableCell className='font-medium text-muted-foreground'>
+                    {product.sku.toLocaleUpperCase()}
+                  </TableCell>
 
-                  <TableCell>{product.name}</TableCell>
+                  <TableCell className='line-clamp-1'>{product.name}</TableCell>
                   <TableCell>
                     <ProductTypeBadge type={product.type} />
                   </TableCell>
                   <TableCell>{product.sellingPrice}</TableCell>
-                  <TableCell>{product.category}</TableCell>
+                  <TableCell className='line-clamp-1 overflow-hidden text-pretty'>
+                    {product.category}
+                  </TableCell>
                   <TableCell>
                     <ProductStatusBadge status={product.status} />
                   </TableCell>
                   <TableCell aria-disabled={true}>
-                    {/* <TableAction id={product.id} /> */}
-                    <EllipsisIcon />
+                    <TableAction id={product.id} />
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </CardContent>
-        <CardFooter className='dark:bg-zinc-950 overflow-hidden'>
+        <CardFooter className='overflow-hidden'>
           <Suspense fallback={<div>Loading pagination...</div>}>
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              itemsPerPage={itemsPerPage}
-            />
+            <Pagination totalPages={totalPages} currentPage={currentPage} />
           </Suspense>
         </CardFooter>
       </Card>

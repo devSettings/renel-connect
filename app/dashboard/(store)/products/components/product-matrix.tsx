@@ -20,7 +20,7 @@ export default async function ProductsMatrix() {
 
   const metrics: ProductMetric[] = [
     {
-      title: 'Customers',
+      title: 'Total Products',
       count: 100,
       icon: <Users className='h-5 w-5' />,
       gradientFrom: 'from-blue-700',
@@ -29,7 +29,7 @@ export default async function ProductsMatrix() {
         ' text-blue-600 border-blue-500/50 hover:bg-blue-500/30 hover:border-blue-400',
     },
     {
-      title: 'Active',
+      title: 'Inventory',
       count: 80,
       icon: <UserRoundCheck className='h-5 w-5' />,
       gradientFrom: 'from-blue-700',
@@ -38,7 +38,7 @@ export default async function ProductsMatrix() {
         ' text-emerald-600 border-emerald-500/50 hover: hover:border-emerald-400',
     },
     {
-      title: 'Inactive',
+      title: 'Non Inventory',
       count: 18,
       icon: <UserX className='h-5 w-5' />,
       gradientFrom: 'from-yellow-700',
@@ -47,7 +47,7 @@ export default async function ProductsMatrix() {
         'text-yellow-600 border-yellow-500/50 hover:bg-yellow-500/30 hover:border-yellow-400',
     },
     {
-      title: 'Banned',
+      title: 'Service',
       count: 10,
       icon: <UserCog className='h-5 w-5' />,
       gradientFrom: 'from-red-700',

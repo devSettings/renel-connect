@@ -44,11 +44,11 @@ export default function ProductTypeBadge({ type }: ProductTypeBadgeProps) {
       variant='outline'
       className={cn(
         'px-2 py-1.5 text-xs font-medium border-[0.1px] transition-colors duration-200',
-        'shadow-lg shadow-black/10',
+        'shadow-lg shadow-black/10 text-nowrap',
         className
       )}
     >
-      <Icon className='w-4 h-4 mr-2 stroke-current' />
+      <Icon className='w-4 h-4 mr-2 stroke-current shrink-0' />
       {label}
     </Badge>
   );

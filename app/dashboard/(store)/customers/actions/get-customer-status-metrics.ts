@@ -21,18 +21,12 @@ const getCustomerStatusMetrics = async (): Promise<
       where: { Role: 'CUSTOMER' },
     });
 
-    // Total number of customers
-    const totalCustomers = await prisma.user.count({
-      where: { Role: 'CUSTOMER' },
-    });
-
     // Initialize metrics
     const customerMetrics = {
       active: 0,
       inactive: 0,
       banned: 0,
       suspended: 0,
-      // total: totalCustomers,
     };
 
     // Populate metrics from aggregations

@@ -85,11 +85,6 @@ export default async function OrderMetrics() {
             <div className='text-2xl font-bold mb-2'>
               {metric.count.toLocaleString()}
             </div>
-
-            {/* <div className='flex justify-between text-xs '>
-              <span>{totalProducts.toLocaleString()} total</span>
-              <span>{((metric.count / totalProducts) * 100).toFixed(1)}%</span>
-            </div> */}
           </CardContent>
         </Card>
       ))}
