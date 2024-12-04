@@ -31,7 +31,7 @@ export default async function ReportPage() {
       <Suspense fallback={'Loading Metrics'}>
         <ReportMetrics />
       </Suspense>
-      <div className='grid grid-cols-2 gap-6'>
+      <div className='grid grid-cols-2 gap-4'>
         <Suspense>
           <TopBestSellingPrducts />
         </Suspense>

@@ -109,6 +109,10 @@ model User {
   Role              Role
   Product           Product[]
   Order             Order[]
+  Expense           Expense[]
+  Income            Income[]
+  Lost              Lost[]
+  Aquisition        Aquisition[]
 
   @@unique([idProvided, idNumber])
   @@unique([firstName, lastName])
@@ -187,6 +191,8 @@ model Product {
   InventoryProduct InventoryProduct[]
   ServicesProduct  ServicesProduct?
   OrderItem        OrderItem[]
+  Lost             Lost[]
+  Aquisition       Aquisition[]
 
   @@index([slug])
   @@index([name])
@@ -215,15 +221,16 @@ model ServicesProduct {
 }
 
 model Supplier {
-  id               String   @id @unique @default(cuid())
-  name             String   @unique
-  slug             String   @unique
-  email            String   @unique
-  phone            String   @unique
-  product_supplied String?  @db.Text()
+  id               String       @id @unique @default(cuid())
+  name             String       @unique
+  slug             String       @unique
+  email            String       @unique
+  phone            String       @unique
+  product_supplied String?      @db.Text()
   address          String
-  created_at       DateTime @default(now())
-  updated_at       DateTime @updatedAt
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @updatedAt
+  Aquisition       Aquisition[]
 
   @@index([slug])
   @@index([email])
@@ -289,4 +296,87 @@ model OrderItem {
   discount   Float?   @default(0) @map("discount")
   createdAt  DateTime @default(now()) @map("created_at")
   productId  String   @map("product_id")
+}
+
+enum TypeOfTransaction {
+  EXPENSE
+  INCOME
+  LOST
+  AQUISITION
+}
+
+model ExpenseCategory {
+  id      String    @id @default(cuid())
+  title   String    @db.VarChar(250)
+  slug    String    @unique
+  Expense Expense[]
+}
+
+model Expense {
+  id                String            @id @default(cuid())
+  title             String            @db.VarChar(250)
+  category          ExpenseCategory   @relation(fields: [expenseCategoryId], references: [id])
+  description       String?           @db.Text
+  amount            Float             @db.Float
+  typeOfTransaction TypeOfTransaction @default(EXPENSE) @map("type_of_transaction")
+  madeBy            User              @relation(fields: [userId], references: [id])
+  userId            String            @map("user_id")
+  expenseDate       String            @map("expense_date")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  expenseCategoryId String            @map("expense_category_id")
+}
+
+enum IncomeCategory {
+  Sale_REVENUE
+  INVESTMENT
+  LOAN
+}
+
+model Income {
+  id                String            @id @default(cuid())
+  title             String            @db.VarChar(250)
+  category          IncomeCategory
+  description       String?           @db.Text
+  amount            Float             @db.Float
+  typeOfTransaction TypeOfTransaction @default(INCOME) @map("type_of_transaction")
+  incomeDate        String            @map("income_date")
+  madeBy            User              @relation(fields: [userId], references: [id])
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  userId            String            @map("user_id")
+}
+
+model Lost {
+  id                String            @id @default(cuid())
+  product           Product           @relation(fields: [productId], references: [id])
+  description       String            @db.Text
+  quantityOfItems   Int               @map("quantity_of_items")
+  typeOfTransaction TypeOfTransaction @default(LOST) @map("type_of_transaction")
+  unitPrice         Decimal           @map("unit_price") @db.Decimal(10, 2)
+  lostDate          String
+  madeBy            User              @relation(fields: [userId], references: [id])
+  userId            String            @map("user_id")
+  totalLost         Decimal           @map("total_lost") @db.Decimal(10, 2)
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  productId         String
+}
+
+model Aquisition {
+  id                   String            @id @default(cuid())
+  product              Product           @relation(fields: [productId], references: [id])
+  productId            String            @map("product_id")
+  suplier              Supplier          @relation(fields: [supplierId], references: [id])
+  typeOfTransaction    TypeOfTransaction @default(AQUISITION) @map("type_of_transaction")
+  supplierId           String            @map("suplier_id")
+  quantityBought       Int               @map("quantity_bought")
+  averageUnitCostPrice Decimal           @map("average_unit_cost_price") @db.Decimal(10, 2)
+  aquisitionDate       String            @map("aquisition_date")
+  totalCost            Decimal           @default(0) @map("total_cost") @db.Decimal(10, 2)
+  madeBy               User              @relation(fields: [userId], references: [id])
+  expiredDate          String            @map("expired_date")
+  createdAt            DateTime          @default(now()) @map("created_at")
+  updatedAt            DateTime          @updatedAt @map("updated_at")
+  userId               String
 }

@@ -33,7 +33,7 @@ const CustomersPage = async () => {
 
   return (
     <div className='space-y-8'>
-      <div className='grid grid-cols-3 gap-6'>
+      <div className='grid grid-cols-3 gap-4'>
         <CustomerStatusMetrics
           active={statusResponse.data.active}
           inactive={statusResponse.data.inactive}

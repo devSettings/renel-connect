@@ -1,9 +1,8 @@
 import Search from '@/components/search';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Suspense } from 'react';
-import ProductsTable from './components/products-table';
 import ProductsMatrix from './components/product-matrix';
+import ProductsTable from './components/products-table';
 export const products: Products[] = [
   {
     id: 'PROD001',
