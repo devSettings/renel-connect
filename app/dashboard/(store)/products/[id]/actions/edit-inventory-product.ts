@@ -6,9 +6,13 @@ import prisma from '@/prisma/client';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { editInventoryProductSchema } from '../schema/edit-inventory-product';
+import { ActionResponse } from '@/app/types/action-reponse';
+import { InventoryProduct } from './get-inventory-product-by-id';
 type FormData = z.infer<typeof editInventoryProductSchema>;
 
-const editInventoryProduct = async (data: FormData) => {
+const editInventoryProduct = async (
+  data: FormData
+): Promise<ActionResponse> => {
   const result = editInventoryProductSchema.safeParse(data);
 
   if (!result?.success) {

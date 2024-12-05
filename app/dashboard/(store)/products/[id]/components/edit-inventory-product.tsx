@@ -34,7 +34,7 @@ import {
 } from '@/components/ui/popover';
 
 import { cn } from '@/lib/utils';
-import { Category, ProductStatus } from '@prisma/client';
+import { Category } from '@prisma/client';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -42,30 +42,21 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import getCategories from '../../create/actions/get-product-category';
 import editInventoryProduct from '../actions/edit-inventory-product';
+import getInventoryProductById, {
+  InventoryProduct,
+} from '../actions/get-inventory-product-by-id';
 import { editInventoryProductSchema } from '../schema/edit-inventory-product';
 
 interface Props {
   OnEditSuccess: () => void;
   id: string;
-  name: string;
-  status: ProductStatus;
-  sellingPrice: number;
-  category: string;
-  reOrderLevel: number;
 }
 
 type FormData = z.infer<typeof editInventoryProductSchema>;
-export default function EditInventoryProductForm({
-  OnEditSuccess,
-  id,
-  name,
-  status,
-  sellingPrice,
-  category,
-  reOrderLevel,
-}: Props) {
+export default function EditInventoryProductForm({ OnEditSuccess, id }: Props) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const [product, setProduct] = useState<InventoryProduct>();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -88,11 +79,11 @@ export default function EditInventoryProductForm({
     resolver: zodResolver(editInventoryProductSchema),
     defaultValues: {
       id,
-      name,
-      status,
-      sellingPrice,
-      reorderLevel: reOrderLevel,
-      category,
+      name: product?.name,
+      status: product?.status,
+      sellingPrice: product?.sellingPrice,
+      reorderLevel: product?.reOrderLevel,
+      category: product?.category,
     },
   });
 
@@ -107,6 +98,26 @@ export default function EditInventoryProductForm({
     router.refresh();
     OnEditSuccess();
   };
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const response = await getInventoryProductById(id);
+      if (!response.success) {
+        toast.error(response.error as string);
+        return '';
+      }
+      setProduct(response.data);
+      form.reset({
+        id: id,
+        name: response.data.name,
+        status: response.data.status,
+        sellingPrice: response.data.sellingPrice,
+        category: response.data.category,
+        reorderLevel: response.data.reOrderLevel,
+      });
+    };
+    fetchProduct();
+  }, [id, form]);
 
   return (
     <Form {...form}>

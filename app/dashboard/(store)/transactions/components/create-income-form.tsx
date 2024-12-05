@@ -1,9 +1,8 @@
 'use client';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { format } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Command,
   CommandEmpty,
@@ -25,122 +24,85 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { Check, ChevronsUpDown } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Category } from '@prisma/client';
+import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react';
+import { useState } from 'react';
+import { FieldValues, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-
 import { z } from 'zod';
-import getCategories from '../../create/actions/get-product-category';
-import editNonInventoryProduct from '../actions/edit-non-inventory-product';
-import getNonInventoryProductById, {
-  NonInventoryProduct,
-} from '../actions/get-non-inventory-product-by-id';
-import editNonInventoryProductSchema from '../schema/edit-non-inventory-product';
+import createIncome from '../actions/create-income';
+import createIncomeSchema from '../schema/create-income';
 
-type FormData = z.infer<typeof editNonInventoryProductSchema>;
 interface Props {
-  OnEditSuccess: () => void;
-  id: string;
+  upOnSubmitting: (data: FieldValues) => void;
 }
-export default function EditNonInventoryProductForm({
-  OnEditSuccess,
-  id,
-}: Props) {
-  const [categories, setCategories] = useState<Category[]>([]);
+
+type IncomeCategory = {
+  id: string;
+  value: string;
+  name: string;
+};
+
+type FormData = z.infer<typeof createIncomeSchema>;
+
+const CreateIncomeForm = ({ upOnSubmitting }: Props) => {
+  const [categories, setCategories] = useState<IncomeCategory[]>([
+    {
+      id: 'INVESTMENT',
+      value: 'INVESTMENT',
+      name: 'Investment',
+    },
+    {
+      id: 'LOAN',
+      value: 'LOAN',
+      name: 'Loan',
+    },
+  ]);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
-  const router = useRouter();
-
-  const [product, setProduct] = useState<NonInventoryProduct>();
-
   const form = useForm<FormData>({
-    resolver: zodResolver(editNonInventoryProductSchema),
+    resolver: zodResolver(createIncomeSchema),
     defaultValues: {
-      id,
-      name: product?.name,
-      status: product?.status,
-      sellingPrice: product?.sellingPrice,
-      category: product?.category,
+      title: '',
+      description: '',
+      amount: undefined,
+      typeOfTransaction: 'INCOME',
+      IncomeDate: undefined,
     },
   });
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const response = await getNonInventoryProductById(id);
-      if (!response.success) {
-        toast.error(response.error as string);
-        return '';
-      }
-      setProduct(response.data);
-      // Update the form values dynamically
-      form.reset({
-        id: id,
-        name: response.data.name,
-        status: response.data.status,
-        sellingPrice: response.data.sellingPrice,
-        category: response.data.category,
-      });
-    };
-    fetchProduct();
-  }, [id, form]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const response = await getCategories({
-        search: query,
-        pageSize: 5,
-      });
-      if (!response.success) {
-        toast.error(response.error as string);
-        return;
-      }
-      setCategories(response.data as Category[]);
-    };
-    fetchCategories();
-  }, [query, open]);
-
-  async function onSubmit(data: FormData) {
-    const result = await editNonInventoryProduct(data);
-    if (!result?.success) {
-      toast.error(result.error as string);
+  const handleTransactionSubmit = async (data: FormData) => {
+    const response = await createIncome(data);
+    if (!response.success) {
+      toast.error(response.message);
       return;
     }
-    toast.success('Product created successfully');
+    toast.success('Income created successfully');
+    upOnSubmitting(data);
     form.reset();
-    router.refresh();
-    OnEditSuccess();
-  }
-
+  };
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
         className='space-y-8 px-4 py-8'
+        onSubmit={form.handleSubmit(handleTransactionSubmit)}
       >
-        <div className='grid grid-cols-2 gap-6'>
+        <div className='grid grid-cols-2 gap-x-6 gap-y-6 p-4'>
           <FormField
             control={form.control}
-            name='name'
+            name='title'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom de l&apos;article</FormLabel>
-                <span className='text-red-500'>*</span>
-
+                <FormLabel>
+                  Title <span className='text-red-600'>*</span>
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder='Nouvel article' {...field} />
+                  <Input placeholder='' {...field} />
                 </FormControl>
+
                 <FormMessage />
               </FormItem>
             )}
@@ -151,9 +113,10 @@ export default function EditNonInventoryProductForm({
             name='category'
             render={({ field }) => (
               <FormItem className='flex flex-col'>
-                <div className='flex items-center mb-1'>
-                  <FormLabel>Nom de la catégorie</FormLabel>
-                  <span className='text-red-500'>*</span>
+                <div className='flex items-center mb-2'>
+                  <FormLabel>
+                    Nom de la catégorie <span className='text-red-600'>*</span>
+                  </FormLabel>
                 </div>
                 <Popover open={open} onOpenChange={setOpen}>
                   <div className='flex items-center gap-2'>
@@ -163,7 +126,7 @@ export default function EditNonInventoryProductForm({
                           variant='outline'
                           role='combobox'
                           aria-expanded={open}
-                          className='w-full justify-between font-normal shadow-none  border h-10'
+                          className='w-full justify-between font-normal shadow-non border h-10'
                         >
                           {field.value
                             ? categories.find(
@@ -174,9 +137,10 @@ export default function EditNonInventoryProductForm({
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
+                    {/* <CategoryFormModal /> */}
                   </div>
 
-                  <PopoverContent className='w-[285px] p-0 shadow-none border'>
+                  <PopoverContent className='w-[265px] p-0 shadow-none border '>
                     <Command>
                       <div className='m-2'>
                         <Input
@@ -185,7 +149,7 @@ export default function EditNonInventoryProductForm({
                           onChange={(e) => setQuery(e.target.value)}
                         />
                       </div>
-                      <CommandList className='border-[0.1px] mx-2 mb-2 rounded-lg '>
+                      <CommandList className='border-[0.1px] mx-2 mb-2 rounded-lg bg-[#0D0E10]'>
                         <CommandEmpty>Aucune catégorie trouvée</CommandEmpty>
                         <CommandGroup>
                           {categories.map((category) => (
@@ -219,15 +183,15 @@ export default function EditNonInventoryProductForm({
 
           <FormField
             control={form.control}
-            name='sellingPrice'
+            name='amount'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Prix de vente</FormLabel>
-                <span className='text-red-500'>*</span>
+                <FormLabel>
+                  Amount <span className='text-red-600'>*</span>
+                </FormLabel>
                 <FormControl>
                   <Input
-                    type='number'
-                    placeholder='0.1'
+                    placeholder=''
                     {...field}
                     onChange={(e) =>
                       field.onChange(
@@ -241,44 +205,84 @@ export default function EditNonInventoryProductForm({
                     }
                   />
                 </FormControl>
+
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name='status'
+            name='IncomeDate'
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Statut</FormLabel>
-                <span className='text-red-500'>*</span>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Statut de l'article" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value='ACTIVE'>Active</SelectItem>
-                    <SelectItem value='ARCHIVED'>Archived</SelectItem>
-                    <SelectItem value='DRAFT'>Draft</SelectItem>
-                    <SelectItem value='INACTIVE'>Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
+              <FormItem className='flex flex-col'>
+                <FormLabel className='mb-2'>
+                  Income Date <span className='text-red-600'>*</span>
+                </FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={'outline'}
+                        className={cn(
+                          'w-full pl-3 text-left font-normal',
+                          !field.value && 'text-muted-foreground'
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, 'PPP')
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-auto p-0' align='start'>
+                    <Calendar
+                      mode='single'
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date('1900-01-01')
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          <div className='col-span-2'>
+            <FormField
+              control={form.control}
+              name='description'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder='' {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
-        <div className='flex items-center justify-end mt-10'>
-          <Button type='submit' disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? 'En cours...' : 'Soumettre'}
+        <div className='flex justify-end pr-4'>
+          <Button
+            size='lg'
+            className='bg-blue-700 text-white hover:bg-blue-800 transition-colors ease-linear duration-300'
+          >
+            Create Income
           </Button>
         </div>
       </form>
     </Form>
   );
-}
+};
+
+export default CreateIncomeForm;

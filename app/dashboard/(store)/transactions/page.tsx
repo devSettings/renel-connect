@@ -1,9 +1,11 @@
 import Search from '@/components/search';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Suspense } from 'react';
-import TransactionTable from './components/transactions-table';
-import TransactionsMetrics from './components/transaction-metrics';
 import getTransactions from './actions/get-transactions';
+import CreateTransactionFormDialog from './components/create-transaction-dialog';
+import TransactionsMetrics from './components/transaction-metrics';
+import TransactionTypeFilter from './components/transaction-type-filter';
+import TransactionTable from './components/transactions-table';
 
 const TransactionsPage = async () => {
   const transactionResponse = await getTransactions();
@@ -20,13 +22,12 @@ const TransactionsPage = async () => {
               <Suspense fallback={<div>Loading search...</div>}>
                 <Search />
               </Suspense>
-              {/* <MobileFilterDrawer /> */}
+              <TransactionTypeFilter />
             </div>
-            {/* <CreateCustomer /> */}
+            <CreateTransactionFormDialog />
           </div>
         </CardHeader>
         <CardContent>
-          <div className='block lg:hidden'>{/* <CustomerList /> */}</div>
           <div className='hidden lg:block'>
             <TransactionTable transactions={transactionResponse.data} />
           </div>
