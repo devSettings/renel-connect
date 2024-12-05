@@ -5,11 +5,11 @@ import prisma from '@/prisma/client';
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { editInventoryProductSchema } from '../schema/edit-inventory-product';
-type FormData = z.infer<typeof editInventoryProductSchema>;
+import editServiceProductSchema from '../schema/edit-service-product';
+type FormData = z.infer<typeof editServiceProductSchema>;
 
-const editInventoryProduct = async (data: FormData) => {
-  const result = editInventoryProductSchema.safeParse(data);
+const editServiceProduct = async (data: FormData) => {
+  const result = editServiceProductSchema.safeParse(data);
 
   if (!result?.success) {
     return {
@@ -46,9 +46,12 @@ const editInventoryProduct = async (data: FormData) => {
           slug: result.data.name.toLowerCase().replace(/ /g, '-'),
         },
       }),
-      prisma.inventoryProduct.update({
+      prisma.servicesProduct.update({
         where: { productId: result.data.id },
-        data: { reorderLevel: result.data.reorderLevel },
+        data: {
+          serviceDuration: result.data.serviceDuration,
+          serviceLocation: result.data.serviceLocation,
+        },
       }),
     ]);
     revalidatePath('/dashboard/products');
@@ -58,4 +61,4 @@ const editInventoryProduct = async (data: FormData) => {
   }
 };
 
-export default editInventoryProduct;
+export default editServiceProduct;

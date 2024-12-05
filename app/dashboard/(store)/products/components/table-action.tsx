@@ -20,12 +20,14 @@ import Link from 'next/link';
 import ProductDeleteModal from '../[id]/components/product-delete-dialog';
 import { useState } from 'react';
 import EditProductFormDialog from '../[id]/components/edit-product-dialog';
+import { ProductType } from '@prisma/client';
 
 interface Props {
   id: string;
+  type: ProductType;
 }
 
-const TableAction = ({ id }: Props) => {
+const TableAction = ({ id, type }: Props) => {
   const [open, setOpen] = useState(false);
 
   const [isEditing, setEditing] = useState(false);
@@ -68,7 +70,12 @@ const TableAction = ({ id }: Props) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <EditProductFormDialog isOpen={isEditing} onClose={handleEdit} id={id} />
+      <EditProductFormDialog
+        type={type}
+        isOpen={isEditing}
+        onClose={handleEdit}
+        id={id}
+      />
       <ProductDeleteModal isOpen={open} onClose={handleDelete} id={id} />
     </div>
   );

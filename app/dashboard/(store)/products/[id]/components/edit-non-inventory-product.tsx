@@ -1,6 +1,16 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
 import { Button } from '@/components/ui/button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 import {
   Form,
   FormControl,
@@ -11,39 +21,32 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 
 import { cn } from '@/lib/utils';
-import { Category, ProductStatus } from '@prisma/client';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import getCategories from '../../create/actions/get-product-category';
-import editInventoryProduct from '../actions/edit-inventory-product';
-import { editInventoryProductSchema } from '../schema/edit-inventory-product';
 
+import { Category, ProductStatus } from '@prisma/client';
+import { toast } from 'sonner';
+
+import { z } from 'zod';
+import editNonInventoryProductSchema from '../schema/edit-non-inventory-product';
+import getCategories from '../../create/actions/get-product-category';
+import editNonInventoryProduct from '../actions/edit-non-inventory-product';
+
+type FormData = z.infer<typeof editNonInventoryProductSchema>;
 interface Props {
   OnEditSuccess: () => void;
   id: string;
@@ -51,21 +54,30 @@ interface Props {
   status: ProductStatus;
   sellingPrice: number;
   category: string;
-  reOrderLevel: number;
 }
-
-type FormData = z.infer<typeof editInventoryProductSchema>;
-export default function EditInventoryProductForm({
+export default function EditNonInventoryProductForm({
   OnEditSuccess,
   id,
   name,
   status,
   sellingPrice,
   category,
-  reOrderLevel,
 }: Props) {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(editNonInventoryProductSchema),
+    defaultValues: {
+      id,
+      name,
+      status,
+      sellingPrice,
+      category,
+    },
+  });
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -82,36 +94,25 @@ export default function EditInventoryProductForm({
     fetchCategories();
   }, [query, open]);
 
-  const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>([]);
-  const form = useForm<FormData>({
-    resolver: zodResolver(editInventoryProductSchema),
-    defaultValues: {
-      id,
-      name,
-      status,
-      sellingPrice,
-      reorderLevel: reOrderLevel,
-      category,
-    },
-  });
-
-  const handleSubmitProduct = async (data: FormData) => {
-    const result = await editInventoryProduct(data);
+  async function onSubmit(data: FormData) {
+    const result = await editNonInventoryProduct(data);
     if (!result?.success) {
-      toast.error(result.error as String);
+      toast.error(result.error as string);
       return;
     }
-    toast.success('Product Sucessfully Updated');
+    toast.success('Product created successfully');
     form.reset();
     router.refresh();
     OnEditSuccess();
-  };
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmitProduct)}>
-        <div className='grid grid-cols-2 gap-x-6 gap-y-6 px-4 py-8'>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className='space-y-8 px-4 py-8'
+      >
+        <div className='grid grid-cols-2 gap-6'>
           <FormField
             control={form.control}
             name='name'
@@ -119,6 +120,7 @@ export default function EditInventoryProductForm({
               <FormItem>
                 <FormLabel>Nom de l&apos;article</FormLabel>
                 <span className='text-red-500'>*</span>
+
                 <FormControl>
                   <Input placeholder='Nouvel article' {...field} />
                 </FormControl>
@@ -208,7 +210,7 @@ export default function EditInventoryProductForm({
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder=''
+                    placeholder='0.1'
                     {...field}
                     onChange={(e) =>
                       field.onChange(
@@ -226,36 +228,6 @@ export default function EditInventoryProductForm({
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name='reorderLevel'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Seuil</FormLabel>
-                <span className='text-red-500'>*</span>
-                <FormControl>
-                  <Input
-                    type='number'
-                    placeholder=''
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value === '' ? '' : Number(e.target.value)
-                      )
-                    }
-                    onBlur={(e) =>
-                      field.onChange(
-                        e.target.value === '' ? '' : Number(e.target.value)
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <FormField
             control={form.control}
             name='status'
@@ -263,7 +235,6 @@ export default function EditInventoryProductForm({
               <FormItem>
                 <FormLabel>Statut</FormLabel>
                 <span className='text-red-500'>*</span>
-
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -286,11 +257,7 @@ export default function EditInventoryProductForm({
           />
         </div>
         <div className='flex items-center justify-end mt-10'>
-          <Button
-            className='bg-blue-700 text-white hover:bg-blue-900 transition-colors duration-300 ease-in-out'
-            type='submit'
-            disabled={form.formState.isSubmitting}
-          >
+          <Button type='submit' disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? 'En cours...' : 'Soumettre'}
           </Button>
         </div>

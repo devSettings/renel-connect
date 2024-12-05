@@ -26,7 +26,7 @@ const CartItem = ({ item }: CartItemProps) => {
   return (
     <div
       key={item.product.id}
-      className='rounded-lg space-y-2  bg-muted/20 border-[0.1px] p-3 mb-3 transition-all duration-300 '
+      className='rounded-lg space-y-2 bg-muted/20 border-[0.1px] p-3 mb-3 transition-all duration-300'
     >
       <div className='flex items-center justify-between '>
         <h4 className='text-sm truncate max-w-[60%]'>{item.product.name}</h4>
@@ -60,7 +60,6 @@ const CartItem = ({ item }: CartItemProps) => {
             variant='outline'
             className='rounded-full h-6 w-6 '
             disabled={item.quantity >= item.product.quantityInStock}
-            // onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
             onClick={() =>
               handleQuantityChange(
                 Math.min(item.product.quantityInStock, quantity + 1)
@@ -71,14 +70,6 @@ const CartItem = ({ item }: CartItemProps) => {
           </Button>
         </div>
       </div>
-      {/* <Input
-          type="number"
-          value={quantity}
-          onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 0)}
-          className="w-16 text-center"
-          min="1"
-          max={item.product.quantityInStock}
-        /> */}
     </div>
   );
 };

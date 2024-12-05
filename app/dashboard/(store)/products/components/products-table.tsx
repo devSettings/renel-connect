@@ -79,12 +79,12 @@ export default function ProductsTable({
                   <TableCell>
                     <Checkbox className='border-[0.1px] rounded-md shadow-none' />
                   </TableCell>
-                  <TableCell className='line-clamp-'>{product.name}</TableCell>
+                  <TableCell>{product.name}</TableCell>
                   <TableCell>
                     <ProductTypeBadge type={product.type} />
                   </TableCell>
                   <TableCell>{product.sellingPrice}</TableCell>
-                  <TableCell className='line-clamp- overflow-hidden '>
+                  <TableCell className='overflow-hidden '>
                     {product.category}
                   </TableCell>
                   <TableCell>
@@ -92,7 +92,7 @@ export default function ProductsTable({
                   </TableCell>
                   <TableCell>{product.quantityInStock}</TableCell>
                   <TableCell aria-disabled={true}>
-                    <TableAction id={product.id} />
+                    <TableAction id={product.id} type={product.type} />
                   </TableCell>
                 </TableRow>
               ))}

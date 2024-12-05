@@ -1,6 +1,16 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+
 import { Button } from '@/components/ui/button';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 import {
   Form,
   FormControl,
@@ -11,61 +21,85 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 
 import { cn } from '@/lib/utils';
-import { Category, ProductStatus } from '@prisma/client';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+import { Category } from '@prisma/client';
+
 import { toast } from 'sonner';
+
 import { z } from 'zod';
 import getCategories from '../../create/actions/get-product-category';
-import editInventoryProduct from '../actions/edit-inventory-product';
-import { editInventoryProductSchema } from '../schema/edit-inventory-product';
+import editServiceProduct from '../actions/edit-service-product';
+import getServiceProductById, {
+  ServiceProduct,
+} from '../actions/get-service-product-by';
+import editServiceProductSchema from '../schema/edit-service-product';
+
+type FormData = z.infer<typeof editServiceProductSchema>;
 
 interface Props {
-  OnEditSuccess: () => void;
+  OnCreateSuccsess: () => void;
   id: string;
-  name: string;
-  status: ProductStatus;
-  sellingPrice: number;
-  category: string;
-  reOrderLevel: number;
 }
-
-type FormData = z.infer<typeof editInventoryProductSchema>;
-export default function EditInventoryProductForm({
-  OnEditSuccess,
+export default function EditServicesProductForm({
+  OnCreateSuccsess,
   id,
-  name,
-  status,
-  sellingPrice,
-  category,
-  reOrderLevel,
 }: Props) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const router = useRouter();
+
+  const [product, setProduct] = useState<ServiceProduct>();
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(editServiceProductSchema),
+    defaultValues: {
+      name: product?.name,
+      status: product?.status,
+      sellingPrice: product?.sellingPrice,
+      category: product?.category,
+      serviceDuration: product?.serviceDuration,
+      serviceLocation: product?.serviceLocation,
+    },
+  });
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const response = await getServiceProductById(id);
+      if (!response.success) {
+        toast.error(response.error as string);
+        return '';
+      }
+      setProduct(response.data);
+      // Update the form values dynamically
+      form.reset({
+        id: id,
+        name: response.data.name,
+        status: response.data.status,
+        sellingPrice: response.data.sellingPrice,
+        category: response.data.category,
+        serviceDuration: response.data.serviceDuration,
+        serviceLocation: response.data.serviceLocation,
+      });
+    };
+    fetchProduct();
+  }, [id, form]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -82,42 +116,31 @@ export default function EditInventoryProductForm({
     fetchCategories();
   }, [query, open]);
 
-  const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>([]);
-  const form = useForm<FormData>({
-    resolver: zodResolver(editInventoryProductSchema),
-    defaultValues: {
-      id,
-      name,
-      status,
-      sellingPrice,
-      reorderLevel: reOrderLevel,
-      category,
-    },
-  });
-
-  const handleSubmitProduct = async (data: FormData) => {
-    const result = await editInventoryProduct(data);
+  async function onSubmit(data: FormData) {
+    const result = await editServiceProduct(data);
     if (!result?.success) {
-      toast.error(result.error as String);
+      toast.error(result.error as string);
       return;
     }
-    toast.success('Product Sucessfully Updated');
+    toast.success('Product Created sucessfully');
     form.reset();
     router.refresh();
-    OnEditSuccess();
-  };
+    OnCreateSuccsess();
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmitProduct)}>
-        <div className='grid grid-cols-2 gap-x-6 gap-y-6 px-4 py-8'>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className='space-y-8 px-4 py-8'
+      >
+        <div className='grid grid-cols-2 gap-6'>
           <FormField
             control={form.control}
             name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom de l&apos;article</FormLabel>
+                <FormLabel>Nom du service</FormLabel>
                 <span className='text-red-500'>*</span>
                 <FormControl>
                   <Input placeholder='Nouvel article' {...field} />
@@ -203,12 +226,13 @@ export default function EditInventoryProductForm({
             name='sellingPrice'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Prix de vente</FormLabel>
+                <FormLabel> Prix ​​du service</FormLabel>
                 <span className='text-red-500'>*</span>
+
                 <FormControl>
                   <Input
                     type='number'
-                    placeholder=''
+                    placeholder='0.1'
                     {...field}
                     onChange={(e) =>
                       field.onChange(
@@ -226,36 +250,6 @@ export default function EditInventoryProductForm({
               </FormItem>
             )}
           />
-
-          <FormField
-            control={form.control}
-            name='reorderLevel'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Seuil</FormLabel>
-                <span className='text-red-500'>*</span>
-                <FormControl>
-                  <Input
-                    type='number'
-                    placeholder=''
-                    {...field}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value === '' ? '' : Number(e.target.value)
-                      )
-                    }
-                    onBlur={(e) =>
-                      field.onChange(
-                        e.target.value === '' ? '' : Number(e.target.value)
-                      )
-                    }
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
           <FormField
             control={form.control}
             name='status'
@@ -263,7 +257,6 @@ export default function EditInventoryProductForm({
               <FormItem>
                 <FormLabel>Statut</FormLabel>
                 <span className='text-red-500'>*</span>
-
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -274,23 +267,69 @@ export default function EditInventoryProductForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value='ACTIVE'>Active</SelectItem>
-                    <SelectItem value='ARCHIVED'>Archived</SelectItem>
-                    <SelectItem value='DRAFT'>Draft</SelectItem>
-                    <SelectItem value='INACTIVE'>Inactive</SelectItem>
+                    <SelectItem key='ACTIVE' value='ACTIVE'>
+                      Active
+                    </SelectItem>
+                    <SelectItem key='Draft' value='DRAFT'>
+                      Draft
+                    </SelectItem>
+                    <SelectItem key='INACTIVE' value='INACTIVE'>
+                      Inactive
+                    </SelectItem>
+                    <SelectItem key='Archived' value='ARCHIVED'>
+                      archived
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name='serviceDuration'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Durée du service</FormLabel>
+                <span className='text-red-500'>*</span>
+                <FormControl>
+                  <Input
+                    type='number'
+                    placeholder='0000000000'
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value === '' ? '' : Number(e.target.value)
+                      )
+                    }
+                    onBlur={(e) =>
+                      field.onChange(
+                        e.target.value === '' ? '' : Number(e.target.value)
+                      )
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='serviceLocation'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Lieu du service</FormLabel>
+                <span className='text-red-500'>*</span>
+                <FormControl>
+                  <Input placeholder='0000000000' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div className='flex items-center justify-end mt-10'>
-          <Button
-            className='bg-blue-700 text-white hover:bg-blue-900 transition-colors duration-300 ease-in-out'
-            type='submit'
-            disabled={form.formState.isSubmitting}
-          >
+          <Button type='submit' disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? 'En cours...' : 'Soumettre'}
           </Button>
         </div>

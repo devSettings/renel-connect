@@ -1,12 +1,12 @@
 import Search from '@/components/search';
-import { Suspense } from 'react';
-import ProductGrid from './components/product-grid';
-import Refresh from './components/refresh';
-import ProductLoading from './components/product-loading';
-import Cart from './components/cart';
-import getItems from './actions/get-items';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { toast } from 'sonner';
+import { Suspense } from 'react';
+import getItems from './actions/get-items';
+import Cart from './components/cart';
+import ProductGrid from './components/product-grid';
+import ProductLoading from './components/product-loading';
+import Refresh from './components/refresh';
+import CartItemLaoding from './components/cart-loading';
 
 interface Props {
   searchParams: Promise<{ searchQuery: string }>;
@@ -27,15 +27,6 @@ const ProductSection = async ({ searchQuery }: ProductSectionProps) => {
 const PosPage = async ({ searchParams }: Props) => {
   const query = (await searchParams).searchQuery;
 
-  const ff = await getItems();
-
-  if (!ff.success) {
-    // toast.error(ff.error);
-    console.log(ff.error);
-  }
-
-  // console.log('hhe');
-
   return (
     <div className='container mx-auto h-full'>
       <div className='grid grid-cols-[1fr_auto] gap-4'>
@@ -53,9 +44,9 @@ const PosPage = async ({ searchParams }: Props) => {
           <Suspense fallback={<ProductLoading />}>
             <ScrollArea className='h-[70vh]'>
               <ProductSection searchQuery={query} />
-              {/* <ProductLoading /> */}
             </ScrollArea>
           </Suspense>
+          <CartItemLaoding />
         </div>
         <div className='space-y-6 w-[20rem] min-h-[80vh]   rounded-lg p-4 bg-[#0a0a0a] border-[0.1px]'>
           <Cart cashier={'j'} />

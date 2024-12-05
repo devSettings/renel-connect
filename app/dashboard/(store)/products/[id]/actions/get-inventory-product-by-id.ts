@@ -4,17 +4,7 @@ import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { ProductStatus, ProductType } from '@prisma/client';
 
-type Product = {
-  id: string;
-  name: string;
-  sellingPrice: number;
-  type: ProductType;
-  status: ProductStatus;
-  category: string;
-  reOrderLevel: number;
-};
-
-type InventoryProduct = {
+export type InventoryProduct = {
   id: string;
   name: string;
   type: ProductType;
@@ -24,16 +14,9 @@ type InventoryProduct = {
   category: string;
 };
 
-type NonInventoryProduct = {
-  id: string;
-  name: string;
-  type: ProductType;
-  sellingPrice: number;
-  status: ProductStatus;
-  category: string;
-};
-
-const getProductById = async (id: string): Promise<ActionResponse> => {
+const getInventoryProductById = async (
+  id: string
+): Promise<ActionResponse<InventoryProduct>> => {
   try {
     const rawProduct = await prisma.product.findUnique({
       where: { id },
@@ -65,14 +48,11 @@ const getProductById = async (id: string): Promise<ActionResponse> => {
       type: rawProduct.type,
       status: rawProduct.status,
       category: rawProduct.category.id,
-      reOrderLevel:
-        rawProduct.type === 'INVENTORY'
-          ? rawProduct.InventoryProduct[0].reorderLevel
-          : 0,
+      reOrderLevel: rawProduct.InventoryProduct[0].reorderLevel,
     };
     return { success: true, data: product };
   } catch (error) {
     return { success: false, error: 'Can not fetch product' };
   }
 };
-export default getProductById;
+export default getInventoryProductById;

@@ -10,68 +10,73 @@ import {
 
 import { Card, CardContent } from '@/components/ui/card';
 import { ProductType } from '@prisma/client';
-import { useEffect, useState } from 'react';
-import getProductById from '../actions/get-product-by-id';
-import EditInventoryProductForm from './edit-inventory-product';
+import EditServicesProductForm from './edit-service-product-form';
 
 interface Props {
   id: string;
+  type: ProductType;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const EditProductFormDialog = ({ id, isOpen, onClose }: Props) => {
-  const [product, setProduct] = useState<{
-    id: string;
-    name: string;
-    sellingPrice: number;
-    type: ProductType;
-    category: string;
-    reOrderLevel: number;
-  }>();
+const EditProductFormDialog = ({ id, type, isOpen, onClose }: Props) => {
+  // const { data: product, error } = useFetchProduct(id, type);
+  // if (type === 'INVENTORY') product as unknown as InventoryProduct;
+  // if (type === 'NON_INVENTORY') product as unknown as NonInventoryProduct;
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const reponse = await getProductById(id);
-      if (!reponse.success) return null;
-      setProduct({
-        id: reponse.data.id,
-        name: reponse.data.name,
-        sellingPrice: reponse.data.sellingPrice,
-        type: reponse.data.type,
-        category: reponse.data.category,
-        reOrderLevel: reponse.data.reOrderLevel,
-      });
-    };
-    fetchProduct();
-  }, []);
+  // if (error) {
+  //   return (
+  //     <Dialog open={isOpen} onOpenChange={onClose}>
+  //       <DialogContent className='max-w-[65vw]'>
+  //         <div className='text-red-500 text-center py-4'>
+  //           Failed to fetch product details. Please try again later.
+  //         </div>
+  //       </DialogContent>
+  //     </Dialog>
+  //   );
+  // }
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className='max-w-[65vw]'>
         <div className='flex justify-between mr-6'>
           <DialogHeader>
             <DialogTitle className='text-2xl font-bold'>
-              {product?.name}
+              {/* {product?.name || 'Product'} */}
             </DialogTitle>
-            <DialogDescription>
-              Fill in the details to add a new product to your inventory. Ensure
-              the information is accurate for seamless tracking and management.
-            </DialogDescription>
+            {/* <DialogDescription>
+              Fill in the details to update the product. Ensure the information
+              is accurate for seamless tracking and management.
+            </DialogDescription> */}
           </DialogHeader>
         </div>
-
         <Card className='border-[0.1px]'>
           <CardContent>
-            {product?.type === 'INVENTORY' && (
+            {/* {type === 'INVENTORY' && product && (
               <EditInventoryProductForm
                 id={id}
                 name={product.name}
                 sellingPrice={product.sellingPrice}
                 OnEditSuccess={onClose}
-                status={'ACTIVE'}
+                status={product.status}
                 category={product.category}
-                reOrderLevel={product.reOrderLevel}
+                reOrderLevel={(product as InventoryProduct).reOrderLevel || 0}
               />
+            )} */}
+
+            {/* {type === 'NON_INVENTORY' && product && (
+              <EditNonInventoryProductForm
+                id={id}
+                name={product.name}
+                sellingPrice={product.sellingPrice}
+                OnEditSuccess={onClose}
+                status={product.status}
+                category={product.category}
+              />
+            )} */}
+
+            {type === 'SERVICE' && (
+              <EditServicesProductForm id={id} OnCreateSuccsess={onClose} />
             )}
           </CardContent>
         </Card>

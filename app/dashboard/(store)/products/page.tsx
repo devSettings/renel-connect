@@ -13,7 +13,6 @@ import ProductTypeFilter from './components/product-type-filter';
 import { ProductTypeMetrics } from './components/product-type-matrics';
 import ProductsTable from './components/products-table';
 import CreateProductFormDialog from './create/components/create-product-form-dialog';
-import ProductDeleteModal from './[id]/components/product-delete-dialog';
 
 const ProductPage = async () => {
   const [products, types, statues, departments] = await Promise.all([
@@ -65,11 +64,6 @@ const ProductPage = async () => {
               </Suspense>
             </div>
             <CreateProductFormDialog />
-            {/* <Link href='/dashboard/products/create'>
-              <Button className='bg-blue-700 text-white mr-2 hover:bg-blue-900'>
-                <PlusIcon /> Create Product
-              </Button>
-            </Link> */}
           </div>
         </CardHeader>
         <CardContent>
