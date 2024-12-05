@@ -67,7 +67,7 @@ export default async function ProductSalesOverview({ id }: Props) {
                 icon={DollarSign}
               />
               <MetricCard
-                title='Avg. elling Price'
+                title='Avg. Selling Price'
                 value={`${response.data.sellingPrice}`}
                 icon={Tag}
               />

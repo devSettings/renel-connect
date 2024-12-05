@@ -4,7 +4,7 @@ import 'server-only';
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { ProductStatus, ProductType } from '@prisma/client';
-import { Product } from '../types/product';
+import { NotApplicable, Product } from '../types/product';
 
 type FilterOptions = {
   search?: string;
@@ -57,10 +57,13 @@ const getProducts = async (
         category: product.category.name,
         sellingPrice: product.sellingPrice,
         status: product.status,
+        quantityInStock:
+          product.type === 'INVENTORY'
+            ? product.InventoryProduct.find((p) => p.productId === product.id)
+                ?.quantityInStock || 0
+            : ('N/A' as NotApplicable),
       };
     });
-
-    const totalPages = Math.ceil(totalCount / pageSize);
 
     return {
       success: true,

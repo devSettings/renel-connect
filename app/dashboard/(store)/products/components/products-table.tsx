@@ -12,7 +12,6 @@ import Pagination from '@/app/dashboard/components/pagination';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { EllipsisIcon } from 'lucide-react';
 import { Suspense } from 'react';
 import { Product } from '../types/product';
 import ProductStatusBadge from './product-status.badge';
@@ -27,12 +26,12 @@ interface Props {
 }
 
 const tableHeads = [
-  'Bar Code',
   'Article',
   'Type',
   'Prix ​​de vente',
   'Categorie',
   'Status',
+  'Stock',
   'Action',
 ];
 
@@ -74,27 +73,24 @@ export default function ProductsTable({
                 <TableRow
                   key={product.name}
                   className={cn('cursor-pointer h-14 boorder-[0.1px]', {
-                    'bg-slate-50/50  bg-[#0a0a0a]': index % 2 === 0,
+                    ' bg-[#0a0a0a]': index % 2 === 0,
                   })}
                 >
                   <TableCell>
                     <Checkbox className='border-[0.1px] rounded-md shadow-none' />
                   </TableCell>
-                  <TableCell className='font-medium text-muted-foreground'>
-                    {product.sku.toLocaleUpperCase()}
-                  </TableCell>
-
-                  <TableCell className='line-clamp-1'>{product.name}</TableCell>
+                  <TableCell className='line-clamp-'>{product.name}</TableCell>
                   <TableCell>
                     <ProductTypeBadge type={product.type} />
                   </TableCell>
                   <TableCell>{product.sellingPrice}</TableCell>
-                  <TableCell className='line-clamp-1 overflow-hidden text-pretty'>
+                  <TableCell className='line-clamp- overflow-hidden '>
                     {product.category}
                   </TableCell>
                   <TableCell>
                     <ProductStatusBadge status={product.status} />
                   </TableCell>
+                  <TableCell>{product.quantityInStock}</TableCell>
                   <TableCell aria-disabled={true}>
                     <TableAction id={product.id} />
                   </TableCell>

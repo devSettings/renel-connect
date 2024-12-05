@@ -243,7 +243,16 @@ export default function CreateNonInventoryProductForm({
                     type='number'
                     placeholder='0.1'
                     {...field}
-                    onChange={(e) => field.onChange(+e.target.value)}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value === '' ? '' : Number(e.target.value)
+                      )
+                    }
+                    onBlur={(e) =>
+                      field.onChange(
+                        e.target.value === '' ? '' : Number(e.target.value)
+                      )
+                    }
                   />
                 </FormControl>
                 <FormMessage />

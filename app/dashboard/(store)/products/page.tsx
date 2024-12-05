@@ -5,17 +5,15 @@ import getProductDepartmentMetrics from './actions/get-product-department-metric
 import getProductStatusMetrics from './actions/get-product-status-metrics';
 import getProductTypeMetrics from './actions/get-product-type-metrics';
 import getProducts from './actions/get-products';
+import ProductCategoryFilter from './components/product-category-filter';
 import { ProductDepartmentMetrics } from './components/product-department-metrics';
+import ProductStatusFilter from './components/product-status-filter';
 import { ProductStatusMetrics } from './components/product-status-matrix';
+import ProductTypeFilter from './components/product-type-filter';
 import { ProductTypeMetrics } from './components/product-type-matrics';
 import ProductsTable from './components/products-table';
-import ProductStatusFilter from './components/product-status-filter';
-import ProductTypeFilter from './components/product-type-filter';
-import { Button } from '@/components/ui/button';
-import ProductCategoryFilter from './components/product-category-filter';
-import { PlusIcon } from 'lucide-react';
-import Link from 'next/link';
 import CreateProductFormDialog from './create/components/create-product-form-dialog';
+import ProductDeleteModal from './[id]/components/product-delete-dialog';
 
 const ProductPage = async () => {
   const [products, types, statues, departments] = await Promise.all([
@@ -52,6 +50,7 @@ const ProductPage = async () => {
           other={departments.data.other}
         />
       </div>
+
       <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]'>
         <CardHeader>
           <div className='flex items-center gap-2 justify-between'>

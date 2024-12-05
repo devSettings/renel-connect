@@ -91,7 +91,7 @@ export default function EditInventoryProductForm({ upOnSubmitting }: Props) {
       toast.error(result.error as String);
       return;
     }
-    toast.success(result.error as String);
+    toast.success('Product created Successfully');
     form.reset();
     router.refresh();
     upOnSubmitting(data);

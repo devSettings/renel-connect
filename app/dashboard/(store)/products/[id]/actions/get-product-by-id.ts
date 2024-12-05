@@ -1,24 +1,56 @@
 'use server';
 
+import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
+import { ProductStatus, ProductType } from '@prisma/client';
 
-const getProductById = async (id: string) => {
+type Product = {
+  id: string;
+  name: string;
+  sellingPrice: number;
+  type: ProductType;
+  status: ProductStatus;
+  category: string;
+  reOrderLevel: number;
+};
+
+const getProductById = async (id: string): Promise<ActionResponse<Product>> => {
   try {
-    const product = await prisma.product.findUnique({
+    const rawProduct = await prisma.product.findUnique({
       where: { id },
       select: {
         id: true,
+        type: true,
+        name: true,
+        status: true,
+        category: true,
         InventoryProduct: {
-          select: { quantityInStock: true, averageUnitCostPrice: true },
+          select: {
+            reorderLevel: true,
+            averageUnitCostPrice: true,
+            productId: true,
+          },
         },
         sellingPrice: true,
       },
     });
 
-    if (!product) {
+    if (!rawProduct) {
       return { success: false, error: 'Product Not Found' };
     }
-    return { success: true, data: product.id };
-  } catch (error) {}
+
+    const product = {
+      id: rawProduct.id,
+      name: rawProduct.name,
+      sellingPrice: rawProduct.sellingPrice,
+      type: rawProduct.type,
+      status: rawProduct.status,
+      category: rawProduct.category.id,
+      reOrderLevel: rawProduct.InventoryProduct[0].reorderLevel,
+    };
+    return { success: true, data: product };
+  } catch (error) {
+    return { success: false, error: 'Can not fetch product' };
+  }
 };
 export default getProductById;
