@@ -27,22 +27,25 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import { Role } from '@prisma/client';
-// import { CalendarIcon } from '@radix-ui/react-icons';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { IoMdAddCircle } from 'react-icons/io';
 
-// import getUserRole from '../actions/get-user-role';
-// import createUserCustomerFormSchema from '../schema/create-user-customer-form-schema';
-// import CreateUserCustomerFormData from '../types/create-user-customer-form-data';
-// import { createUserCustomer } from '../actions/create-user-customer';
-import { CalendarIcon, LoaderCircle } from 'lucide-react';
+import { CalendarIcon, CircleX, LoaderCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { z } from 'zod';
-import createUserCustomerFormSchema from '../schema/create-user-customer';
+import createUserCustomer from '../actions/create-user-customer';
+import {
+  default as createUserCustomerFormSchema,
+  default as createUserCustomerSchema,
+} from '../schema/create-user-customer';
+
+interface Props {
+  OnCreateSuccess: () => void;
+}
 
 type FormData = z.infer<typeof createUserCustomerFormSchema>;
-export function CreateUserCustomerForm() {
+export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
   const years = Array.from(
     { length: new Date().getFullYear() - 18 - 1950 + 1 },
     (_, i) => 1950 + i
@@ -62,19 +65,17 @@ export function CreateUserCustomerForm() {
     'December',
   ];
   const [calendarDate, setCalendarDate] = useState<Date>(new Date());
-  const [roles, setRoles] = useState<Role[]>([]);
   const form = useForm<FormData>({
-    resolver: zodResolver(createUserCustomerFormSchema),
+    resolver: zodResolver(createUserCustomerSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
       phoneNumber: '',
       email: '',
       gender: undefined,
-      status: undefined,
+      status: 'ACTIVE',
       preferredLanguage: undefined,
       membership: undefined,
-      roleId: undefined,
       typeOfId: undefined,
       idNumber: undefined,
     },
@@ -97,33 +98,22 @@ export function CreateUserCustomerForm() {
   };
 
   const handleFormSubmit = async (data: FormData) => {
-    // const result = await createUserCustomer(data);
-    // if (result.success) {
-    //   toast.success('User customer created successfully');
-    //   form.reset();
-    //   closeDialog();
-    // } else {
-    //   toast.error(result.error);
-    // }
-  };
+    const result = await createUserCustomer(data);
 
-  //   useEffect(() => {
-  //     const fetchUserRoles = async () => {
-  //       const result = await getUserRole();
-  //       if (result.success) {
-  //         setRoles(result.data!);
-  //       }
-  //     };
-  //     fetchUserRoles();
-  //   }, []);
+    if (!result.success) {
+      toast.error(result.error as string);
+    } else {
+      toast.success('User customer created successfully');
+      form.reset();
+      OnCreateSuccess();
+    }
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleFormSubmit)}>
         <div
-          className={cn('grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6', {
-            // 'gap-y-3': form.formState.errors,
-          })}
+          className={cn('grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-6', {})}
         >
           <FormField
             control={form.control}
@@ -135,7 +125,7 @@ export function CreateUserCustomerForm() {
                   <Input placeholder='John' {...field} />
                 </FormControl>
 
-                {/* <FormMessage /> */}
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -149,7 +139,7 @@ export function CreateUserCustomerForm() {
                   <Input placeholder='Doe' {...field} />
                 </FormControl>
 
-                {/* <FormMessage /> */}
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -254,7 +244,7 @@ export function CreateUserCustomerForm() {
                     <SelectItem value='FEMALE'>Female</SelectItem>
                   </SelectContent>
                 </Select>
-                {/* <FormMessage /> */}
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -284,7 +274,7 @@ export function CreateUserCustomerForm() {
                 <FormControl>
                   <Input placeholder='50900000000' {...field} />
                 </FormControl>
-                {/* <FormMessage /> */}
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -307,42 +297,12 @@ export function CreateUserCustomerForm() {
                     <SelectContent>
                       <SelectItem value='ACTIVE'>Active</SelectItem>
                       <SelectItem value='INACTIVE'>Inactive</SelectItem>
-                      {/* <SelectItem value='SUSPENDED'>Suspended</SelectItem> */}
-                      {/* <SelectItem value='BANNED'>Banned</SelectItem> */}
                     </SelectContent>
                   </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name='roleId'
-              render={({ field }) => (
-                <FormItem className='w-full'>
-                  <FormLabel>Role</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder='Role' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {roles.map((role) => (
-                        <SelectItem key={role.value} value={role.id}>
-                          {role.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
           </div>
           <div className='flex gap-4 w-full'>
             <FormField
@@ -445,7 +405,11 @@ export function CreateUserCustomerForm() {
           />
         </div>
 
-        <div className='flex justify-end lg:pr-4 mt-10 w-full'>
+        <div className='flex justify-end space-x-4 lg:pr-2 mt-10 w-full'>
+          <Button variant='secondary' size={'lg'}>
+            <CircleX />
+            Cancel
+          </Button>
           <Button
             type='submit'
             size='lg'

@@ -44,17 +44,8 @@ const CreateTransactionFormDialog = () => {
       <DialogContent className='max-w-[65vw] bg-black border-[0.1px] rounded-md'>
         <div className='flex justify-between mr-8'>
           <DialogHeader>
-            <DialogTitle className='text-2xl font-bold'>
-              Add New Transaction
-            </DialogTitle>
-            <DialogDescription className='max-w-[35vw]'>
-              Select the proper
-              <span className='font-medium text-blue-800 text-sm mx-1 '>
-                Transaction Type
-              </span>
-              to be able add all the necessary details about the new
-              transaction.
-            </DialogDescription>
+            <DialogTitle className='text-2xl font-bold'></DialogTitle>
+            <DialogDescription className='max-w-[35vw]'></DialogDescription>
           </DialogHeader>
           <Select
             defaultValue='EXPENSE'
@@ -74,13 +65,13 @@ const CreateTransactionFormDialog = () => {
           </Select>
         </div>
 
-        <Card className='bg-[#0a0a0a] border-[0.1px] rounded-md'>
+        <Card className='border-[0.1px] rounded-md'>
           <CardContent>
             {selectedTransactionType === 'EXPENSE' && (
               <CreateExpenseForm upOnSubmitting={() => setOpen(!open)} />
             )}
             {selectedTransactionType === 'AQUISITION' && (
-              <CreateAquisitionForm />
+              <CreateAquisitionForm OnCreateSuccess={() => setOpen(!open)} />
             )}
             {selectedTransactionType === 'INCOME' && (
               <CreateIncomeForm upOnSubmitting={() => setOpen(!open)} />

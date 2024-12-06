@@ -37,7 +37,7 @@ const createInventoryProduct = async (data: FormData) => {
         categoryId: result.data.category,
         type: 'INVENTORY',
         slug: result.data.name.toLowerCase().replace(/ /g, '-'),
-        createdById: '1',
+        createdById: 'cm4ct968q000049i0xxqmz5e4',
         InventoryProduct: {
           create: { reorderLevel: result.data.reorderLevel },
         },

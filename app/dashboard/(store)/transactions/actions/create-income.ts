@@ -21,7 +21,7 @@ const createIncome = async (data: FormData) => {
         amount: result.data.amount,
         typeOfTransaction: result.data.typeOfTransaction,
         incomeDate: result.data.IncomeDate.toISOString().split('T')[0],
-        userId: '1',
+        userId: 'cm4ct968q000049i0xxqmz5e4',
         category: result.data.category as IncomeCategory,
       },
     });

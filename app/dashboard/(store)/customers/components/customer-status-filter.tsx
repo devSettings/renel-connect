@@ -1,6 +1,13 @@
 'use client';
 
-import { ChevronsUpDown, Crown, Star, User } from 'lucide-react';
+import {
+  ChevronsUpDown,
+  Crown,
+  LucideIcon,
+  Star,
+  User,
+  UserRoundX,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -18,39 +25,39 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-import { useState } from 'react';
 import useQueryParameter from '@/hooks/use-query-parameter';
-import { TypeOfTransaction } from '@prisma/client';
+import { UserStatus } from '@prisma/client';
+import { useState } from 'react';
 
-const memberships = [
+const statuses: { value: UserStatus; label: string; icon: LucideIcon }[] = [
   {
-    value: 'Expense',
-    label: 'Expense',
+    value: 'ACTIVE',
+    label: 'Active',
     icon: User,
   },
   {
-    value: 'INCOME',
-    label: 'Income',
-    icon: User,
+    value: 'INACTIVE',
+    label: 'Inactive',
+    icon: UserRoundX,
   },
   {
-    value: 'LOST',
-    label: 'Lost',
+    value: 'SUSPENDED',
+    label: 'Suspended',
     icon: Star,
   },
   {
-    value: 'AQUISITION',
-    label: 'Aquisition',
+    value: 'BANNED',
+    label: 'Banned',
     icon: Crown,
   },
 ];
 
-export default function TransactionTypeFilter() {
+export default function CustomerStatusFilter() {
   const [open, setOpen] = useState(false);
-  const { query, handleQuery } = useQueryParameter('membership');
+  const { query, handleQuery } = useQueryParameter('status');
 
-  const handleMembershipToggle = (type: TypeOfTransaction) => {
-    handleQuery(type);
+  const handleStatusToggle = (status: UserStatus) => {
+    handleQuery(status);
   };
 
   return (
@@ -64,7 +71,7 @@ export default function TransactionTypeFilter() {
             aria-expanded={open}
             className='w-fit justify-between rounded-sm'
           >
-            Type
+            Status
             <ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />
           </Button>
 
@@ -75,10 +82,7 @@ export default function TransactionTypeFilter() {
                 variant='secondary'
                 size='sm'
               >
-                {
-                  memberships.find((membership) => membership.value === query)
-                    ?.label
-                }
+                {statuses.find((status) => status.value === query)?.label}
               </Button>
             </div>
           )}
@@ -86,31 +90,29 @@ export default function TransactionTypeFilter() {
       </PopoverTrigger>
       <PopoverContent className='w-fit p-0'>
         <Command>
-          <CommandInput placeholder='Search membership...' className='h-9' />
+          <CommandInput placeholder='Search status...' className='h-9' />
           <CommandList>
-            <CommandEmpty>No membership found.</CommandEmpty>
+            <CommandEmpty>No status found.</CommandEmpty>
             <CommandGroup>
-              {memberships.map((membership) => {
-                const MembershipIcon = membership.icon;
+              {statuses.map((status) => {
+                const StatusIcon = status.icon;
                 return (
                   <CommandItem
-                    key={membership.value}
-                    onSelect={() => handleMembershipToggle(membership.value)}
+                    key={status.value}
+                    onSelect={() => handleStatusToggle(status.value)}
                   >
                     <div className='flex items-center space-x-2 flex-1'>
                       <Checkbox
-                        checked={query === membership.value}
-                        onCheckedChange={() =>
-                          handleMembershipToggle(membership.value)
-                        }
-                        id={`membership-${membership.value}`}
+                        checked={query === status.value}
+                        onCheckedChange={() => handleStatusToggle(status.value)}
+                        id={`status-${status.value}`}
                       />
-                      <MembershipIcon className='h-4 w-4 text-muted-foreground' />
+                      <StatusIcon className='h-4 w-4 text-muted-foreground' />
                       <label
-                        htmlFor={`membership-${membership.value}`}
+                        htmlFor={`membership-${status.value}`}
                         className='flex-1 cursor-pointer'
                       >
-                        {membership.label}
+                        {status.label}
                       </label>
                     </div>
                   </CommandItem>
@@ -119,7 +121,7 @@ export default function TransactionTypeFilter() {
             </CommandGroup>
           </CommandList>
         </Command>
-        <div className='p-2'>
+        {/* <div className='p-2'>
           <Button
             variant='destructive'
             size='sm'
@@ -128,7 +130,7 @@ export default function TransactionTypeFilter() {
           >
             Clear
           </Button>
-        </div>
+        </div> */}
       </PopoverContent>
     </Popover>
   );

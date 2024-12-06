@@ -69,7 +69,7 @@ const createAquisition = async (data: FormData) => {
           aquisitionDate: result.data.acquisitionDate
             .toISOString()
             .split('T')[0],
-          userId: '1',
+          userId: 'cm4ct968q000049i0xxqmz5e4',
           supplierId: result.data.supplier,
           typeOfTransaction: 'AQUISITION',
           quantityBought: result.data.quantityBought,

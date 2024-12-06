@@ -20,26 +20,26 @@ const UniqueProductMetrics = async ({ id }: Props) => {
 
   const metrics: TransactionMetric[] = [
     {
-      title: 'Income',
-      count: 0,
+      title: 'Revenue',
+      count: response.data.totalRevenue,
       icon: HandCoins,
       iconColor: 'text-blue-800',
     },
     {
-      title: 'Expense',
-      count: 0,
+      title: 'Quantity Sold',
+      count: response.data.quantitySold,
       icon: Currency,
       iconColor: '',
     },
     {
-      title: 'Aquisition',
-      count: 0,
+      title: 'Quantity Lost',
+      count: response.data.quantityLost,
       icon: BadgeX,
       iconColor: '',
     },
     {
-      title: 'Lost',
-      count: 0,
+      title: 'Quantity In Stock',
+      count: response.data.quantityInStock,
       icon: Coins,
       iconColor: '',
     },

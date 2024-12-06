@@ -41,20 +41,28 @@ import createAquisition from '../actions/create-transactions';
 import createAquisitionSchema from '../schema/create-aquisition';
 import CreateProductSupplierForm from './create-product-supplier-form';
 
-const CreateAquisitionForm = () => {
+interface Props {
+  OnCreateSuccess: () => void;
+}
+
+const CreateAquisitionForm = ({ OnCreateSuccess }: Props) => {
   const [products, setProducts] = useState<{ id: string; name: string }[]>([]);
   const [suppliers, setSuppliers] = useState<
     Array<{ id: string; name: string }>
   >([]);
 
-  const [query, setQuery] = useState('');
+  const [productQuery, setProductQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [isCreatingProduct, setCreatingProduct] = useState(false);
+
+  const [supplierQuery, setSupplierQuery] = useState<string>();
+  const [supplierOpen, setSupplierOpen] = useState<boolean>(false);
+  const [creatingSupplier, setCreatingSupplier] = useState<boolean>(false);
 
   useEffect(() => {
     const getInventoryProducts = async () => {
       const response = await getSimpleInventoryProducts({
-        search: query,
+        search: productQuery,
         count: 10,
       });
       if (response?.success) {
@@ -63,7 +71,7 @@ const CreateAquisitionForm = () => {
       }
     };
     getInventoryProducts();
-  }, [query]);
+  }, [productQuery, isOpen]);
 
   useEffect(() => {
     const getSuppliers = async () => {
@@ -74,7 +82,7 @@ const CreateAquisitionForm = () => {
       }
     };
     getSuppliers();
-  }, [query]);
+  }, [supplierQuery, supplierOpen]);
 
   type FormData = z.infer<typeof createAquisitionSchema>;
 
@@ -91,12 +99,13 @@ const CreateAquisitionForm = () => {
     },
   });
   const handleTransactionSubmit = async (data: FormData) => {
-    try {
-      const reponse = await createAquisition(data);
-      toast.success('Transaction created Successly');
-    } catch (error) {
-      toast.error('Error');
+    const reponse = await createAquisition(data);
+    if (!reponse.success) {
+      toast.error(reponse.error as string);
+      return;
     }
+    toast.success('Transaction created Successly');
+    OnCreateSuccess();
   };
 
   return (
@@ -136,9 +145,17 @@ const CreateAquisitionForm = () => {
                       </FormControl>
                     </PopoverTrigger>
 
-                    <FormDialog title={''} description={''} trigger={''}>
+                    <FormDialog
+                      title={''}
+                      description={''}
+                      trigger={''}
+                      isOpen={isCreatingProduct}
+                      setOpen={() => setCreatingProduct(!isCreatingProduct)}
+                    >
                       <CreateInventoryProductForm
-                        upOnSubmitting={() => console.log('')}
+                        upOnSubmitting={() =>
+                          setCreatingProduct(!isCreatingProduct)
+                        }
                       />
                     </FormDialog>
                   </div>
@@ -148,8 +165,8 @@ const CreateAquisitionForm = () => {
                       <div className='m-2'>
                         <Input
                           placeholder='search categories...'
-                          value={query}
-                          onChange={(e) => setQuery(e.target.value)}
+                          value={productQuery}
+                          onChange={(e) => setProductQuery(e.target.value)}
                         />
                       </div>
                       <CommandList className='border-[0.1px] mx-2 mb-2 rounded-lg bg-[#0D0E10]'>
@@ -194,14 +211,14 @@ const CreateAquisitionForm = () => {
                     Supplier <span className='text-red-600'>*</span>
                   </FormLabel>
                 </div>
-                <Popover open={open} onOpenChange={setOpen}>
+                <Popover open={supplierOpen} onOpenChange={setSupplierOpen}>
                   <div className='flex items-center gap-2'>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant='outline'
                           role='combobox'
-                          aria-expanded={open}
+                          aria-expanded={supplierOpen}
                           className='w-full justify-between font-normal shadow-non border h-10'
                         >
                           {field.value
@@ -214,12 +231,16 @@ const CreateAquisitionForm = () => {
                       </FormControl>
                     </PopoverTrigger>
                     <FormDialog
-                      title='Enregistrer un nouveau fournisseur'
-                      description="Les coordonnées du fournisseur sont un excellent moyen d'organiser votre achat"
+                      title=''
+                      description=''
                       trigger={''}
+                      isOpen={creatingSupplier}
+                      setOpen={() => setCreatingSupplier(!creatingSupplier)}
                     >
                       <CreateProductSupplierForm
-                        upOnSubmitting={() => console.log('')}
+                        upOnSubmitting={() =>
+                          setCreatingSupplier(!creatingSupplier)
+                        }
                       />
                     </FormDialog>
                   </div>
@@ -229,8 +250,8 @@ const CreateAquisitionForm = () => {
                       <div className='m-2'>
                         <Input
                           placeholder='Search for a supplier...'
-                          value={query}
-                          onChange={(e) => setQuery(e.target.value)}
+                          value={supplierQuery}
+                          onChange={(e) => setSupplierQuery(e.target.value)}
                         />
                       </div>
                       <CommandList className='border-[0.1px] mx-2 mb-2 rounded-lg bg-[#0D0E10]'>
@@ -241,7 +262,7 @@ const CreateAquisitionForm = () => {
                               key={supplier.id}
                               onSelect={() => {
                                 form.setValue('supplier', supplier.id);
-                                setOpen(false);
+                                setSupplierOpen(!supplierOpen);
                               }}
                             >
                               <Check

@@ -54,7 +54,7 @@ export async function createLost(
             description: result.data.description,
             quantityOfItems: result.data.quantityLost,
             lostDate: result.data.lostDate.toISOString().split('T')[0],
-            userId: '1', // Consider fetching this from the session
+            userId: 'cm4ct968q000049i0xxqmz5e4', // Consider fetching this from the session
             unitPrice: product.product.sellingPrice,
             totalLost:
               Number(product.averageUnitCostPrice) * result.data.quantityLost,

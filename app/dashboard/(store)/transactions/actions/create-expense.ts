@@ -23,7 +23,7 @@ const createExpense = async (data: FormData) => {
         typeOfTransaction: result.data.typeOfTransaction,
         expenseDate: result.data.expenseDate.toISOString().split('T')[0],
         expenseCategoryId: result.data.category,
-        userId: '1',
+        userId: 'cm4ct968q000049i0xxqmz5e4',
       },
     });
     revalidatePath('/dashboard/transactions');

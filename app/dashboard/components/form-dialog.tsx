@@ -19,6 +19,8 @@ interface FormDialogProps {
   title: string;
   description: string;
   trigger: string;
+  isOpen: boolean;
+  setOpen: () => void;
 }
 
 const FormDialog = ({
@@ -26,11 +28,11 @@ const FormDialog = ({
   title,
   description,
   trigger,
+  isOpen,
+  setOpen,
 }: FormDialogProps) => {
-  const [open, setOpen] = useState(false);
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant='outline'
@@ -49,7 +51,7 @@ const FormDialog = ({
           </DialogHeader>
         </div>
 
-        <Card className='bg-[#0a0a0a] border-[0.1px] rounded-md'>
+        <Card className='border-[0.1px] rounded-md'>
           <CardContent>{children}</CardContent>
         </Card>
       </DialogContent>

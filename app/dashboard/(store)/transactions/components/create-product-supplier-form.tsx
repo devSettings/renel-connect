@@ -26,7 +26,7 @@ import {
 } from '../schema/create-product-supplier';
 
 interface Props {
-  upOnSubmitting: (data: FieldValues) => void;
+  upOnSubmitting: () => void;
 }
 
 export default function CreateProductSupplierForm({ upOnSubmitting }: Props) {
@@ -54,7 +54,7 @@ export default function CreateProductSupplierForm({ upOnSubmitting }: Props) {
     if (result.success) {
       toast.success('Supplier created successfully');
       setIsSubmitting(false);
-      upOnSubmitting(values);
+      upOnSubmitting();
     }
   }
 

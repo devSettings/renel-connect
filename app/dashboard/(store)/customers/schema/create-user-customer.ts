@@ -9,7 +9,7 @@ import { z } from 'zod';
 
 const phoneNumberRegex = /^(?:\d{10}|\d{11})$/;
 
-const createUserCustomerFormSchema = z
+const createUserCustomerSchema = z
   .object({
     firstName: z
       .string({ required_error: 'First name is required' })
@@ -60,9 +60,6 @@ const createUserCustomerFormSchema = z
         }),
       })
       .optional(),
-    roleId: z
-      .string({ required_error: 'User role is required' })
-      .min(5, { message: 'User role is required' }),
     phoneNumber: z.string().regex(phoneNumberRegex, {
       message: 'Invalid phone number. Enter 10 or 11 digits only.',
     }),
@@ -91,4 +88,4 @@ const createUserCustomerFormSchema = z
     }
   });
 
-export default createUserCustomerFormSchema;
+export default createUserCustomerSchema;

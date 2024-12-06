@@ -294,6 +294,7 @@ model OrderItem {
   quantity   Int      @map("quantity")
   unitPrice  Decimal  @map("unit_price") @db.Decimal(10, 2)
   totalPrice Decimal  @map("total_cost") @db.Decimal(10, 2)
+  orderDate  String   @map("order_date")
   discount   Float?   @default(0) @map("discount")
   createdAt  DateTime @default(now()) @map("created_at")
   productId  String   @map("product_id")
@@ -355,7 +356,7 @@ model Lost {
   quantityOfItems   Int               @map("quantity_of_items")
   typeOfTransaction TypeOfTransaction @default(LOST) @map("type_of_transaction")
   unitPrice         Decimal           @map("unit_price") @db.Decimal(10, 2)
-  lostDate          String
+  lostDate          String            @map("lost_date")
   madeBy            User              @relation(fields: [userId], references: [id])
   userId            String            @map("user_id")
   totalLost         Decimal           @map("total_lost") @db.Decimal(10, 2)

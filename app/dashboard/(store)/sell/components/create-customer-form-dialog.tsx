@@ -12,7 +12,7 @@ import {
 import { IoMdAddCircle } from 'react-icons/io';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
-import { CreateUserCustomerForm } from '../../customers/create/create-customer-form';
+import { CreateUserCustomerForm } from '../../customers/components/create-customer-form';
 
 const CreateCustomerFormDialog = () => {
   const [open, setOpen] = useState(false);

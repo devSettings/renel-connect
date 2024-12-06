@@ -35,20 +35,18 @@ interface Props {
   customers: Customer[];
   totalPages: number;
   currentPage: number;
-  itemsPerPage: number;
 }
 
 export default function CustomersTable({
   customers,
   totalPages,
   currentPage,
-  itemsPerPage,
 }: Props) {
   if (customers.length === 0) {
     return (
       <EmptyTable
         heading='No customers found!'
-        description='There are no customers in the database. Add one so it can show up here.'
+        description='There may be no customers in the database. or we can not find the ones that match your filter query'
       />
     );
   }
@@ -109,11 +107,7 @@ export default function CustomersTable({
         </Table>
       </CardContent>
       <CardFooter className='overflow-hidden bg-accent/20'>
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          itemsPerPage={itemsPerPage}
-        />
+        <Pagination totalPages={totalPages} currentPage={currentPage} />
       </CardFooter>
     </Card>
   );

@@ -20,37 +20,36 @@ import {
 
 import { useState } from 'react';
 import useQueryParameter from '@/hooks/use-query-parameter';
-import { TypeOfTransaction } from '@prisma/client';
 
 const memberships = [
   {
-    value: 'Expense',
-    label: 'Expense',
+    value: 'BRONZE',
+    label: 'Bronze',
     icon: User,
   },
   {
-    value: 'INCOME',
-    label: 'Income',
+    value: 'SILVER',
+    label: 'Silver',
     icon: User,
   },
   {
-    value: 'LOST',
-    label: 'Lost',
+    value: 'GOLD',
+    label: 'Gold',
     icon: Star,
   },
   {
-    value: 'AQUISITION',
-    label: 'Aquisition',
+    value: 'PLATINUM',
+    label: 'Platinum',
     icon: Crown,
   },
 ];
 
-export default function TransactionTypeFilter() {
+export default function ProductMemberFilter() {
   const [open, setOpen] = useState(false);
   const { query, handleQuery } = useQueryParameter('membership');
 
-  const handleMembershipToggle = (type: TypeOfTransaction) => {
-    handleQuery(type);
+  const handleMembershipToggle = (membership: string) => {
+    handleQuery(membership);
   };
 
   return (
@@ -64,7 +63,7 @@ export default function TransactionTypeFilter() {
             aria-expanded={open}
             className='w-fit justify-between rounded-sm'
           >
-            Type
+            Membership
             <ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />
           </Button>
 
