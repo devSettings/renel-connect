@@ -6,6 +6,7 @@ import { useCartStore } from '../hooks/use-cart-store';
 import { useDiscount } from '../hooks/use-discount';
 import DiscountModal from './discount-modal';
 import { CheckoutDialog } from './check-out-dialog';
+import { TestCheckOut } from './test-checkout';
 
 interface Props {
   cashier: string;
@@ -66,7 +67,8 @@ const Cart = ({ cashier }: Props) => {
         </div>
 
         <div className='mt-5'>
-          <CheckoutDialog disabled={items.length === 0} cashier={cashier} />
+          {/* <CheckoutDialog disabled={items.length === 0} /> */}
+          <TestCheckOut disabled={items.length === 0} />
         </div>
       </div>
     </div>

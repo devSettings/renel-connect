@@ -34,7 +34,8 @@ const createNonInventoryProduct = async (
         categoryId: result.data.category,
         type: 'NON_INVENTORY',
         slug: result.data.name.toLowerCase().replace(/ /g, '-'),
-        createdById: '2',
+        createdById: 'cm4ctamdh000249i0jm2qpfqu',
+        department: 'OTHER',
       },
     });
     revalidatePath('/dashboard/products');

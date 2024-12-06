@@ -1,104 +1,96 @@
 'use server';
 
-import prisma from '@/prisma/client';
-import { Collection, PaymentMethod } from '@prisma/client';
-import SaleReference from './create-order-reference';
 import { ActionResponse } from '@/app/types/action-reponse';
-import { revalidatePath } from 'next/cache';
+import prisma from '@/prisma/client';
 import { format } from 'date-fns';
+import { revalidatePath } from 'next/cache';
+import { OrderData, OrderItemData } from '../types/order';
+import SaleReference from './create-order-reference';
 
-const CURRENT_YEAR = new Date().getFullYear();
-const OrderDate = format(new Date(CURRENT_YEAR, 0, 1), 'yyyy-dd-MM');
-
-export type SaleData = {
-  cashier_id: string;
-  category: Collection;
-  paymentMethod: PaymentMethod;
-  sub_total: number;
-  amount_received?: number;
-  customer_change?: number;
-  discount: number;
-  total: number;
-  tax?: number;
-  room_number?: string;
-  transaction_receipt_id?: string;
-  customer_id?: string;
-};
-
-export type SaleItemsData = {
-  product_id: string;
-  unit_price: number;
-  quantity: number;
-  selling_price: number;
-  total_price: number;
-};
-
-export type OrderData = {
-  CashierId: string;
-  category: Collection;
-  paymentMethod: PaymentMethod;
-  subTotal: number;
-  amountReceived?: number;
-  customerChange?: number;
-  discount: number;
-  total: number;
-  tax?: number;
-  transactionReceiptId?: string;
-  customerId?: string;
-};
-
-export type OrderItemData = {
-  productId: string;
-  unitPrice: number;
-  quantity: number;
-  totalPrice: number;
-}[];
+const OrderDate = format(new Date(), 'yyyy-MM-dd');
 
 const createOrder = async (
-  orderData: {},
-  OrderItemData: []
+  orderData: OrderData,
+  OrderItemData: OrderItemData
 ): Promise<ActionResponse> => {
   try {
     if (!orderData || !OrderItemData || OrderItemData.length === 0) {
-      return { success: false, error: 'Order Can not be created' };
+      console.error('Invalid input data');
+      return {
+        success: false,
+        error: 'Order cannot be created: Invalid input data',
+      };
     }
 
     const reference = await SaleReference();
-    if (!reference)
-      return { success: false, error: 'Failed to generate Order Refrence' };
+    if (!reference) {
+      console.error('Failed to generate Order Reference');
+      return { success: false, error: 'Failed to generate Order Reference' };
+    }
 
-    await prisma.order.create({
-      data: {
-        reference: reference,
-        orderDate: OrderDate,
-        cashierId: '',
-        amountReceived: 0,
-        source: 'POS',
-        totalPrice: 0,
-        totalItems: 0,
-        category: 'OTHER',
-        customerId: '',
-        paymentMethod: 'CASH',
-        change: 0,
-        OrderItem: {
-          create: [
-            {
-              unitPrice: 0,
-              totalPrice: 0,
-              quantity: 0,
-              orderDate: OrderDate,
-              productId: '',
-              roomNumber: 0,
-            },
-          ],
+    const orderItems = OrderItemData.map((item) => ({
+      unitPrice: item.unitPrice,
+      totalPrice: item.totalPrice,
+      quantity: item.quantity,
+      orderDate: OrderDate,
+      productId: item.productId,
+    }));
+
+    const result = await prisma.$transaction(async (prisma) => {
+      const order = await prisma.order.create({
+        data: {
+          reference: reference,
+          orderDate: OrderDate,
+          cashierId: 'cm4ctbui5000449i07gvj0k9y',
+          amountReceived: orderData.amountReceived,
+          source: 'POS',
+          totalPrice: orderData.total,
+          totalItems: OrderItemData.length,
+          category: orderData.category,
+          customerId: orderData.customerId ?? 'cm4d2q3qp000149im2cyb69sq',
+          paymentMethod: orderData.paymentMethod,
+          change: orderData.customerChange,
+          OrderItem: {
+            create: orderItems,
+          },
         },
-      },
+      });
+
+      for (const item of OrderItemData) {
+        const inventoryProduct = await prisma.inventoryProduct.findUnique({
+          where: { productId: item.productId },
+        });
+
+        if (inventoryProduct) {
+          await prisma.inventoryProduct.update({
+            where: { productId: item.productId },
+            data: {
+              quantityInStock: {
+                decrement: item.quantity,
+              },
+            },
+          });
+        }
+      }
+
+      return order;
     });
 
+    console.log('Prisma transaction result:', JSON.stringify(result, null, 2));
+
     revalidatePath('/dashboard/orders');
-    revalidatePath('dashboard/reports');
-    return { success: true, data: '' };
+    revalidatePath('/dashboard/reports');
+
+    return { success: true, data: 'Order created Successfully' };
   } catch (error) {
-    return { success: false, error: 'Failed to create Order' };
+    console.error('Error in createOrder:', error);
+    return {
+      success: false,
+      error: `Failed to create Order: ${
+        error instanceof Error ? error.message : 'Unknown Error'
+      }`,
+    };
   }
 };
+
+export default createOrder;

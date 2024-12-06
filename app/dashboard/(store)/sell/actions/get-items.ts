@@ -48,7 +48,7 @@ const getItems = async (
               ?.quantityInStock || 0
           : INFINITE_STOCK,
     }));
-    console.log(products);
+
     return { success: true, data: products };
   } catch (error) {
     return {

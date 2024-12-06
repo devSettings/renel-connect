@@ -270,19 +270,20 @@ enum Collection {
 
 model Order {
   id             String        @id @default(cuid())
-  reference      String        @unique @db.VarChar(10)
-  category       Collection    @default(OTHER)
+  reference      String        @unique @db.VarChar(12)
+  category       Collection
   cashier        User          @relation(fields: [cashierId], references: [id])
   cashierId      String        @map("cashier_id")
   customer       Customer      @relation(fields: [customerId], references: [id])
   customerId     String        @map("customer_id")
   paymentMethod  PaymentMethod
   source         OrderSource
-  totalPrice     BigInt        @map("total_price") @db.BigInt
+  totalPrice     Decimal       @map("total_price") @db.Decimal(10, 2)
   totalItems     Int           @map("total_items")
   orderDate      String        @map("order_date")
   amountReceived Float         @map("amount_received")
   change         Float         @default(0) @map("change")
+  roomNumber     Int?          @map("room_number")
   OrderItem      OrderItem[]
   createdAt      DateTime      @default(now()) @map("created_at")
 }
@@ -299,7 +300,7 @@ model OrderItem {
   discount   Float?   @default(0) @map("discount")
   createdAt  DateTime @default(now()) @map("created_at")
   productId  String   @map("product_id")
-  roomNumber Int?     @map("room_number")
+  // roomNumber Int?     @map("room_number")
 }
 
 enum TypeOfTransaction {

@@ -67,7 +67,7 @@ interface Props {
   disabled: boolean;
 }
 
-export function CheckoutDialog({ disabled }: Props) {
+export function TestCheckOut({ disabled }: Props) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const { openModal, closeModal, isOpen } = useCheckoutModal();
