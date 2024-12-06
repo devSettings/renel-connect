@@ -3,11 +3,10 @@ import 'server-only';
 
 import prisma from '@/prisma/client';
 
+import { ActionResponse } from '@/app/types/action-reponse';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { editInventoryProductSchema } from '../schema/edit-inventory-product';
-import { ActionResponse } from '@/app/types/action-reponse';
-import { InventoryProduct } from './get-inventory-product-by-id';
 type FormData = z.infer<typeof editInventoryProductSchema>;
 
 const editInventoryProduct = async (

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -9,9 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { IoMdAddCircle } from 'react-icons/io';
-import { Card, CardContent } from '@/components/ui/card';
 import { useState } from 'react';
+import { IoMdAddCircle } from 'react-icons/io';
 import { CreateUserCustomerForm } from '../../customers/components/create-customer-form';
 
 const CreateCustomerFormDialog = () => {
@@ -20,24 +20,22 @@ const CreateCustomerFormDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className='font-normal bg-blue-700 hover:bg-blue-800 text-white transition-colors ease-in-out duration-300'>
+        <Button variant='outline' className='text-blue-700 border-[0.1px]'>
           <IoMdAddCircle />
-          New customer
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-[65vw] bg-black'>
         <DialogHeader>
-          <DialogTitle className='text-2xl font-bold'>
-            {/* Create new customer */}
-          </DialogTitle>
-          <DialogDescription>
-            {/* This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers. */}
-          </DialogDescription>
+          {/* <DialogTitle className='text-2xl font-bold'></DialogTitle> */}
+          {/* <DialogDescription></DialogDescription> */}
         </DialogHeader>
-        <Card className='bg-[#0a0a0a]'>
-          <CardContent>
-            <CreateUserCustomerForm />
+        <Card className='border-[0.1px] '>
+          <CardContent className='pt-8'>
+            <CreateUserCustomerForm
+              OnCreateSuccess={() => {
+                setOpen(!open);
+              }}
+            />
           </CardContent>
         </Card>
       </DialogContent>

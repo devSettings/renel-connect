@@ -30,7 +30,7 @@ const PosPage = async ({ searchParams }: Props) => {
   return (
     <div className='container mx-auto h-full'>
       <div className='grid grid-cols-[1fr_auto] gap-4'>
-        <div className='space-y-6 rounded-lg h-full p-4 border-[0.1px] bg-[#0a0a0a] shadow-sm'>
+        <div className='space-y-6 rounded-lg h-full p-4 border-[0.1px] bg-card shadow-sm'>
           <div className='flex items-center gap-2'>
             <div className='flex-1'>
               <Suspense fallback={<div>Loading search...</div>}>
@@ -46,9 +46,8 @@ const PosPage = async ({ searchParams }: Props) => {
               <ProductSection searchQuery={query} />
             </ScrollArea>
           </Suspense>
-          <CartItemLaoding />
         </div>
-        <div className='space-y-6 w-[20rem] min-h-[80vh]   rounded-lg p-4 bg-[#0a0a0a] border-[0.1px]'>
+        <div className='space-y-6 w-[20rem] min-h-[80vh]   rounded-lg p-4 bg-card border-[0.1px]'>
           <Cart cashier={'j'} />
         </div>
       </div>

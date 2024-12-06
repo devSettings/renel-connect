@@ -70,6 +70,7 @@ enum Role {
   SUPERVISOR
   ADMIN
   DEVELOPER
+  UNKNOWN
 }
 
 enum UserStatus {
@@ -180,7 +181,7 @@ model Product {
   slug             String             @unique
   sku              String             @unique
   sellingPrice     Float              @map("selling_price")
-  department       Collection         @default(OTHER)
+  department       Collection
   category         Category           @relation(fields: [categoryId], references: [id])
   type             ProductType
   status           ProductStatus
@@ -298,6 +299,7 @@ model OrderItem {
   discount   Float?   @default(0) @map("discount")
   createdAt  DateTime @default(now()) @map("created_at")
   productId  String   @map("product_id")
+  roomNumber Int?     @map("room_number")
 }
 
 enum TypeOfTransaction {

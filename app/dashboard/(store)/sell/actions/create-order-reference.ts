@@ -6,7 +6,7 @@ const SaleReference = async () => {
   const generateRandomReference = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let reference = '';
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 10; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
       reference += characters[randomIndex];
     }
@@ -19,7 +19,7 @@ const SaleReference = async () => {
   while (!isUnique) {
     referenceNumber = generateRandomReference();
     try {
-      const existingReferences = await prisma.sale.findMany({
+      const existingReferences = await prisma.order.findMany({
         where: { reference: referenceNumber },
         select: { reference: true },
       });

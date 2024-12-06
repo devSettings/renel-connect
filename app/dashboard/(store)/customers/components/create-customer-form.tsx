@@ -406,7 +406,7 @@ export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
         </div>
 
         <div className='flex justify-end space-x-4 lg:pr-2 mt-10 w-full'>
-          <Button variant='secondary' size={'lg'}>
+          <Button variant='secondary' size={'lg'} onClick={OnCreateSuccess}>
             <CircleX />
             Cancel
           </Button>

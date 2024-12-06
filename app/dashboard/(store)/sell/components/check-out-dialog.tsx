@@ -42,23 +42,24 @@ import {
   ChevronsUpDown,
   CreditCard,
   HandCoins,
-  Receipt,
   TicketCheck,
   Wallet,
   Wine,
   XIcon,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { FaSpinner } from 'react-icons/fa';
 import { GiFoodChain } from 'react-icons/gi';
-import { SimpleCustomer } from '../../customers/types/customers';
 import { useCartStore } from '../hooks/use-cart-store';
 import useCheckoutModal from '../hooks/use-checkout-dialog';
 import { useDiscount } from '../hooks/use-discount';
 import checkOutSchema, { CheckoutFormData } from '../schema/check-out';
 import CreateCustomerFormDialog from './create-customer-form-dialog';
+import getSimpleCustomers, {
+  SimpleCustomer,
+} from '../../customers/actions/get-get-simple-customers';
 
 interface Props {
   disabled: boolean;
@@ -82,15 +83,16 @@ export function CheckoutDialog({ disabled, cashier }: Props) {
 
   const [customers, setCustomers] = useState<SimpleCustomer[]>([]);
 
-  //   useEffect(() => {
-  //     const fetchcustomers = async () => {
-  //       const response = await getCustomers({ search: query });
-  //       if (response?.success) {
-  //         setCustomers(response.data!);
-  //       }
-  //     };
-  //     fetchcustomers();
-  //   }, [customers, query]);
+  useEffect(() => {
+    const fetchcustomers = async () => {
+      const response = await getSimpleCustomers();
+      if (!response.success) {
+        return;
+      }
+      setCustomers(response.data);
+    };
+    fetchcustomers();
+  }, [query]);
 
   const { getTotal, clearCart } = useCartStore();
   const { calculateDiscount } = useDiscount();
@@ -185,10 +187,10 @@ export function CheckoutDialog({ disabled, cashier }: Props) {
       <DialogTrigger asChild>
         <Button
           disabled={disabled}
-          className='w-full rounded-md py-6 text-white  text-base bg-blue-700 mt-4 hover:to-blue-900 transition-all duration-300'
+          className='w-full rounded-md py-6 text-white  text-base bg-blue-700 mt-4 hover:to-blue-900 transition-all duration-300 hover:bg-blue-900'
         >
           <HandCoins />
-          Passer à la caisse
+          Check Out
         </Button>
       </DialogTrigger>
       <DialogContent className='sm:max-w-[1000px] bg-black rounded-2xl border-[0.1px] pb-10 '>
@@ -209,7 +211,7 @@ export function CheckoutDialog({ disabled, cashier }: Props) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <div className='flex flex-col h-full py-4 px-4 border-[0.1px] bg-[#0a0a0a] rounded-md'>
+          <div className='flex flex-col h-full py-4 px-4 border-[0.1px] bg-card rounded-md'>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -433,7 +435,7 @@ export function CheckoutDialog({ disabled, cashier }: Props) {
                                       ? customers.find(
                                           (customer) =>
                                             customer.id === field.value
-                                        )?.firsName
+                                        )?.firstName
                                       : 'liste des clients'}
                                     <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                                   </Button>
@@ -475,7 +477,7 @@ export function CheckoutDialog({ disabled, cashier }: Props) {
                                               : 'opacity-0'
                                           )}
                                         />
-                                        {customer.firsName +
+                                        {customer.firstName +
                                           ' ' +
                                           customer.lastName}
                                       </CommandItem>
@@ -516,7 +518,7 @@ export function CheckoutDialog({ disabled, cashier }: Props) {
                     </motion.div>
                   )}
                 </div>
-                <div className='lg:w-80 p-6 border bg-card flex flex-col  ml-3 rounded-xl'>
+                <div className='lg:w-80 p-6  bg-card border-[0.1px] bg-black flex flex-col  ml-3 rounded-xl'>
                   <div className='flex-1'>
                     <h2 className='font-semibold mb-4'>
                       Résumé de l&apos;achat
@@ -553,45 +555,30 @@ export function CheckoutDialog({ disabled, cashier }: Props) {
                         <span>{customerChange} G</span>
                       </motion.div>
                     </div>
-                    <div className=''>
-                      {!completed && (
-                        <Button
-                          disabled={
-                            !form.formState.isValid ||
-                            form.formState.isSubmitting ||
-                            (paymentMethod === 'CASH' &&
-                              amountReceived! < total)
-                          }
-                          type='submit'
-                          className='w-full mt-6 bg-blue-700 hover:bg-blue-900 text-white'
-                          size='lg'
-                        >
-                          {isLoading ? (
-                            <p className='flex items-center justify-center gap-4'>
-                              <FaSpinner className='animate-spin' />
-                              <span>Processing...</span>
-                            </p>
-                          ) : (
-                            'Finaliser le paiement'
-                          )}
-                        </Button>
-                      )}
-                    </div>
                   </div>
-
-                  {/* {completed && (
-                    <div className='flex mt-4 justify-between   items-center gap-4'>
+                  <div className='mt-auto'>
+                    {!completed && (
                       <Button
-                        className='text-base font-normal transition-all duration-300 shadow-none border-[0.1px]'
-                        onClick={handleCanel}
+                        disabled={
+                          !form.formState.isValid ||
+                          form.formState.isSubmitting ||
+                          (paymentMethod === 'CASH' && amountReceived! < total)
+                        }
+                        type='submit'
+                        className='w-full mt-6 bg-blue-700 hover:bg-blue-900 text-white'
+                        size='lg'
                       >
-                        Retourner
+                        {isLoading ? (
+                          <p className='flex items-center justify-center gap-4'>
+                            <FaSpinner className='animate-spin' />
+                            <span>Processing...</span>
+                          </p>
+                        ) : (
+                          'Complete payment'
+                        )}
                       </Button>
-                      <Button disabled>
-                        <Receipt /> Imprimer le reçu
-                      </Button>
-                    </div>
-                  )} */}
+                    )}
+                  </div>
                 </div>
               </form>
             </Form>

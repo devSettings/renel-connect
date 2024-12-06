@@ -1,12 +1,18 @@
 'use server';
 
-import SaleReference from '@/lib/create-sales-reference';
 import prisma from '@/prisma/client';
-import { PaymentMethod, Prisma, SaleCategory } from '@prisma/client';
+import { Collection, PaymentMethod } from '@prisma/client';
+import SaleReference from './create-order-reference';
+import { ActionResponse } from '@/app/types/action-reponse';
+import { revalidatePath } from 'next/cache';
+import { format } from 'date-fns';
+
+const CURRENT_YEAR = new Date().getFullYear();
+const OrderDate = format(new Date(CURRENT_YEAR, 0, 1), 'yyyy-dd-MM');
 
 export type SaleData = {
   cashier_id: string;
-  category: SaleCategory;
+  category: Collection;
   paymentMethod: PaymentMethod;
   sub_total: number;
   amount_received?: number;
@@ -27,102 +33,72 @@ export type SaleItemsData = {
   total_price: number;
 };
 
-const createSale = async (
-  saleData: SaleData,
-  saleItemsData: SaleItemsData[]
-) => {
-  try {
-    if (!saleData || !saleItemsData || saleItemsData.length === 0) {
-      throw new Error(
-        `Données de vente ou données d'articles soldés non valides`
-      );
-    }
-    // Generate unique sale reference
-    const reference = await SaleReference();
-    if (!reference) {
-      throw new Error('Failed to generate a sale reference.');
-    }
-
-    // Create the sale entry in the database
-
-    // Start a transaction for creating sale and saleItems
-    const result = await prisma.$transaction(async (prisma) => {
-      const newSale = await prisma.sale.create({
-        data: {
-          reference,
-          cashier_id: saleData.cashier_id,
-          category: saleData.category,
-          payment_method: saleData.paymentMethod,
-          sub_total: saleData.sub_total,
-          amount_received: saleData.amount_received || 0,
-          customer_change: saleData.customer_change,
-          discount: saleData.discount || 0,
-          total: saleData.total,
-          tax: saleData.tax,
-          room_number: saleData.room_number,
-          transaction_receipt_id: saleData.transaction_receipt_id,
-          customer_id: saleData.customer_id,
-        },
-      });
-
-      await prisma.saleItem.createMany({
-        data: saleItemsData.map((item) => ({
-          sale_id: newSale.id,
-          product_id: item.product_id,
-          unit_price: item.unit_price,
-          selling_price: item.selling_price,
-          total_price: item.total_price,
-          quantity: item.quantity,
-        })),
-      });
-
-      // Fetch sale items with related product information
-      const saleItems = await prisma.saleItem.findMany({
-        where: { sale_id: newSale.id },
-        include: { product: { select: { name: true } } },
-      });
-
-      return {
-        newSale,
-        saleItems,
-      };
-    });
-
-    return {
-      success: true,
-      saleData: result.newSale,
-      saleItemData: result.saleItems,
-      message: 'Vente créée avec succès.',
-    };
-  } catch (error) {
-    console.error('Error creating sale:', error);
-
-    // Differentiate error types for better feedback
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      // Handle known Prisma errors
-      if (error.code === 'P2002') {
-        return {
-          success: false,
-          message:
-            'Unique constraint violation. A sale with this reference already exists.',
-        };
-      }
-      return {
-        success: false,
-        message:
-          'Database error. Please contact support if the issue persists.',
-      };
-    } else if (error instanceof Error) {
-      // Handle general errors
-      return { success: false, message: error.message };
-    } else {
-      // Handle unexpected errors
-      return {
-        success: false,
-        message: 'An unexpected error occurred. Please try again later.',
-      };
-    }
-  }
+export type OrderData = {
+  CashierId: string;
+  category: Collection;
+  paymentMethod: PaymentMethod;
+  subTotal: number;
+  amountReceived?: number;
+  customerChange?: number;
+  discount: number;
+  total: number;
+  tax?: number;
+  transactionReceiptId?: string;
+  customerId?: string;
 };
 
-export default createSale;
+export type OrderItemData = {
+  productId: string;
+  unitPrice: number;
+  quantity: number;
+  totalPrice: number;
+}[];
+
+const createOrder = async (
+  orderData: {},
+  OrderItemData: []
+): Promise<ActionResponse> => {
+  try {
+    if (!orderData || !OrderItemData || OrderItemData.length === 0) {
+      return { success: false, error: 'Order Can not be created' };
+    }
+
+    const reference = await SaleReference();
+    if (!reference)
+      return { success: false, error: 'Failed to generate Order Refrence' };
+
+    await prisma.order.create({
+      data: {
+        reference: reference,
+        orderDate: OrderDate,
+        cashierId: '',
+        amountReceived: 0,
+        source: 'POS',
+        totalPrice: 0,
+        totalItems: 0,
+        category: 'OTHER',
+        customerId: '',
+        paymentMethod: 'CASH',
+        change: 0,
+        OrderItem: {
+          create: [
+            {
+              unitPrice: 0,
+              totalPrice: 0,
+              quantity: 0,
+              orderDate: OrderDate,
+              productId: '',
+              roomNumber: 0,
+            },
+          ],
+        },
+      },
+    });
+
+    revalidatePath('/dashboard/orders');
+    revalidatePath('dashboard/reports');
+    return { success: true, data: '' };
+  } catch (error) {
+    return { success: false, error: 'Failed to create Order' };
+  }
+};
