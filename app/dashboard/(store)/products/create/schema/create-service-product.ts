@@ -5,33 +5,35 @@ const createServiceProductSchema = z.object({
   name: z
     .string()
     .min(3, {
-      message: 'Le nom du produit doit comporter au moins 3 caractères',
+      message: 'The product name must be at least 3 characters',
     })
     .max(50, {
-      message: 'Le nom du produit ne peut pas comporter plus de 50 caractères',
+      message: 'The product name must not exceed 50 characters',
     }),
   sku: z
     .string()
-    .min(8, { message: 'Le SKU est requis' })
-    .max(20, { message: 'Le SKU ne peut pas comporter plus de 10 caractères' })
+    .min(8, { message: 'The SKU is required' })
+    .max(20, { message: 'The SKU must not exceed 10 characters' })
     .optional(),
   category: z.string({
-    required_error: 'La catégorie du produit est requise',
+    required_error: 'The product category is required',
   }),
-  sellingPrice: z.number().positive('Le prix de vente doit être supérieur à 0'),
+  sellingPrice: z.number().positive('The selling price must be greater than 0'),
   productType: z.literal('SERVICES', {
-    message: 'Le type de produit doit être Services',
+    message: 'The product type must be Services',
   }),
   status: z.nativeEnum(ProductStatus, {
     errorMap: () => ({
-      message: `Le statut du produit doit être une des valeurs suivantes `,
+      message: `The product status must be one of the following values: ${Object.values(
+        ProductStatus
+      ).join(', ')}`,
     }),
   }),
   serviceDuration: z
     .number()
-    .positive('La durée du service doit être supérieure à 0'),
+    .positive('The service duration must be greater than 0'),
   serviceLocation: z.string({
-    required_error: 'Le lieu du service est requis',
+    required_error: 'The service location is required',
   }),
 });
 

@@ -1,11 +1,11 @@
 import Search from '@/components/search';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { ProductStatus, ProductType } from '@prisma/client';
 import { Suspense } from 'react';
 import getProductDepartmentMetrics from './actions/get-product-department-metrics';
 import getProductStatusMetrics from './actions/get-product-status-metrics';
 import getProductTypeMetrics from './actions/get-product-type-metrics';
 import getProducts from './actions/get-products';
-import ProductCategoryFilter from './components/product-category-filter';
 import { ProductDepartmentMetrics } from './components/product-department-metrics';
 import ProductStatusFilter from './components/product-status-filter';
 import { ProductStatusMetrics } from './components/product-status-matrix';
@@ -13,10 +13,25 @@ import ProductTypeFilter from './components/product-type-filter';
 import { ProductTypeMetrics } from './components/product-type-matrics';
 import ProductsTable from './components/products-table';
 import CreateProductFormDialog from './create/components/create-product-form-dialog';
-
-const ProductPage = async () => {
+interface Props {
+  searchParams: Promise<{
+    status: ProductStatus;
+    page: string;
+    searchQuery: string;
+    type: ProductType;
+  }>;
+}
+const ProductPage = async ({ searchParams }: Props) => {
+  const { status, page, searchQuery, type } = await searchParams;
+  let currentPage = 1;
+  if (page) {
+    const parsedPage = parseInt(page);
+    if (!isNaN(parsedPage) && parsedPage > 0) {
+      currentPage = parsedPage;
+    }
+  }
   const [products, types, statues, departments] = await Promise.all([
-    getProducts(),
+    getProducts({ status, type, search: searchQuery, currentPage }),
     getProductTypeMetrics(),
     getProductStatusMetrics(),
     getProductDepartmentMetrics(),
@@ -42,12 +57,12 @@ const ProductPage = async () => {
           nonInventory={types.data.non_inventory}
           digital={types.data.digital}
         />
-        {/* <ProductDepartmentMetrics
+        <ProductDepartmentMetrics
           room={departments.data.room}
           drink={departments.data.drink}
           food={departments.data.food}
           other={departments.data.other}
-        /> */}
+        />
       </div>
 
       <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]'>
@@ -58,7 +73,7 @@ const ProductPage = async () => {
                 <Search className='bg-black' />
               </Suspense>
               <Suspense fallback={'Matrics Loading....'}>
-                <ProductCategoryFilter />
+                {/* <ProductCategoryFilter /> */}
                 <ProductStatusFilter />
                 <ProductTypeFilter />
               </Suspense>

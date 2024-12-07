@@ -135,11 +135,11 @@ export default function EditNonInventoryProductForm({
             name='name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom de l&apos;article</FormLabel>
+                <FormLabel>Product Name</FormLabel>
                 <span className='text-red-500'>*</span>
 
                 <FormControl>
-                  <Input placeholder='Nouvel article' {...field} />
+                  <Input placeholder='New Product' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -152,7 +152,7 @@ export default function EditNonInventoryProductForm({
             render={({ field }) => (
               <FormItem className='flex flex-col'>
                 <div className='flex items-center mb-1'>
-                  <FormLabel>Nom de la catégorie</FormLabel>
+                  <FormLabel>Category Name</FormLabel>
                   <span className='text-red-500'>*</span>
                 </div>
                 <Popover open={open} onOpenChange={setOpen}>
@@ -169,7 +169,7 @@ export default function EditNonInventoryProductForm({
                             ? categories.find(
                                 (customer) => customer.id === field.value
                               )?.name
-                            : 'Listes de catégories'}
+                            : 'Category List'}
                           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                         </Button>
                       </FormControl>
@@ -180,13 +180,13 @@ export default function EditNonInventoryProductForm({
                     <Command>
                       <div className='m-2'>
                         <Input
-                          placeholder='Rechercher une catégorie...'
+                          placeholder='Search Category...'
                           value={query}
                           onChange={(e) => setQuery(e.target.value)}
                         />
                       </div>
                       <CommandList className='border-[0.1px] mx-2 mb-2 rounded-lg '>
-                        <CommandEmpty>Aucune catégorie trouvée</CommandEmpty>
+                        <CommandEmpty>No category found</CommandEmpty>
                         <CommandGroup>
                           {categories.map((category) => (
                             <CommandItem
@@ -222,7 +222,7 @@ export default function EditNonInventoryProductForm({
             name='sellingPrice'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Prix de vente</FormLabel>
+                <FormLabel>Selling Price</FormLabel>
                 <span className='text-red-500'>*</span>
                 <FormControl>
                   <Input
@@ -250,7 +250,7 @@ export default function EditNonInventoryProductForm({
             name='status'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Statut</FormLabel>
+                <FormLabel>Status</FormLabel>
                 <span className='text-red-500'>*</span>
                 <Select
                   onValueChange={field.onChange}
@@ -258,7 +258,7 @@ export default function EditNonInventoryProductForm({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Statut de l'article" />
+                      <SelectValue placeholder='Status' />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -274,8 +274,12 @@ export default function EditNonInventoryProductForm({
           />
         </div>
         <div className='flex items-center justify-end mt-10'>
-          <Button type='submit' disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? 'En cours...' : 'Soumettre'}
+          <Button
+            className='bg-blue-700 hover:bg-blue-700 text-white'
+            type='submit'
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? 'Submitting...' : 'Submit'}
           </Button>
         </div>
       </form>

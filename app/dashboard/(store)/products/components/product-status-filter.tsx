@@ -1,6 +1,12 @@
 'use client';
 
-import { ChevronsUpDown, Crown, Star, User } from 'lucide-react';
+import {
+  Archive,
+  ChevronsUpDown,
+  CircleCheck,
+  CircleX,
+  File,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -21,35 +27,35 @@ import {
 import { useState } from 'react';
 import useQueryParameter from '@/hooks/use-query-parameter';
 
-const memberships = [
+const statuses = [
   {
-    value: 'BRONZE',
-    label: 'Bronze',
-    icon: User,
+    value: 'ACTIVE',
+    label: 'Active',
+    icon: CircleCheck,
   },
   {
-    value: 'SILVER',
-    label: 'Silver',
-    icon: User,
+    value: 'INACTIVE',
+    label: 'Inactive',
+    icon: CircleX,
   },
   {
-    value: 'GOLD',
-    label: 'Gold',
-    icon: Star,
+    value: 'DRAFT',
+    label: 'Draft',
+    icon: File,
   },
   {
-    value: 'PLATINUM',
-    label: 'Platinum',
-    icon: Crown,
+    value: 'ARCHIVED',
+    label: 'Archived',
+    icon: Archive,
   },
 ];
 
 export default function ProductStatusFilter() {
   const [open, setOpen] = useState(false);
-  const { query, handleQuery } = useQueryParameter('membership');
+  const { query, handleQuery } = useQueryParameter('status');
 
-  const handleMembershipToggle = (membership: string) => {
-    handleQuery(membership);
+  const handleStatusToggle = (status: string) => {
+    handleQuery(status);
   };
 
   return (
@@ -63,7 +69,7 @@ export default function ProductStatusFilter() {
             aria-expanded={open}
             className='w-fit justify-between rounded-sm'
           >
-            Membership
+            Status
             <ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />
           </Button>
 
@@ -74,10 +80,7 @@ export default function ProductStatusFilter() {
                 variant='secondary'
                 size='sm'
               >
-                {
-                  memberships.find((membership) => membership.value === query)
-                    ?.label
-                }
+                {statuses.find((status) => status.value === query)?.label}
               </Button>
             </div>
           )}
@@ -85,31 +88,29 @@ export default function ProductStatusFilter() {
       </PopoverTrigger>
       <PopoverContent className='w-fit p-0'>
         <Command>
-          <CommandInput placeholder='Search membership...' className='h-9' />
+          <CommandInput placeholder='Search status...' className='h-9' />
           <CommandList>
-            <CommandEmpty>No membership found.</CommandEmpty>
+            <CommandEmpty>No status found.</CommandEmpty>
             <CommandGroup>
-              {memberships.map((membership) => {
-                const MembershipIcon = membership.icon;
+              {statuses.map((status) => {
+                const StatusIcon = status.icon;
                 return (
                   <CommandItem
-                    key={membership.value}
-                    onSelect={() => handleMembershipToggle(membership.value)}
+                    key={status.value}
+                    onSelect={() => handleStatusToggle(status.value)}
                   >
                     <div className='flex items-center space-x-2 flex-1'>
                       <Checkbox
-                        checked={query === membership.value}
-                        onCheckedChange={() =>
-                          handleMembershipToggle(membership.value)
-                        }
-                        id={`membership-${membership.value}`}
+                        checked={query === status.value}
+                        onCheckedChange={() => handleStatusToggle(status.value)}
+                        id={`status-${status.value}`}
                       />
-                      <MembershipIcon className='h-4 w-4 text-muted-foreground' />
+                      <StatusIcon className='h-4 w-4 text-muted-foreground' />
                       <label
-                        htmlFor={`membership-${membership.value}`}
+                        htmlFor={`status-${status.value}`}
                         className='flex-1 cursor-pointer'
                       >
-                        {membership.label}
+                        {status.label}
                       </label>
                     </div>
                   </CommandItem>
@@ -118,16 +119,6 @@ export default function ProductStatusFilter() {
             </CommandGroup>
           </CommandList>
         </Command>
-        <div className='p-2'>
-          <Button
-            variant='destructive'
-            size='sm'
-            className='w-full bg-red-600 rounded-sm'
-            onClick={() => handleQuery('')}
-          >
-            Clear
-          </Button>
-        </div>
       </PopoverContent>
     </Popover>
   );

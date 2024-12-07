@@ -43,11 +43,11 @@ const CreateProductFormDialog = () => {
         <div className='flex  justify-between mr-6'>
           <DialogHeader>
             <DialogTitle className='text-2xl font-bold'>
-              Create new product
+              {/* Create new product */}
             </DialogTitle>
             <DialogDescription>
-              Fill in the details to add a new product to your inventory. Ensure
-              the information is accurate for seamless tracking and management.
+              {/* Fill in the details to add a new product to your inventory. Ensure
+              the information is accurate for seamless tracking and management. */}
             </DialogDescription>
           </DialogHeader>
           <Select

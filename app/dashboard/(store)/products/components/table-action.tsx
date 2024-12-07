@@ -70,6 +70,7 @@ const TableAction = ({ id, type }: Props) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
       <EditProductFormDialog
         type={type}
         isOpen={isEditing}

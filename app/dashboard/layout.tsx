@@ -1,13 +1,21 @@
 import { AppSidebar } from '@/components/app-sidebar';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { PropsWithChildren } from 'react';
-import Breadcrumb from './components/breadcrumb';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import DatePickerWithRange from './components/date-range-picker';
 import createUser from './action/create-user';
+import Breadcrumb from './components/breadcrumb';
+import DatePickerWithRange from './components/date-range-picker';
+import { currentUser } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
 const LayOut = async ({ children }: PropsWithChildren) => {
   await createUser();
+
+  const user = await currentUser();
+  if (!user) {
+    redirect('/sign-in');
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -18,7 +26,7 @@ const LayOut = async ({ children }: PropsWithChildren) => {
             <DatePickerWithRange />
           </div>
         </header>
-        <div className='flex flex-1 flex-col gap-4 p-4 pt-2   bg-black overflow-hidden'>
+        <div className='flex flex-1 flex-col gap-4 p-4 pt-2 bg-black overflow-hidden'>
           <ScrollArea className='h-[85vh]'>{children}</ScrollArea>
         </div>
       </SidebarInset>

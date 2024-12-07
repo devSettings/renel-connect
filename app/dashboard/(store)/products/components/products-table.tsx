@@ -26,10 +26,10 @@ interface Props {
 }
 
 const tableHeads = [
-  'Article',
+  'Product',
   'Type',
-  'Prix ​​de vente',
-  'Categorie',
+  'Selling Price',
+  'Category',
   'Status',
   'Stock',
   'Action',

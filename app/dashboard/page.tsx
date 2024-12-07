@@ -1,16 +1,6 @@
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
-
+import { redirect } from 'next/navigation';
 const OverViewPage = () => {
-  return (
-    <div>
-      <SignedOut>
-        <SignInButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </div>
-  );
+  redirect('/dashboard/reports');
 };
 
 export default OverViewPage;

@@ -18,38 +18,38 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-import { useState } from 'react';
 import useQueryParameter from '@/hooks/use-query-parameter';
+import { useState } from 'react';
 
-const memberships = [
+const types = [
   {
-    value: 'BRONZE',
-    label: 'Bronze',
+    value: 'INVENTORY',
+    label: 'Inventory',
+    icon: File,
+  },
+  {
+    value: 'SERVICE',
+    label: 'Service',
     icon: User,
   },
   {
-    value: 'SILVER',
-    label: 'Silver',
-    icon: User,
-  },
-  {
-    value: 'GOLD',
-    label: 'Gold',
+    value: 'NON_INVENTORY',
+    label: 'Non Inventory',
     icon: Star,
   },
   {
-    value: 'PLATINUM',
-    label: 'Platinum',
+    value: 'DIGITAL',
+    label: 'Digital',
     icon: Crown,
   },
 ];
 
 export default function ProductTypeFilter() {
   const [open, setOpen] = useState(false);
-  const { query, handleQuery } = useQueryParameter('membership');
+  const { query, handleQuery } = useQueryParameter('type');
 
-  const handleMembershipToggle = (membership: string) => {
-    handleQuery(membership);
+  const handleTypeToggle = (type: string) => {
+    handleQuery(type);
   };
 
   return (
@@ -63,7 +63,7 @@ export default function ProductTypeFilter() {
             aria-expanded={open}
             className='w-fit justify-between rounded-sm'
           >
-            Membership
+            Type
             <ChevronsUpDown className='h-4 w-4 shrink-0 opacity-50' />
           </Button>
 
@@ -74,10 +74,7 @@ export default function ProductTypeFilter() {
                 variant='secondary'
                 size='sm'
               >
-                {
-                  memberships.find((membership) => membership.value === query)
-                    ?.label
-                }
+                {types.find((type) => type.value === query)?.label}
               </Button>
             </div>
           )}
@@ -85,31 +82,29 @@ export default function ProductTypeFilter() {
       </PopoverTrigger>
       <PopoverContent className='w-fit p-0'>
         <Command>
-          <CommandInput placeholder='Search membership...' className='h-9' />
+          <CommandInput placeholder='Search type...' className='h-9' />
           <CommandList>
-            <CommandEmpty>No membership found.</CommandEmpty>
+            <CommandEmpty>No type found.</CommandEmpty>
             <CommandGroup>
-              {memberships.map((membership) => {
-                const MembershipIcon = membership.icon;
+              {types.map((type) => {
+                const TypeIcon = type.icon;
                 return (
                   <CommandItem
-                    key={membership.value}
-                    onSelect={() => handleMembershipToggle(membership.value)}
+                    key={type.value}
+                    onSelect={() => handleTypeToggle(type.value)}
                   >
                     <div className='flex items-center space-x-2 flex-1'>
                       <Checkbox
-                        checked={query === membership.value}
-                        onCheckedChange={() =>
-                          handleMembershipToggle(membership.value)
-                        }
-                        id={`membership-${membership.value}`}
+                        checked={query === type.value}
+                        onCheckedChange={() => handleTypeToggle(type.value)}
+                        id={`type-${type.value}`}
                       />
-                      <MembershipIcon className='h-4 w-4 text-muted-foreground' />
+                      {/* <TypeIcon className='h-4 w-4 text-muted-foreground' /> */}
                       <label
-                        htmlFor={`membership-${membership.value}`}
+                        htmlFor={`type-${type.value}`}
                         className='flex-1 cursor-pointer'
                       >
-                        {membership.label}
+                        {type.label}
                       </label>
                     </div>
                   </CommandItem>
@@ -118,16 +113,6 @@ export default function ProductTypeFilter() {
             </CommandGroup>
           </CommandList>
         </Command>
-        <div className='p-2'>
-          <Button
-            variant='destructive'
-            size='sm'
-            className='w-full bg-red-600 rounded-sm'
-            onClick={() => handleQuery('')}
-          >
-            Clear
-          </Button>
-        </div>
       </PopoverContent>
     </Popover>
   );

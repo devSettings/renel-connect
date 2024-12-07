@@ -21,12 +21,12 @@ const CreateProductCategoryFormDialog = () => {
           <PlusCircle className='text-blue-600' />
         </Button>
       </DialogTrigger>
-      <DialogContent className='py-10 bg-[#0a0a0a]'>
+      <DialogContent className='py-10 '>
         <DialogHeader>
-          <DialogTitle>Créer une nouvelle catégorie</DialogTitle>
+          <DialogTitle>Create new product category</DialogTitle>
           <DialogDescription>
-            Créer une nouvelle catégorie signifie que vous pourrez la
-            sélectionner immédiatement lors de la création de nouveaux produits.
+            {/* Créer une nouvelle catégorie signifie que vous pourrez la
+            sélectionner immédiatement lors de la création de nouveaux produits. */}
           </DialogDescription>
         </DialogHeader>
         <CreateProductCategoryForm
