@@ -32,7 +32,12 @@ const getCustomers = async (): Promise<ActionResponse<Customer[]>> => {
     });
     return { success: true, data: customers };
   } catch (error) {
-    return { success: false, error: 'Faild to fetch customers' };
+    return {
+      success: false,
+      error: `Failed to create Customer: ${
+        error instanceof Error ? error.message : 'Unknown Error'
+      }`,
+    };
   }
 };
 

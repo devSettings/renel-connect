@@ -50,7 +50,7 @@ export function CustomerGenderMetrics({ male, female, other }: Props) {
 
   const totalCustomers = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.customers, 0);
-  }, []);
+  }, [chartData]);
 
   return (
     <Card className='flex flex-col border-[0.1px]'>

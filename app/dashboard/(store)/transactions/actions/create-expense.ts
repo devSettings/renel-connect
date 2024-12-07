@@ -5,10 +5,16 @@ import prisma from '@/prisma/client';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import createExpenseFormSchema from '../schema/create-expense';
+import { currentUser } from '@clerk/nextjs/server';
+import { ActionResponse } from '@/app/types/action-reponse';
 
 type FormData = z.infer<typeof createExpenseFormSchema>;
 
-const createExpense = async (data: FormData) => {
+const createExpense = async (data: FormData): Promise<ActionResponse> => {
+  const user = await currentUser();
+  if (!user) {
+    return { success: false, error: 'User not found' };
+  }
   const result = createExpenseFormSchema.safeParse(data);
   if (!result.success) {
     return { success: false, error: result.error.flatten().fieldErrors };
@@ -23,7 +29,7 @@ const createExpense = async (data: FormData) => {
         typeOfTransaction: result.data.typeOfTransaction,
         expenseDate: result.data.expenseDate.toISOString().split('T')[0],
         expenseCategoryId: result.data.category,
-        userId: 'cm4ct968q000049i0xxqmz5e4',
+        userId: user.id,
       },
     });
     revalidatePath('/dashboard/transactions');
@@ -31,11 +37,7 @@ const createExpense = async (data: FormData) => {
   } catch (error) {
     return {
       success: false,
-      message: `Failed to create expense: ${
-        error instanceof Error ? error.message : 'Unknown error'
-      }`,
       error: error instanceof Error ? error.message : 'Unknown error',
-      data: [],
     };
   }
 };

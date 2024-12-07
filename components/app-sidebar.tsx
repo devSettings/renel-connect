@@ -1,12 +1,9 @@
 'use client';
 
 import {
-  BookOpen,
-  Bot,
   Command,
   Frame,
   LifeBuoy,
-  Map,
   PieChart,
   Send,
   Settings2,
@@ -58,56 +55,15 @@ const data = {
         { title: 'Transactions', url: '/dashboard/transactions' },
       ],
     },
-    {
-      title: 'Models',
-      url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#',
-        },
-        {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
-    },
+
     {
       title: 'Settings',
       url: '#',
       icon: Settings2,
       items: [
         {
-          title: 'General',
-          url: '#',
+          title: 'Users',
+          url: '/dashboard/users',
         },
         {
           title: 'Team',
@@ -146,11 +102,6 @@ const data = {
       name: 'Sales & Marketing',
       url: '#',
       icon: PieChart,
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map,
     },
   ],
 };

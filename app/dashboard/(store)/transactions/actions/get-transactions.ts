@@ -4,6 +4,7 @@ import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { TypeOfTransaction } from '@prisma/client';
 import { Transaction } from '../types/transactions';
+import { format } from 'date-fns';
 type FilterOptions = {
   type?: TypeOfTransaction;
   search?: string;
@@ -20,6 +21,11 @@ const getTransactions = async (
   try {
     const adjustedPageSize = Math.floor(pageSize / 4);
     const remainder = pageSize % 4;
+
+    const aggregations = await prisma.order.aggregate({
+      _sum: { totalPrice: true },
+    });
+    const totalRevenue = aggregations._sum.totalPrice?.toNumber();
 
     const [expenses, incomes, losses, aquisitions] = await Promise.all([
       prisma.expense.findMany({
@@ -64,6 +70,7 @@ const getTransactions = async (
         skip,
         take: adjustedPageSize,
       }),
+
       prisma.lost.findMany({
         select: {
           id: true,
@@ -157,6 +164,19 @@ const getTransactions = async (
           : 'Unknown',
       })),
     ];
+    const currentDate = format(new Date(), 'yyyy-MM-dd');
+
+    // Add total revenue as an income transaction
+    if (totalRevenue) {
+      transactions.push({
+        id: 'KKVSH009NS1',
+        title: 'Total Revenue',
+        amount: totalRevenue,
+        type: 'INCOME',
+        date: currentDate,
+        madeBy: 'System',
+      });
+    }
 
     if (!transactions || transactions.length === 0) {
       return {

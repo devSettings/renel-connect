@@ -42,12 +42,12 @@ const ProductPage = async () => {
           nonInventory={types.data.non_inventory}
           digital={types.data.digital}
         />
-        <ProductDepartmentMetrics
+        {/* <ProductDepartmentMetrics
           room={departments.data.room}
           drink={departments.data.drink}
           food={departments.data.food}
           other={departments.data.other}
-        />
+        /> */}
       </div>
 
       <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]'>

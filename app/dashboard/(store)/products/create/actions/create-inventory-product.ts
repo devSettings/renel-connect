@@ -6,11 +6,16 @@ import { revalidatePath } from 'next/cache';
 import createInventoryProductSchema from '../schema/create-inventory-product';
 import { z } from 'zod';
 import generateProductSku from './generate-product-sku';
+import { currentUser } from '@clerk/nextjs/server';
 
 type FormData = z.infer<typeof createInventoryProductSchema>;
 const createInventoryProduct = async (data: FormData) => {
   const sku = await generateProductSku();
   const result = createInventoryProductSchema.safeParse(data);
+  const user = await currentUser();
+  if (!user) {
+    return { success: false, error: 'User not found' };
+  }
 
   if (!result?.success) {
     return {
@@ -37,7 +42,8 @@ const createInventoryProduct = async (data: FormData) => {
         categoryId: result.data.category,
         type: 'INVENTORY',
         slug: result.data.name.toLowerCase().replace(/ /g, '-'),
-        createdById: 'cm4ct968q000049i0xxqmz5e4',
+        createdById: user.id,
+        department: 'OTHER',
         InventoryProduct: {
           create: { reorderLevel: result.data.reorderLevel },
         },

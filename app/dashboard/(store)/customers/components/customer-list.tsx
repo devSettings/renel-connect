@@ -1,9 +1,8 @@
 'use client';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronRight, DollarSign, Phone, ShoppingCart } from 'lucide-react';
+import { DollarSign, Phone, ShoppingCart } from 'lucide-react';
 import * as React from 'react';
 
 interface Customer {

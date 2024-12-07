@@ -9,6 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SaleReportItemTable from './components/sale-items-report-table';
 import getSales from './actions/get-sales';
 import getSaleItems from './actions/get-sale-items';
+import getTopSellingProduct from './actions/top-selling-product';
+import getSaleByCategory from './actions/get-sale-by-category';
 
 export default async function ReportPage() {
   const [salesResponse, itemsResponse] = await Promise.all([
@@ -26,6 +28,13 @@ export default async function ReportPage() {
   //     return <OrderError error={revenueResponse.error as string} />;
   //   }
 
+  const topSellingProductResponse = await getTopSellingProduct();
+  if (!topSellingProductResponse.success) return;
+
+  const saleCategory = await getSaleByCategory();
+
+  if (!saleCategory.success) return null;
+
   return (
     <div className='space-y-8'>
       <Suspense fallback={'Loading Metrics'}>
@@ -36,7 +45,12 @@ export default async function ReportPage() {
           <TopBestSellingPrducts />
         </Suspense>
         <Suspense fallback={'Laoding Revenue Charts'}>
-          <SaleCategoryChart />
+          <SaleCategoryChart
+            food={saleCategory.data.food}
+            drink={saleCategory.data.drink}
+            room={saleCategory.data.room}
+            other={saleCategory.data.other}
+          />
         </Suspense>
       </div>
 

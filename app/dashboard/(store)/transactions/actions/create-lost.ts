@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import createLostSchema from '../schema/create-lost';
-
+import { currentUser } from '@clerk/nextjs/server';
 export async function createLost(
   data: z.infer<typeof createLostSchema>
 ): Promise<ActionResponse> {
@@ -14,7 +14,10 @@ export async function createLost(
   if (!result.success) {
     return { success: false, error: result.error.flatten().fieldErrors };
   }
-
+  const user = await currentUser();
+  if (!user) {
+    return { success: false, error: 'User not found' };
+  }
   try {
     return await prisma.$transaction(async (tx) => {
       const product = await tx.inventoryProduct.findUnique({
@@ -54,7 +57,7 @@ export async function createLost(
             description: result.data.description,
             quantityOfItems: result.data.quantityLost,
             lostDate: result.data.lostDate.toISOString().split('T')[0],
-            userId: 'cm4ct968q000049i0xxqmz5e4', // Consider fetching this from the session
+            userId: user.id,
             unitPrice: product.product.sellingPrice,
             totalLost:
               Number(product.averageUnitCostPrice) * result.data.quantityLost,

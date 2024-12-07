@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
 import EmptyTable from '@/app/dashboard/components/empty-table';
 import Pagination from '@/app/dashboard/components/pagination';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -22,12 +21,12 @@ interface Props {
 
 const tableHeads = [
   'Name',
-  'QuantitySold',
-  'Average SalePrice',
-  'total Revenue',
-  'Sa Contribution',
-  'Stock Status',
-  'Last Purchase Date',
+  'Quantity Sold',
+  'Average Sale Price',
+  'Total Revenue',
+  'Sales Contribution',
+  'Stock',
+  // 'Last Purchase Date',
   'Action',
 ];
 
@@ -72,8 +71,7 @@ export default function SaleReportItemTable({ items }: Props) {
                 <TableCell>{item.totalRevenue}</TableCell>
                 <TableCell>{item.salesCountribution}</TableCell>
                 <TableCell>{item.QuantityInStock}</TableCell>
-                <TableCell>{item.lastPurchaseDate}</TableCell>
-
+                {/* <TableCell>{item.lastPurchaseDate}</TableCell> */}
                 <TableCell aria-disabled={true}>
                   <EllipsisIcon className='w-4 h-4' />
                 </TableCell>
@@ -84,7 +82,7 @@ export default function SaleReportItemTable({ items }: Props) {
       </CardContent>
       <CardFooter className='overflow-hidden'>
         <Suspense fallback={<div>Loading pagination...</div>}>
-          <Pagination totalPages={10} currentPage={1} itemsPerPage={10} />
+          <Pagination totalPages={10} currentPage={1} />
         </Suspense>
       </CardFooter>
     </Card>

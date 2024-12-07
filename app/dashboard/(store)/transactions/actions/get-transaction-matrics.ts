@@ -25,8 +25,14 @@ const getTransactionMetrics = async (): Promise<
       }),
     ]);
 
+    const aggregations = await prisma.order.aggregate({
+      _sum: { totalPrice: true },
+    });
+
+    const totalRevenue = aggregations._sum.totalPrice?.toNumber();
+
     const transactions = {
-      income: Number(_income._sum.amount) || 0,
+      income: Number(_income._sum.amount) + (totalRevenue || 0),
       expenses: Number(_expense._sum.amount) || 0,
       aquisitions: Number(_aquisition._sum.totalCost) || 0,
       loses: Number(_lost._sum.totalLost) || 0,

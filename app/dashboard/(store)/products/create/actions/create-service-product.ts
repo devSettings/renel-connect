@@ -8,6 +8,7 @@ import generateProductSku from './generate-product-sku';
 import createServiceProductSchema from '../schema/create-service-product';
 import { z } from 'zod';
 import { ActionResponse } from '@/app/types/action-reponse';
+import { currentUser } from '@clerk/nextjs/server';
 type FormData = z.infer<typeof createServiceProductSchema>;
 const createServiceProduct = async (
   data: FormData
@@ -21,6 +22,10 @@ const createServiceProduct = async (
       error: result.error.flatten().fieldErrors,
     };
   }
+  const user = await currentUser();
+  if (!user) {
+    return { success: false, error: 'User not found' };
+  }
 
   try {
     const product = await prisma.product.create({
@@ -32,7 +37,8 @@ const createServiceProduct = async (
         categoryId: result.data.category,
         type: 'SERVICE',
         slug: result.data.name.toLowerCase().replace(/ /g, '-'),
-        createdById: '3',
+        createdById: user.id,
+        department: 'OTHER',
         ServicesProduct: {
           create: {
             serviceDuration: result.data.serviceDuration,

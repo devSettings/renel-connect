@@ -18,7 +18,7 @@ const getOrderMetrics = async (): Promise<ActionResponse<OrderMetrics>> => {
     const matrix: OrderMetrics = {
       totalCustomers: customerCount || 0,
       totalIncome: Number(aggregation._sum.totalPrice) || 0,
-      averageSpent: aggregation._avg.totalPrice || 0,
+      averageSpent: aggregation._avg.totalPrice?.toNumber() || 0,
       totalOrders: aggregation._count.id || 0,
     };
 

@@ -4,8 +4,10 @@ import { PropsWithChildren } from 'react';
 import Breadcrumb from './components/breadcrumb';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import DatePickerWithRange from './components/date-range-picker';
+import createUser from './action/create-user';
 
-const LayOut = ({ children }: PropsWithChildren) => {
+const LayOut = async ({ children }: PropsWithChildren) => {
+  await createUser();
   return (
     <SidebarProvider>
       <AppSidebar />

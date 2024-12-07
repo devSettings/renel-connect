@@ -6,9 +6,10 @@ import prisma from '@/prisma/client';
 import { format } from 'date-fns';
 import { revalidatePath } from 'next/cache';
 import createAquisitionSchema from '../schema/create-aquisition';
-
+import { currentUser } from '@clerk/nextjs/server';
+import { ActionResponse } from '@/app/types/action-reponse';
 const CURRENT_YEAR = new Date().getFullYear();
-const START_DATE = format(new Date(CURRENT_YEAR, 0, 1), 'yyyy-dd-MM');
+const START_DATE = format(new Date(CURRENT_YEAR, 0, 1), 'yyyy-MM-dd');
 
 const calculateAverageUnitCost = (costs: number[]): number =>
   parseFloat(
@@ -16,8 +17,12 @@ const calculateAverageUnitCost = (costs: number[]): number =>
   );
 
 type FormData = z.infer<typeof createAquisitionSchema>;
-const createAquisition = async (data: FormData) => {
+const createAquisition = async (data: FormData): Promise<ActionResponse> => {
   const result = createAquisitionSchema.safeParse(data);
+  const user = await currentUser();
+  if (!user) {
+    return { success: false, error: 'User not found' };
+  }
 
   if (!result.success)
     return { success: false, error: result.error.flatten().fieldErrors };
@@ -69,7 +74,7 @@ const createAquisition = async (data: FormData) => {
           aquisitionDate: result.data.acquisitionDate
             .toISOString()
             .split('T')[0],
-          userId: 'cm4ct968q000049i0xxqmz5e4',
+          userId: user.id,
           supplierId: result.data.supplier,
           typeOfTransaction: 'AQUISITION',
           quantityBought: result.data.quantityBought,

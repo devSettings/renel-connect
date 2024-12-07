@@ -6,30 +6,52 @@ import CreateTransactionFormDialog from './components/create-transaction-dialog'
 import TransactionsMetrics from './components/transaction-metrics';
 import TransactionTypeFilter from './components/transaction-type-filter';
 import TransactionTable from './components/transactions-table';
+import { TypeOfTransaction } from '@prisma/client';
 
-const TransactionsPage = async () => {
-  const transactionResponse = await getTransactions();
+interface TransactionsPageProps {
+  searchParams: Promise<{
+    type?: TypeOfTransaction;
+    searchQuery?: string;
+    page: string;
+  }>;
+}
+
+const TransactionsPage = async ({ searchParams }: TransactionsPageProps) => {
+  const { type, searchQuery, page } = await searchParams;
+
+  const currentPage = page ? parseInt(page) : 1;
+
+  const transactionResponse = await getTransactions({
+    type: type,
+    search: searchQuery,
+    // currentPage: currentPage,
+  });
   if (!transactionResponse.success) return null;
 
-  console.log(transactionResponse.data);
   return (
     <div className='space-y-8'>
       <TransactionsMetrics />
-      <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]   bg-[#0a0a0a] '>
+      <Card className='shadow-none  flex-1 overflow-hidden border-[0.1px]'>
         <CardHeader>
           <div className='flex items-center gap-2 justify-between'>
             <div className='flex items-center gap-4'>
               <Suspense fallback={<div>Loading search...</div>}>
-                <Search />
+                <Search className='bg-black' />
               </Suspense>
-              <TransactionTypeFilter />
+              <Suspense fallback={'loading..'}>
+                <TransactionTypeFilter />
+              </Suspense>
             </div>
             <CreateTransactionFormDialog />
           </div>
         </CardHeader>
         <CardContent>
           <div className='hidden lg:block'>
-            <TransactionTable transactions={transactionResponse.data} />
+            <TransactionTable
+              totalPage={2}
+              currentPage={1}
+              transactions={transactionResponse.data}
+            />
           </div>
         </CardContent>
       </Card>

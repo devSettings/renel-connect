@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { revalidatePath } from 'next/cache';
 import { OrderData, OrderItemData } from '../types/order';
 import SaleReference from './create-order-reference';
+import { currentUser } from '@clerk/nextjs/server';
 
 const OrderDate = format(new Date(), 'yyyy-MM-dd');
 
@@ -21,6 +22,14 @@ const createOrder = async (
         error: 'Order cannot be created: Invalid input data',
       };
     }
+    const user = await currentUser();
+    if (!user) {
+      return { success: false, error: 'User not found' };
+    }
+
+    const customer = orderData.customerId ?? 'cm4d2q3qp000149im2cyb69sq';
+
+    const total = orderData.total;
 
     const reference = await SaleReference();
     if (!reference) {
@@ -41,13 +50,13 @@ const createOrder = async (
         data: {
           reference: reference,
           orderDate: OrderDate,
-          cashierId: 'cm4ctbui5000449i07gvj0k9y',
+          cashierId: user.id,
           amountReceived: orderData.amountReceived,
           source: 'POS',
-          totalPrice: orderData.total,
+          totalPrice: total,
           totalItems: OrderItemData.length,
           category: orderData.category,
-          customerId: orderData.customerId ?? 'cm4d2q3qp000149im2cyb69sq',
+          customerId: customer,
           paymentMethod: orderData.paymentMethod,
           change: orderData.customerChange,
           OrderItem: {
@@ -72,6 +81,14 @@ const createOrder = async (
           });
         }
       }
+
+      await prisma.customer.update({
+        where: { id: customer },
+        data: {
+          totalOrders: { increment: 1 },
+          totalSpend: { increment: total },
+        },
+      });
 
       return order;
     });

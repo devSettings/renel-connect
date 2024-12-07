@@ -2,12 +2,17 @@
 
 import prisma from '@/prisma/client';
 import { revalidatePath } from 'next/cache';
-
+import { currentUser } from '@clerk/nextjs/server';
+import { ActionResponse } from '@/app/types/action-reponse';
 import { IncomeCategory } from '@prisma/client';
 import { z } from 'zod';
 import createIncomeSchema from '../schema/create-income';
 type FormData = z.infer<typeof createIncomeSchema>;
-const createIncome = async (data: FormData) => {
+const createIncome = async (data: FormData): Promise<ActionResponse> => {
+  const user = await currentUser();
+  if (!user) {
+    return { success: false, error: 'User not found' };
+  }
   const result = createIncomeSchema.safeParse(data);
   if (!result.success) {
     return { success: false, error: result.error.flatten().fieldErrors };
@@ -21,7 +26,7 @@ const createIncome = async (data: FormData) => {
         amount: result.data.amount,
         typeOfTransaction: result.data.typeOfTransaction,
         incomeDate: result.data.IncomeDate.toISOString().split('T')[0],
-        userId: 'cm4ct968q000049i0xxqmz5e4',
+        userId: user.id,
         category: result.data.category as IncomeCategory,
       },
     });
@@ -30,11 +35,7 @@ const createIncome = async (data: FormData) => {
   } catch (error) {
     return {
       success: false,
-      message: `Failed to create income: ${
-        error instanceof Error ? error.message : 'Unknown error'
-      }`,
       error: error instanceof Error ? error.message : 'Unknown error',
-      data: [],
     };
   }
 };

@@ -1,5 +1,3 @@
-'use client';
-
 import { EllipsisIcon as EllipsisHorizontal } from 'lucide-react';
 
 // import Pagination from '@/components/pagination';
@@ -19,6 +17,7 @@ import { cn } from '@/lib/utils';
 import { Customer } from '../types/customers';
 import CustomerMembershipBadge from './customer-membership-badge';
 import CustomerStatusBadge from './customer-status-badge';
+import { Suspense } from 'react';
 
 const TABLE_HEADS = [
   'Customer',
@@ -107,7 +106,9 @@ export default function CustomersTable({
         </Table>
       </CardContent>
       <CardFooter className='overflow-hidden bg-accent/20'>
-        <Pagination totalPages={totalPages} currentPage={currentPage} />
+        <Suspense fallback={'loading'}>
+          <Pagination totalPages={totalPages} currentPage={currentPage} />
+        </Suspense>
       </CardFooter>
     </Card>
   );

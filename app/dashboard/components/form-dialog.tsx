@@ -6,13 +6,12 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { IoMdAddCircle } from 'react-icons/io';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { ReactNode, useState } from 'react';
+import { ReactNode } from 'react';
 
 interface FormDialogProps {
   children: ReactNode;
@@ -46,8 +45,7 @@ const FormDialog = ({
       <DialogContent className='max-w-[65vw]'>
         <div className='flex  justify-between mr-6'>
           <DialogHeader>
-            <DialogTitle className='text-2xl font-bold'>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
+            <DialogDescription></DialogDescription>
           </DialogHeader>
         </div>
 

@@ -57,8 +57,14 @@ const CustomersPage = async () => {
               <Suspense fallback={<div>Loading search...</div>}>
                 <Search className='bg-black' />
               </Suspense>
-              <CustomerStatusFilter />
-              <ProductMemberFilter />
+
+              <Suspense fallback={'loading..'}>
+                <CustomerStatusFilter />
+              </Suspense>
+
+              <Suspense fallback={'loading...'}>
+                <ProductMemberFilter />
+              </Suspense>
             </div>
             <CreateCustomerDialog />
           </div>

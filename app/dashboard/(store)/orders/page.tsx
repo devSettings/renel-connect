@@ -39,8 +39,12 @@ export default async function OrdersPage() {
               <Suspense fallback={<div>Loading search...</div>}>
                 <Search />
               </Suspense>
-              <OrderPaymentMethodFilter />
-              <OrderCashierFilter />
+              <Suspense fallback={'loading'}>
+                <OrderPaymentMethodFilter />
+              </Suspense>
+              <Suspense fallback='loading...'>
+                <OrderCashierFilter />
+              </Suspense>
             </div>
           </div>
         </CardHeader>

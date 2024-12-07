@@ -61,6 +61,7 @@ model Permission {
   label       String         @unique @db.VarChar(250)
   value       PermissionName @unique
   description String
+  users       User[]
 }
 
 enum Role {
@@ -114,6 +115,7 @@ model User {
   Income            Income[]
   Lost              Lost[]
   Aquisition        Aquisition[]
+  permissions       Permission[]
 
   @@unique([idProvided, idNumber])
   @@unique([firstName, lastName])

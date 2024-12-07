@@ -22,8 +22,16 @@ const getSimpleCustomers = async (
 
   try {
     const users = await prisma.user.findMany({
-      where: { status: 'ACTIVE', Role: 'CUSTOMER' },
-
+      where: {
+        status: 'ACTIVE',
+        Role: 'CUSTOMER',
+        OR: search
+          ? [
+              { firstName: { contains: search } },
+              { lastName: { contains: search } },
+            ]
+          : undefined,
+      },
       select: { id: true, firstName: true, lastName: true },
       skip,
       take: itemsPerpage,

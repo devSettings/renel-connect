@@ -12,14 +12,15 @@ import Pagination from '@/app/dashboard/components/pagination';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { TypeOfTransaction } from '@prisma/client';
 import { EllipsisIcon } from 'lucide-react';
 import { Suspense } from 'react';
-import TransactionTypeBadge from './transaction-type-badge';
 import { Transaction } from '../types/transactions';
+import TransactionTypeBadge from './transaction-type-badge';
 
 interface Props {
   transactions: Transaction[];
+  totalPage: number;
+  currentPage: number;
 }
 
 const tableHeads = [
@@ -32,7 +33,11 @@ const tableHeads = [
   'Action',
 ];
 
-export default function TransactionTable({ transactions }: Props) {
+export default function TransactionTable({
+  transactions,
+  totalPage,
+  currentPage,
+}: Props) {
   if (transactions.length === 0)
     return (
       <EmptyTable
@@ -92,9 +97,9 @@ export default function TransactionTable({ transactions }: Props) {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter className=' bg-zinc-950 overflow-hidden'>
+      <CardFooter className='bg-zinc-950 overflow-hidden'>
         <Suspense fallback={<div>Loading pagination...</div>}>
-          <Pagination totalPages={10} currentPage={1} itemsPerPage={10} />
+          <Pagination totalPages={totalPage} currentPage={currentPage} />
         </Suspense>
       </CardFooter>
     </Card>

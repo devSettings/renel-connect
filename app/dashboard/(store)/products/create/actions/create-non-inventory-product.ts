@@ -8,7 +8,7 @@ import { z } from 'zod';
 import createNonInventoryProductSchema from '../schema/create-non-inventory-product';
 import generateProductSku from './generate-product-sku';
 import { ActionResponse } from '@/app/types/action-reponse';
-
+import { currentUser } from '@clerk/nextjs/server';
 type FormData = z.infer<typeof createNonInventoryProductSchema>;
 
 const createNonInventoryProduct = async (
@@ -16,6 +16,10 @@ const createNonInventoryProduct = async (
 ): Promise<ActionResponse> => {
   const sku = await generateProductSku();
   const result = createNonInventoryProductSchema.safeParse(data);
+  const user = await currentUser();
+  if (!user) {
+    return { success: false, error: 'User not found' };
+  }
 
   if (!result?.success) {
     return {
@@ -34,7 +38,7 @@ const createNonInventoryProduct = async (
         categoryId: result.data.category,
         type: 'NON_INVENTORY',
         slug: result.data.name.toLowerCase().replace(/ /g, '-'),
-        createdById: 'cm4ctamdh000249i0jm2qpfqu',
+        createdById: user.id,
         department: 'OTHER',
       },
     });
