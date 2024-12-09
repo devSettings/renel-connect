@@ -9,12 +9,12 @@ import { currentUser } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
 const LayOut = async ({ children }: PropsWithChildren) => {
-  await createUser();
-
   const user = await currentUser();
   if (!user) {
     redirect('/sign-in');
   }
+
+  await createUser();
 
   return (
     <SidebarProvider>

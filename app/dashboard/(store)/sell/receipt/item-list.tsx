@@ -12,18 +12,21 @@ interface Props {
 const ItemsList = ({ data }: Props) => {
   return (
     <div className='space-y-2 mb-4'>
-      <div className='flex justify-between text-xs font-medium text-gray-900'>
-        <span className='w-2/3'>Service/Produit</span>
-        <span className='w-1/3 text-right'>Prix</span>
+      <div className='flex justify-between text-xs font-medium'>
+        <span className='w-1/4'>Product</span>
+        <span className='w-1/4 text-right'>Price</span>
+        <span className='w-1/4 text-center'>Qty</span>
+        <span className='w-1/4 text-right'>Total</span>
       </div>
       {data.map((product, index) => (
-        <div key={index} className='flex justify-between text-xs text-gray-900'>
-          <span className='w-2/3'>
-            {product.name} x{product.quantity}
+        <div key={index} className='flex justify-between text-xs'>
+          <span className='w-1/4'>{product.name}</span>
+          <span className='w-1/4 text-right'>
+            {product.sellingPrice.toLocaleString('fr-FR')}
           </span>
-          <span className='w-1/3 text-right'>
-            {(product.sellingPrice * product.quantity).toLocaleString('fr-FR')}{' '}
-            G
+          <span className='w-1/4 text-center'>{product.quantity}</span>
+          <span className='w-1/4 text-right'>
+            {product.totalCost.toLocaleString('fr-FR')}
           </span>
         </div>
       ))}

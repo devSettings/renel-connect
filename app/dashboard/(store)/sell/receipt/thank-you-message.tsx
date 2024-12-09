@@ -2,7 +2,7 @@ import { receiptData } from './receipt-data';
 
 const ThankYouMessage = () => {
   return (
-    <div className='text-center text-xs text-gray-900 mb-4'>
+    <div className='text-center text-xs mb-4'>
       <p className='font-medium'>
         {`Merci d'avoir choisi`} {receiptData.salonName} !
       </p>

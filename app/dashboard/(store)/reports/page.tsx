@@ -1,16 +1,16 @@
 import Search from '@/components/search';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Suspense } from 'react';
+import getSaleByCategory from './actions/get-sale-by-category';
+import getSaleItems from './actions/get-sale-items';
+import getSales from './actions/get-sales';
+import getTopSellingProduct from './actions/top-selling-product';
 import ReportMetrics from './components/report-metrics';
 import { SaleCategoryChart } from './components/sale-category-chart';
-import { TopBestSellingPrducts } from './components/top-best-selling-product';
-import SaleReportTable from './components/sale-report-table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SaleReportItemTable from './components/sale-items-report-table';
-import getSales from './actions/get-sales';
-import getSaleItems from './actions/get-sale-items';
-import getTopSellingProduct from './actions/top-selling-product';
-import getSaleByCategory from './actions/get-sale-by-category';
+import SaleReportTable from './components/sale-report-table';
+import { TopBestSellingProducts } from './components/top-best-selling-product';
 
 export default async function ReportPage() {
   const [salesResponse, itemsResponse] = await Promise.all([
@@ -42,7 +42,7 @@ export default async function ReportPage() {
       </Suspense>
       <div className='grid grid-cols-2 gap-4'>
         <Suspense>
-          <TopBestSellingPrducts />
+          <TopBestSellingProducts data={topSellingProductResponse.data} />
         </Suspense>
         <Suspense fallback={'Laoding Revenue Charts'}>
           <SaleCategoryChart

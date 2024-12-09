@@ -18,11 +18,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-const chartData = [
-  { browser: 'food', revenue: 275, fill: 'var(--color-chrome)' },
-  { browser: 'drink', revenue: 200, fill: 'var(--color-safari)' },
-  { browser: 'other', revenue: 287, fill: 'var(--color-firefox)' },
-  { browser: 'room', revenue: 173, fill: 'var(--color-edge)' },
+
+const stunningColors = [
+  '#FF5733', // Red
+  '#3357FF', // Blue
+  '#FF33A1', // Pink
+  '#A133FF', // Purple
+  '#FFC300', // Yellow
 ];
 
 const chartConfig = {
@@ -31,19 +33,19 @@ const chartConfig = {
   },
   chrome: {
     label: 'Food',
-    color: 'hsl(var(--chart-1))',
+    color: stunningColors[0],
   },
   drink: {
     label: 'Drink',
-    color: 'hsl(var(--chart-2))',
+    color: stunningColors[1],
   },
   other: {
     label: 'Other',
-    color: 'hsl(var(--chart-3))',
+    color: stunningColors[2],
   },
   room: {
     label: 'Room',
-    color: 'hsl(var(--chart-4))',
+    color: stunningColors[3],
   },
 } satisfies ChartConfig;
 
@@ -56,10 +58,10 @@ interface Props {
 
 export function SaleCategoryChart({ food, drink, other, room }: Props) {
   const chartData = [
-    { browser: 'food', revenue: food, fill: 'var(--color-chrome)' },
-    { browser: 'drink', revenue: drink, fill: 'var(--color-safari)' },
-    { browser: 'other', revenue: other, fill: 'var(--color-firefox)' },
-    { browser: 'room', revenue: room, fill: 'var(--color-edge)' },
+    { browser: 'food', revenue: food, fill: stunningColors[0] },
+    { browser: 'drink', revenue: drink, fill: stunningColors[1] },
+    { browser: 'other', revenue: other, fill: stunningColors[2] },
+    { browser: 'room', revenue: room, fill: stunningColors[3] },
   ];
 
   const totalrevenue = React.useMemo(() => {

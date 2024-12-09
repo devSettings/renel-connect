@@ -3,9 +3,30 @@
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { Customer } from '../types/customers';
+import { Membership, UserStatus } from '@prisma/client';
 
-const getCustomers = async (): Promise<ActionResponse<Customer[]>> => {
+interface Options {
+  memberships?: Membership[];
+  statuses?: UserStatus[];
+  search?: string;
+  pageSize?: number;
+  currentPage?: number;
+}
+
+const getCustomers = async (
+  options?: Options
+): Promise<ActionResponse<Customer[]>> => {
   try {
+    const {
+      memberships,
+      statuses,
+      search,
+      pageSize = 10,
+      currentPage = 1,
+    } = options || {};
+
+    const skip = (currentPage - 1) * pageSize;
+
     const rawCustomers = await prisma.customer.findMany({
       select: {
         user: { select: { firstName: true, lastName: true, status: true } },
@@ -16,6 +37,18 @@ const getCustomers = async (): Promise<ActionResponse<Customer[]>> => {
         id: true,
         phoneNumber: true,
       },
+      where: {
+        membership: { in: memberships },
+        user: { status: { in: statuses } },
+        ...(search && {
+          OR: [
+            { user: { firstName: { contains: search } } },
+            { user: { lastName: { contains: search } } },
+          ],
+        }),
+      },
+      skip,
+      take: pageSize,
     });
 
     const customers = rawCustomers.map((customer) => {

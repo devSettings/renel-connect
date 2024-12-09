@@ -1,32 +1,38 @@
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Banknote, Mail, MapPin, Phone, User } from 'lucide-react';
+import { Banknote, Calendar, Mail, MapPin, Phone, User } from 'lucide-react';
 import { useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import BarCode from './bar-code';
-import ItemsList from './item-list';
-import { receiptData } from './receipt-data';
+import ItemsList, { Item } from './item-list';
 import ThankYouMessage from './thank-you-message';
 
 interface BarReceiptProps {
-  address: string;
-  phone1: string;
-  email: string;
   transactionId: string;
-  date: string;
   cashier: string;
-  items: { name: string; price: number }[];
+  items: Item[];
   subtotal: number;
   discount: number;
   tax: number;
   total: number;
   amountReceived: number;
   change: number;
+  paymentMethod: string;
 }
 
-const BarReceipt = ({}: BarReceiptProps) => {
+const BarReceipt = ({
+  transactionId,
+  cashier,
+  items,
+  subtotal,
+  discount,
+  tax,
+  total,
+  amountReceived,
+  change,
+  paymentMethod,
+}: BarReceiptProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
@@ -34,85 +40,82 @@ const BarReceipt = ({}: BarReceiptProps) => {
     <div className='flex justify-center items-center h-screen'>
       <Card className='p-4 space-y-4 w-[80mm]' ref={contentRef}>
         <div className='text-center mb-2'>
-          <h1 className='text-2xl font-black text-black'>Pause Inn Bar</h1>
+          <h1 className='text-2xl font-black'>Pause Inn Bar</h1>
         </div>
-        <div className='space-y-1 text-xs mb-4 text-gray-600'>
+        <div className='space-y-1 text-xs mb-4'>
           <p className='flex items-center justify-center'>
-            <MapPin className='w-3 h-3 mr-1 text-gray-400' />
-            {receiptData.address}
+            <MapPin className='w-3 h-3 mr-1 ' />
+            #54 Rue Jacques 1er , Delmas 31
           </p>
           <p className='flex items-center justify-center'>
-            <Phone className='w-3 h-3 mr-1 text-gray-400' />
-            {receiptData.phone1}
+            <Phone className='w-3 h-3 mr-1 ' />
+            +242 33 547 96 11
           </p>
           <p className='flex items-center justify-center'>
-            <Mail className='w-3 h-3 mr-1 text-gray-400' />
-            {receiptData.email}
+            <Mail className='w-3 h-3 mr-1 ' />
+            lapauseinn@gmail.com
           </p>
         </div>
-        <div className='border-t border-gray-200 my-2'></div>
-        <div className='space-y-2 text-xs mb-4 text-gray-600'>
+        <div className='border-t  my-2'></div>
+        <div className='space-y-2 text-xs mb-4'>
           <div className='flex justify-between items-center'>
             <span className='font-medium'>ID de Transaction:</span>
-            <span>{receiptData.transactionId}</span>
+            <span>{transactionId}</span>
           </div>
           <div className='flex justify-between items-center'>
             <span className='font-medium flex items-center'>
               <Calendar className='w-3 h-3 mr-1 text-gray-400' />
               Date:
             </span>
-            <span>{receiptData.date}</span>
+            <span>{new Date().toLocaleDateString('fr-FR')}</span>
           </div>
           <div className='flex justify-between items-center'>
             <span className='font-medium flex items-center'>
-              <User className='w-3 h-3 mr-1 text-gray-400' />
+              <User className='w-3 h-3 mr-1 ' />
               Caissier:
             </span>
-            <span>{receiptData.cashier}</span>
+            <span>{cashier}</span>
           </div>
         </div>
-        <div className='border-t border-gray-200 my-2'></div>
-        {/* Uncomment and implement ItemsList when data is available */}
-        <ItemsList data={[]} />
-        <div className='border-t border-gray-200 my-2'></div>
-        <div className='space-y-1 text-xs text-gray-900 mb-3'>
+        <div className='border-t  my-2'></div>
+        <ItemsList data={items} />
+        <div className='border-t  my-2'></div>
+        <div className='space-y-1 text-xs  mb-3'>
           <div className='flex justify-between'>
             <span>Sous-total:</span>
-            <span>{receiptData.subtotal} G</span>
+            <span>{subtotal} G</span>
           </div>
           <div className='flex justify-between'>
             <span className='flex items-center'>discount:</span>
-            <span>-{receiptData.discount}G</span>
+            <span>-{discount}G</span>
           </div>
           <div className='flex justify-between'>
             <span>TVA:</span>
-            <span>{receiptData.tax} G</span>
+            <span>{tax} G</span>
           </div>
-          <div className='flex justify-between font-bold text-sm mt-2 text-black'>
+          <div className='flex justify-between font-bold text-sm mt-2'>
             <span>Total:</span>
-            <span>{receiptData.total} G</span>
+            <span>{total} G</span>
           </div>
         </div>
-        <div className='mt-4 space-y-1 text-xs text-gray-600'>
+        <div className='mt-4 space-y-1 text-xs'>
           <Separator />
           <div className='flex justify-between'>
             <span className='flex items-center'>Reçu:</span>
-            <span>{receiptData.amountReceived} G</span>
+            <span>{amountReceived} G</span>
           </div>
           <div className='flex justify-between'>
             <span>Monnaie:</span>
-            <span>{receiptData.change} G</span>
+            <span>{change} G</span>
           </div>
         </div>
         <div className='mt-6 text-center'>
-          <Banknote className='w-6 h-6 mx-auto text-gray-400 mb-1' />
-          <p className='text-xs text-gray-600'>
-            Payé en {receiptData.paymentMethod}
-          </p>
+          <Banknote className='w-6 h-6 mx-auto  mb-1' />
+          <p className='text-xs'>Paid with {paymentMethod}</p>
         </div>
-        <div className='border-t border-gray-200 my-2'></div>
+        <div className='border-t  my-2'></div>
         <ThankYouMessage />
-        <BarCode transactionId={receiptData.transactionId} />
+        <BarCode transactionId={transactionId} />
       </Card>
       <Button className='mt-4' onClick={() => reactToPrintFn()}>
         Print

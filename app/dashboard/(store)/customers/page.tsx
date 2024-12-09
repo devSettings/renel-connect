@@ -13,9 +13,45 @@ import { CustomerMembershipMetrics } from './components/customer-membership-metr
 import CustomerStatusFilter from './components/customer-status-filter';
 import { CustomerStatusMetrics } from './components/customer-status-metrics';
 import CustomersTable from './components/customers-table';
+import { Membership, UserStatus } from '@prisma/client';
+interface Props {
+  searchParams: Promise<{
+    status: UserStatus;
+    membership: Membership;
+    searchQuery: string;
+    page: string;
+  }>;
+}
 
-const CustomersPage = async () => {
-  const response = await getCustomers();
+const CustomersPage = async ({ searchParams }: Props) => {
+  let selectedStatus: UserStatus[] = [];
+  const status = (await searchParams).status;
+  if (status && Object.values(UserStatus).includes(status)) {
+    selectedStatus = [status];
+  }
+  let selectedMembership: Membership[] = [];
+
+  const membership = (await searchParams).membership;
+  if (membership && Object.values(Membership).includes(membership)) {
+    selectedMembership = [membership];
+  }
+
+  let currentPage = 1;
+  const page = (await searchParams).page;
+
+  if (page) {
+    const parsedPage = parseInt(page);
+    if (!isNaN(parsedPage) && parsedPage > 0) {
+      currentPage = parsedPage;
+    }
+  }
+
+  const response = await getCustomers({
+    // memberships: selectedMembership,
+    // statuses: selectedStatus,
+    // search: searchQuery,
+    // currentPage,
+  });
   if (!response.success) return null;
   const customers = response.data;
   const statusResponse = await getCustomerStatusMetrics();

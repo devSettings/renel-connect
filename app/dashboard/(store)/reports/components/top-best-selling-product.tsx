@@ -1,7 +1,7 @@
 'use client';
 
 import { TrendingUp } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, Rectangle, XAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, Rectangle, XAxis, Cell } from 'recharts';
 
 import {
   Card,
@@ -18,40 +18,6 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 
-const chartData = [
-  { browser: 'chrome', visitors: 187, fill: 'var(--color-chrome)' },
-  { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-  { browser: 'firefox', visitors: 275, fill: 'var(--color-firefox)' },
-  { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-  { browser: 'other', visitors: 90, fill: 'var(--color-other)' },
-];
-
-const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
-  chrome: {
-    label: 'Chrome',
-    color: 'hsl(var(--chart-1))',
-  },
-  safari: {
-    label: 'Safari',
-    color: 'hsl(var(--chart-2))',
-  },
-  firefox: {
-    label: 'Firefox',
-    color: 'hsl(var(--chart-3))',
-  },
-  edge: {
-    label: 'Edge',
-    color: 'hsl(var(--chart-4))',
-  },
-  other: {
-    label: 'Other',
-    color: 'hsl(var(--chart-5))',
-  },
-} satisfies ChartConfig;
-
 type Product = {
   name: string;
   revenue: number;
@@ -61,54 +27,49 @@ interface Props {
   data: Product[];
 }
 
-export function TopBestSellingPrducts() {
-  const chartData = [
-    { browser: 'chrome', visitors: 187, fill: 'var(--color-chrome)' },
-    { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-    { browser: 'firefox', visitors: 275, fill: 'var(--color-firefox)' },
-    { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-    { browser: 'other', visitors: 90, fill: 'var(--color-other)' },
+export function TopBestSellingProducts({ data }: Props) {
+  const chartConfig = {
+    revenue: {
+      label: 'Revenue',
+    },
+  } satisfies ChartConfig;
+
+  const stunningColors = [
+    '#FF5733', // Red
+    '#3357FF', // Blue
+    '#FF33A1', // Pink
+    '#A133FF', // Purple
+    '#FFC300', // Yellow
   ];
+
   return (
     <Card className='border-[0.1px]'>
       <CardHeader>
-        <CardTitle>Bar Chart - Active</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Top 5 Best Selling Products</CardTitle>
+        <CardDescription>Displaying product revenue</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey='browser'
+              dataKey='name'
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) =>
-                chartConfig[value as keyof typeof chartConfig]?.label
-              }
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar
-              dataKey='visitors'
-              strokeWidth={2}
-              radius={8}
-              // activeIndex={2}
-              activeBar={({ ...props }) => {
-                return (
-                  <Rectangle
-                    {...props}
-                    fillOpacity={0.8}
-                    stroke={props.payload.fill}
-                    strokeDasharray={4}
-                    strokeDashoffset={4}
-                  />
-                );
-              }}
-            />
+            <Bar dataKey='revenue' strokeWidth={2} radius={8}>
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={stunningColors[index % stunningColors.length]}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -117,7 +78,7 @@ export function TopBestSellingPrducts() {
           Trending up by 5.2% this month <TrendingUp className='h-4 w-4' />
         </div>
         <div className='leading-none text-muted-foreground'>
-          Showing total visitors for the last 6 months
+          Showing revenue for the top 5 products
         </div>
       </CardFooter>
     </Card>

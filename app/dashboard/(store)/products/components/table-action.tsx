@@ -59,12 +59,19 @@ const TableAction = ({ id, type }: Props) => {
             <GitCompare />
             Compare
           </DropdownMenuItem>
-          <DropdownMenuItem className='cursor-pointer' onClick={handleEdit}>
+          <DropdownMenuItem
+            className='cursor-pointer'
+            onClick={handleEdit}
+            disabled={type === 'NON_INVENTORY'}
+          >
             <FilePenLine />
             Edit
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className='cursor-pointer' onClick={handleDelete}>
+          <DropdownMenuItem
+            className='cursor-pointer'
+            onClick={handleDelete}
+          >
             <Trash />
             Delete
           </DropdownMenuItem>
@@ -77,7 +84,11 @@ const TableAction = ({ id, type }: Props) => {
         onClose={handleEdit}
         id={id}
       />
-      <ProductDeleteModal isOpen={open} onClose={handleDelete} id={id} />
+      <ProductDeleteModal
+        isOpen={open}
+        onClose={handleDelete}
+        id={id}
+      />
     </div>
   );
 };
