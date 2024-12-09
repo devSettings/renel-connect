@@ -24,7 +24,9 @@ const getProducts = async (
     const where = {
       status,
       type,
-      name: search ? { contains: search } : undefined,
+      name: search
+        ? { contains: search, mode: 'insensitive' as const }
+        : undefined,
     };
 
     const totalCount = await prisma.product.count({ where });

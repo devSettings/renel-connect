@@ -31,7 +31,7 @@ const getItems = async (
       },
       where: {
         status: 'ACTIVE',
-        name: { contains: search },
+        name: { contains: search, mode: 'insensitive' as const },
       },
       skip,
       take: pageSize,
