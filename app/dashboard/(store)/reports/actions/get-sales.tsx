@@ -3,10 +3,13 @@
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { Sale } from '../types/report';
-import { OrderCategory } from '@prisma/client';
+import { format } from 'date-fns';
+import { Collection } from '@prisma/client';
+
+const currentDate = format(new Date(), 'yyyy-MM-dd');
 
 const getSales = async (): Promise<ActionResponse<Sale[]>> => {
-  const categoryFormatter = (category: OrderCategory) => {
+  const categoryFormatter = (category: Collection) => {
     if (category === 'DRINK') return 'Drink';
     if (category === 'FOOD') return 'Food';
     if (category === 'ROOM') return 'Room';
@@ -27,6 +30,9 @@ const getSales = async (): Promise<ActionResponse<Sale[]>> => {
         cashier: {
           select: { firstName: true, lastName: true },
         },
+      },
+      where: {
+        orderDate: currentDate,
       },
     });
 

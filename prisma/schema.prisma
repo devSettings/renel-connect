@@ -147,6 +147,7 @@ model Customer {
   user             User       @relation(fields: [userId], references: [id])
   userId           String     @unique @map("user_id")
   Order            Order[]
+  createdDate      String?    @map("created_date")
 
   @@unique([phoneNumber])
 }

@@ -2,6 +2,9 @@
 
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
+import { format } from 'date-fns';
+
+const currentDate = format(new Date(), 'yyyy-MM-dd');
 
 const getTopSellingProduct = async (): Promise<
   ActionResponse<{ name: string; revenue: number }[]>
@@ -12,6 +15,9 @@ const getTopSellingProduct = async (): Promise<
       _sum: { quantity: true, unitPrice: true },
       orderBy: { _sum: { quantity: 'desc' } },
       take: 5,
+      where: {
+        orderDate: currentDate,
+      },
     });
 
     const productDetails = await prisma.product.findMany({

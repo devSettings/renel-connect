@@ -3,6 +3,9 @@
 import { ActionResponse } from '@/app/types/action-reponse';
 import { ItemReport } from '../types/report';
 import prisma from '@/prisma/client';
+import { format } from 'date-fns';
+
+const currentDate = format(new Date(), 'yyyy-MM-dd');
 
 const getSaleItems = async (): Promise<ActionResponse<ItemReport[]>> => {
   try {
@@ -13,6 +16,9 @@ const getSaleItems = async (): Promise<ActionResponse<ItemReport[]>> => {
       _avg: { unitPrice: true },
       _max: { createdAt: true },
       _count: { _all: true },
+      where: {
+        orderDate: currentDate,
+      },
     });
 
     // Get all product details for the sold items

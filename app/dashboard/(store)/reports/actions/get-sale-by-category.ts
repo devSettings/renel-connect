@@ -1,6 +1,9 @@
 'use server';
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
+import { format } from 'date-fns';
+
+const currentDate = format(new Date(), 'yyyy-MM-dd');
 
 const getSaleByCategory = async (): Promise<ActionResponse> => {
   try {
@@ -14,6 +17,9 @@ const getSaleByCategory = async (): Promise<ActionResponse> => {
     const aggregations = await prisma.order.groupBy({
       by: ['category'],
       _sum: { totalPrice: true },
+      where: {
+        orderDate: currentDate,
+      },
     });
 
     aggregations.forEach((group) => {

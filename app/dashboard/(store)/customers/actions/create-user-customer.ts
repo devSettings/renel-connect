@@ -6,6 +6,9 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import createUserCustomerSchema from '../schema/create-user-customer';
 import { ActionResponse } from '@/app/types/action-reponse';
+import { format } from 'date-fns';
+
+const currentDate = format(new Date(), 'yyyy-MM-dd');
 
 type FormData = z.infer<typeof createUserCustomerSchema>;
 async function createUserCustomer(data: FormData): Promise<ActionResponse> {
@@ -81,6 +84,7 @@ async function createUserCustomer(data: FormData): Promise<ActionResponse> {
           create: {
             membership,
             phoneNumber: formattedPhoneNumber,
+            createdDate: currentDate,
           },
         },
       },
