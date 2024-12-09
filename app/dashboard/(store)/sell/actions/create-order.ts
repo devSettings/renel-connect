@@ -27,7 +27,7 @@ const createOrder = async (
       return { success: false, error: 'User not found' };
     }
 
-    const customer = orderData.customerId ?? 'cm4haj6ys00004900pol7lkc5';
+    const customer = orderData.customerId ?? 'cm4hcl76y000149nrmevwrofu';
 
     const total = orderData.total;
 
