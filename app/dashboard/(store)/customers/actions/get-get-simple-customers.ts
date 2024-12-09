@@ -32,12 +32,22 @@ const getSimpleCustomers = async (
             ]
           : undefined,
       },
-      select: { id: true, firstName: true, lastName: true },
+      select: {
+        firstName: true,
+        lastName: true,
+        customer: { select: { id: true } },
+      },
       skip,
       take: itemsPerpage,
     });
 
-    return { success: true, data: users };
+    const customers = users.map((user) => ({
+      id: user.customer?.id!,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    }));
+
+    return { success: true, data: customers };
   } catch (error) {
     console.error('Error fetching customers:', error);
     return {

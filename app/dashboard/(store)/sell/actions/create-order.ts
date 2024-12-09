@@ -87,6 +87,8 @@ const createOrder = async (
         data: {
           totalOrders: { increment: 1 },
           totalSpend: { increment: total },
+          lastPurchaseDate: OrderDate,
+          loyaltyPoints: { increment: 10 },
         },
       });
 
