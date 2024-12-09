@@ -42,8 +42,8 @@ const getCustomers = async (
         user: { status: { in: statuses } },
         ...(search && {
           OR: [
-            { user: { firstName: { contains: search } } },
-            { user: { lastName: { contains: search } } },
+            { user: { firstName: { contains: search, mode: 'insensitive' } } },
+            { user: { lastName: { contains: search, mode: 'insensitive' } } },
           ],
         }),
       },

@@ -27,8 +27,8 @@ const getSimpleCustomers = async (
         Role: 'CUSTOMER',
         OR: search
           ? [
-              { firstName: { contains: search } },
-              { lastName: { contains: search } },
+              { firstName: { contains: search, mode: 'insensitive' } },
+              { lastName: { contains: search, mode: 'insensitive' } },
             ]
           : undefined,
       },
