@@ -1,8 +1,8 @@
 export type Item = {
   name: string;
   quantity: number;
-  sellingPrice: number;
-  totalCost: number;
+  price: number;
+  total: number;
 };
 
 interface Props {
@@ -13,20 +13,20 @@ const ItemsList = ({ data }: Props) => {
   return (
     <div className='space-y-2 mb-4'>
       <div className='flex justify-between text-xs font-medium'>
-        <span className='w-1/4'>Product</span>
-        <span className='w-1/4 text-right'>Price</span>
-        <span className='w-1/4 text-center'>Qty</span>
-        <span className='w-1/4 text-right'>Total</span>
+        <span className='w-2/4'>Product</span>
+        <span className='w-1/6 text-center'>Qty</span>
+        <span className='w-1/6 text-right'>Price</span>
+        <span className='w-1/6 text-right'>Total</span>
       </div>
       {data.map((product, index) => (
-        <div key={index} className='flex justify-between text-xs'>
-          <span className='w-1/4'>{product.name}</span>
-          <span className='w-1/4 text-right'>
-            {product.sellingPrice.toLocaleString('fr-FR')}
+        <div className='flex justify-between text-xs'>
+          <span className='w-2/4'>{product.name}</span>
+          <span className='w-1/6 text-center'>{product.quantity}</span>
+          <span className='w-1/6 text-right'>
+            {product.price.toLocaleString('fr-FR')}
           </span>
-          <span className='w-1/4 text-center'>{product.quantity}</span>
-          <span className='w-1/4 text-right'>
-            {product.totalCost.toLocaleString('fr-FR')}
+          <span className='w-1/6 text-right'>
+            {product.total.toLocaleString('fr-FR')}
           </span>
         </div>
       ))}

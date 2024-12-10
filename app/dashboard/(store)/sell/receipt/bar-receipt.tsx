@@ -2,11 +2,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Banknote, Calendar, Mail, MapPin, Phone, User } from 'lucide-react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useReactToPrint } from 'react-to-print';
 import BarCode from './bar-code';
 import ItemsList, { Item } from './item-list';
 import ThankYouMessage from './thank-you-message';
+import { FaPrint } from 'react-icons/fa';
+import { PaymentMethod } from '@prisma/client';
 
 interface BarReceiptProps {
   transactionId: string;
@@ -18,7 +20,7 @@ interface BarReceiptProps {
   total: number;
   amountReceived: number;
   change: number;
-  paymentMethod: string;
+  paymentMethod: PaymentMethod;
 }
 
 const BarReceipt = ({
@@ -34,13 +36,26 @@ const BarReceipt = ({
   paymentMethod,
 }: BarReceiptProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const reactToPrintFn = useReactToPrint({ contentRef });
+  const [isClient, setIsClient] = useState(false);
+
+  const reactToPrintFn = useReactToPrint({
+    contentRef,
+  });
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return null;
 
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <Card className='p-4 space-y-4 w-[80mm]' ref={contentRef}>
+    <div>
+      <Card
+        className='p-4 space-y-4 w-[80mm] border-none shadow-none screen-only print:block print-only'
+        ref={contentRef}
+      >
         <div className='text-center mb-2'>
-          <h1 className='text-2xl font-black'>Pause Inn Bar</h1>
+          <h1 className='text-2xl font-black'>La Pause Inn</h1>
         </div>
         <div className='space-y-1 text-xs mb-4'>
           <p className='flex items-center justify-center'>
@@ -49,7 +64,7 @@ const BarReceipt = ({
           </p>
           <p className='flex items-center justify-center'>
             <Phone className='w-3 h-3 mr-1 ' />
-            +242 33 547 96 11
+            +509 3704 0400
           </p>
           <p className='flex items-center justify-center'>
             <Mail className='w-3 h-3 mr-1 ' />
@@ -59,7 +74,7 @@ const BarReceipt = ({
         <div className='border-t  my-2'></div>
         <div className='space-y-2 text-xs mb-4'>
           <div className='flex justify-between items-center'>
-            <span className='font-medium'>ID de Transaction:</span>
+            <span className='font-medium'>Transaction ID:</span>
             <span>{transactionId}</span>
           </div>
           <div className='flex justify-between items-center'>
@@ -72,7 +87,7 @@ const BarReceipt = ({
           <div className='flex justify-between items-center'>
             <span className='font-medium flex items-center'>
               <User className='w-3 h-3 mr-1 ' />
-              Caissier:
+              Cashier:
             </span>
             <span>{cashier}</span>
           </div>
@@ -82,15 +97,15 @@ const BarReceipt = ({
         <div className='border-t  my-2'></div>
         <div className='space-y-1 text-xs  mb-3'>
           <div className='flex justify-between'>
-            <span>Sous-total:</span>
+            <span>Subtotal:</span>
             <span>{subtotal} G</span>
           </div>
           <div className='flex justify-between'>
-            <span className='flex items-center'>discount:</span>
+            <span className='flex items-center'>Discount:</span>
             <span>-{discount}G</span>
           </div>
           <div className='flex justify-between'>
-            <span>TVA:</span>
+            <span>Tax:</span>
             <span>{tax} G</span>
           </div>
           <div className='flex justify-between font-bold text-sm mt-2'>
@@ -101,24 +116,33 @@ const BarReceipt = ({
         <div className='mt-4 space-y-1 text-xs'>
           <Separator />
           <div className='flex justify-between'>
-            <span className='flex items-center'>Reçu:</span>
+            <span className='flex items-center'>Received:</span>
             <span>{amountReceived} G</span>
           </div>
           <div className='flex justify-between'>
-            <span>Monnaie:</span>
+            <span>Change:</span>
             <span>{change} G</span>
           </div>
         </div>
         <div className='mt-6 text-center'>
           <Banknote className='w-6 h-6 mx-auto  mb-1' />
-          <p className='text-xs'>Paid with {paymentMethod}</p>
+          <p className='text-xs'>
+            Paid with {paymentMethod === 'CASH' && 'Cash'}{' '}
+            {paymentMethod === 'CREDIT_CARD' && 'Card'}
+            {paymentMethod === 'CHECK' && 'Check'}
+            {paymentMethod === 'WIRE_TRANSFER' && 'Wire Transfer'}
+          </p>
         </div>
         <div className='border-t  my-2'></div>
         <ThankYouMessage />
         <BarCode transactionId={transactionId} />
       </Card>
-      <Button className='mt-4' onClick={() => reactToPrintFn()}>
-        Print
+      <Button
+        className=' bg-blue-700 hover:bg-blue-900 text-white w-full'
+        onClick={() => reactToPrintFn()}
+      >
+        <FaPrint className='w-4 h-4 mr-2' />
+        Print receipt
       </Button>
     </div>
   );

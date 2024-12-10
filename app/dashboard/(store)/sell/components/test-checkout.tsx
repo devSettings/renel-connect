@@ -62,12 +62,27 @@ import useCheckoutModal from '../hooks/use-checkout-dialog';
 import { useDiscount } from '../hooks/use-discount';
 import checkOutSchema, { CheckoutFormData } from '../schema/check-out';
 import CreateCustomerFormDialog from './create-customer-form-dialog';
+import BarReceipt from '../receipt/bar-receipt';
+import { Item } from '../receipt/item-list';
+import { PaymentMethod } from '@prisma/client';
 
 interface Props {
   disabled: boolean;
 }
 
 export function TestCheckOut({ disabled }: Props) {
+  const [data, setData] = useState<{
+    transactionId: string;
+    cashier: string;
+    items: Item[];
+    subtotal: number;
+    discount: number;
+    tax: number;
+    total: number;
+    amountReceived: number;
+    change: number;
+    paymentMethod: PaymentMethod;
+  }>();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const { openModal, closeModal, isOpen } = useCheckoutModal();
@@ -161,7 +176,19 @@ export function TestCheckOut({ disabled }: Props) {
       handleQuery('');
       return;
     }
-    toast.success(response.data);
+    toast.success(JSON.stringify(response.data, null, 2));
+    setData({
+      transactionId: response.data.transactionId,
+      cashier: response.data.cashier,
+      items: response.data.items,
+      subtotal: getTotal(),
+      discount: discount,
+      tax: 0,
+      total: response.data.total,
+      amountReceived: response.data.amountReceived,
+      change: parseFloat(customerChange),
+      paymentMethod: response.data.paymentMethod,
+    });
     form.reset();
     resetDiscount();
     clearCart();
@@ -176,8 +203,18 @@ export function TestCheckOut({ disabled }: Props) {
     setCompleted(false);
   };
 
+  const handleClose = () => {
+    clearCart();
+    closeModal();
+    router.refresh();
+    setCompleted(false);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={openModal}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={openModal}
+    >
       <DialogTrigger asChild>
         <Button
           disabled={disabled}
@@ -415,7 +452,10 @@ export function TestCheckOut({ disabled }: Props) {
                       render={({ field }) => (
                         <FormItem className='flex flex-col'>
                           <FormLabel>Customer Name</FormLabel>
-                          <Popover open={open} onOpenChange={setOpen}>
+                          <Popover
+                            open={open}
+                            onOpenChange={setOpen}
+                          >
                             <div className='flex  items-center gap-2'>
                               <PopoverTrigger asChild>
                                 <FormControl>
@@ -569,6 +609,30 @@ export function TestCheckOut({ disabled }: Props) {
                           'Complete payment'
                         )}
                       </Button>
+                    )}
+                    {completed && (
+                      <div className='flex items-center space-x-4  w-full'>
+                        <Button
+                          variant={'outline'}
+                          className='w-full'
+                          onClick={handleClose}
+                        >
+                          <XIcon className='w-4 h-4 mr-2' />
+                          Close
+                        </Button>
+                        <BarReceipt
+                          transactionId={data?.transactionId!}
+                          cashier={data?.cashier!}
+                          items={data?.items!}
+                          subtotal={data?.subtotal!}
+                          discount={data?.discount!}
+                          tax={0}
+                          total={data?.total!}
+                          amountReceived={data?.amountReceived!}
+                          change={data?.change!}
+                          paymentMethod={data?.paymentMethod!}
+                        />
+                      </div>
                     )}
                   </div>
                 </div>

@@ -71,3 +71,25 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer base {
+  @media print {
+    @page {
+      size: 80mm 200mm;
+    }
+  }
+}
+
+/* Hide elements during printing */
+@media print {
+  .screen-only {
+    display: none;
+  }
+}
+
+/* Hide elements on the screen but show them in printing */
+@media screen {
+  .print-only {
+    display: none;
+  }
+}

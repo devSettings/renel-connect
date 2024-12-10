@@ -4,11 +4,10 @@ const ThankYouMessage = () => {
   return (
     <div className='text-center text-xs mb-4'>
       <p className='font-medium'>
-        {`Merci d'avoir choisi`} {receiptData.salonName} !
+        {`Thank you for choosing`} {receiptData.salonName} !
       </p>
       <p className='mt-1 text-[10px] italic'>
-        {`  Nous espérons que vous vous sentez belle à l'intérieur comme à
-        l'extérieur.`}
+        {`We hope you had a wonderful experience and look forward to serving you again.`}
       </p>
     </div>
   );

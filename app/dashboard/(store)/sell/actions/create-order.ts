@@ -65,6 +65,42 @@ const createOrder = async (
         },
       });
 
+      const cashier = await prisma.user.findUnique({
+        where: { id: order.cashierId },
+      });
+
+      const _items = await prisma.orderItem.findMany({
+        where: { orderId: order.id },
+        select: {
+          product: {
+            select: {
+              name: true,
+            },
+          },
+          unitPrice: true,
+          quantity: true,
+          totalPrice: true,
+        },
+      });
+
+      const items = _items.map((item) => ({
+        name: item.product.name,
+        quantity: item.quantity,
+        price: item.unitPrice,
+        total: item.totalPrice,
+      }));
+
+      const newOrder = {
+        transactionId: order.reference,
+        cashier: cashier?.firstName + ' ' + cashier?.lastName,
+        paymentMethod: order.paymentMethod,
+        amountReceived: order.amountReceived,
+        change: order.change,
+        total: order.totalPrice,
+        items: items,
+        subtotal: order.totalPrice,
+      };
+
       for (const item of OrderItemData) {
         const inventoryProduct = await prisma.inventoryProduct.findUnique({
           where: { productId: item.productId },
@@ -92,7 +128,7 @@ const createOrder = async (
         },
       });
 
-      return order;
+      return newOrder;
     });
 
     console.log('Prisma transaction result:', JSON.stringify(result, null, 2));
@@ -100,7 +136,7 @@ const createOrder = async (
     revalidatePath('/dashboard/orders');
     revalidatePath('/dashboard/reports');
 
-    return { success: true, data: 'Order created Successfully' };
+    return { success: true, data: result };
   } catch (error) {
     console.error('Error in createOrder:', error);
     return {
