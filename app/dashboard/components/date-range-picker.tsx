@@ -17,14 +17,14 @@ import { cn } from '@/lib/utils';
 export default function DatePickerWithRange({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
+  const today = new Date();
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: today,
+    to: today,
   });
   const [open, setOpen] = React.useState(false);
 
   const handleRangeSelect = (months: number) => {
-    const today = new Date();
     const from = months === 12 ? subYears(today, 1) : subMonths(today, months);
     setDate({ from, to: today });
     setOpen(false);
@@ -37,12 +37,19 @@ export default function DatePickerWithRange({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={cn('space-y-4', className)}>
+    <form
+      onSubmit={handleSubmit}
+      className={cn('space-y-4', className)}
+    >
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover
+            open={false}
+            onOpenChange={setOpen}
+          >
             <PopoverTrigger asChild>
               <Button
+                disabled
                 id='date-range'
                 variant={'outline'}
                 className={cn(
@@ -65,7 +72,10 @@ export default function DatePickerWithRange({
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className='w-auto p-0' align='start'>
+            <PopoverContent
+              className='w-auto p-0'
+              align='start'
+            >
               <Calendar
                 initialFocus
                 mode='range'
@@ -132,7 +142,12 @@ export default function DatePickerWithRange({
               </div>
             </PopoverContent>
           </Popover>
-          <Button type='submit'>Submit</Button>
+          <Button
+            type='submit'
+            disabled
+          >
+            Submit
+          </Button>
         </div>
       </div>
     </form>

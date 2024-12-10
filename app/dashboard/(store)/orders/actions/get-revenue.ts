@@ -15,7 +15,7 @@ const getRevenue = async (): Promise<ActionResponse<Revenue[]>> => {
       date: rev.orderDate,
       revenue: Number(rev._sum.totalPrice) || 0,
     }));
-
+    console.log(revenue);
     return { success: true, data: revenue };
   } catch (error) {
     console.error('Error fetching revenue:', error);
