@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import BarReceipt from './dashboard/(store)/sell/receipt/bar-receipt';
 
 const HomePage = () => {
-  redirect('/dashboard');
+  // redirect('/dashboard');
   return (
     <div>
       <BarReceipt

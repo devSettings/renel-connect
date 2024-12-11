@@ -8,11 +8,7 @@ import DiscountModal from './discount-modal';
 import { CheckoutDialog } from './check-out-dialog';
 import { TestCheckOut } from './test-checkout';
 
-interface Props {
-  cashier: string;
-}
-
-const Cart = ({ cashier }: Props) => {
+const Cart = () => {
   const { items, getTotal, getTotalItems } = useCartStore();
   const { calculateDiscount } = useDiscount();
   const [isClient, setIsClient] = useState(false);
@@ -46,7 +42,10 @@ const Cart = ({ cashier }: Props) => {
     <div className='flex flex-col h-full'>
       <div className='flex-grow overflow-auto'>
         {items.map((item) => (
-          <CartItem key={item.product.id} item={item} />
+          <CartItem
+            key={item.product.id}
+            item={item}
+          />
         ))}
       </div>
       <div className='space-y-4 pb-2'>

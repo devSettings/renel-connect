@@ -51,7 +51,7 @@ const BarReceipt = ({
   return (
     <div>
       <Card
-        className='p-4 space-y-4 w-[80mm] border-none shadow-none screen-only print:block print-only'
+        className='px-7 py-4 space-y-4 w-[80mm] h-auto border-none shadow-none screen-only print:block print-only'
         ref={contentRef}
       >
         <div className='text-center mb-2'>

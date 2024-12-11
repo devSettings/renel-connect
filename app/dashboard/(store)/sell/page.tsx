@@ -48,7 +48,7 @@ const PosPage = async ({ searchParams }: Props) => {
           </Suspense>
         </div>
         <div className='space-y-6 w-[20rem] min-h-[80vh]   rounded-lg p-4 bg-card border-[0.1px]'>
-          <Cart cashier={'j'} />
+          <Cart />
         </div>
       </div>
     </div>

@@ -176,7 +176,7 @@ export function TestCheckOut({ disabled }: Props) {
       handleQuery('');
       return;
     }
-    toast.success(JSON.stringify(response.data, null, 2));
+    toast.success('Order created successfully');
     setData({
       transactionId: response.data.transactionId,
       cashier: response.data.cashier,

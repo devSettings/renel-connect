@@ -72,11 +72,9 @@ body {
   }
 }
 
-@layer base {
-  @media print {
-    @page {
-      size: 80mm 200mm;
-    }
+@media print {
+  @page {
+    size: 80mm fit-content;
   }
 }
 
