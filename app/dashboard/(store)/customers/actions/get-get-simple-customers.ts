@@ -17,7 +17,7 @@ export type SimpleCustomer = {
 const getSimpleCustomers = async (
   option: FilterOption = {}
 ): Promise<ActionResponse<SimpleCustomer[]>> => {
-  const { search, page = 1, itemsPerpage = 20 } = option;
+  const { search, page = 1, itemsPerpage = 30 } = option;
   const skip = (page - 1) * itemsPerpage;
 
   try {

@@ -47,8 +47,8 @@ interface Props {
 type FormData = z.infer<typeof createUserCustomerFormSchema>;
 export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
   const years = Array.from(
-    { length: new Date().getFullYear() - 18 - 1950 + 1 },
-    (_, i) => 1950 + i
+    { length: new Date().getFullYear() - 18 - 1940 + 1 },
+    (_, i) => 1940 + i
   );
   const months = [
     'January',
@@ -122,7 +122,10 @@ export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='John' {...field} />
+                  <Input
+                    placeholder='John'
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -136,7 +139,10 @@ export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Doe' {...field} />
+                  <Input
+                    placeholder='Doe'
+                    {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />
@@ -185,7 +191,10 @@ export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
                         </SelectTrigger>
                         <SelectContent>
                           {months.map((month) => (
-                            <SelectItem key={month} value={month}>
+                            <SelectItem
+                              key={month}
+                              value={month}
+                            >
                               {month}
                             </SelectItem>
                           ))}
@@ -200,7 +209,10 @@ export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
                         </SelectTrigger>
                         <SelectContent>
                           {years.map((year) => (
-                            <SelectItem key={year} value={year.toString()}>
+                            <SelectItem
+                              key={year}
+                              value={year.toString()}
+                            >
                               {year}
                             </SelectItem>
                           ))}
@@ -272,7 +284,10 @@ export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input placeholder='50900000000' {...field} />
+                  <Input
+                    placeholder='50900000000'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -397,7 +412,10 @@ export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
               <FormItem>
                 <FormLabel>ID Number</FormLabel>
                 <FormControl>
-                  <Input placeholder='00000000000' {...field} />
+                  <Input
+                    placeholder='00000000000'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -406,7 +424,11 @@ export function CreateUserCustomerForm({ OnCreateSuccess }: Props) {
         </div>
 
         <div className='flex justify-end space-x-4 lg:pr-2 mt-10 w-full'>
-          <Button variant='secondary' size={'lg'} onClick={OnCreateSuccess}>
+          <Button
+            variant='secondary'
+            size={'lg'}
+            onClick={OnCreateSuccess}
+          >
             <CircleX />
             Cancel
           </Button>
