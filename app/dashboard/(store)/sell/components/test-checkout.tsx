@@ -86,7 +86,7 @@ export function TestCheckOut({ disabled }: Props) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const { openModal, closeModal, isOpen } = useCheckoutModal();
-  const { handleQuery } = useQueryParameter('searchQuery');
+  const { handleQuery, query: searchQuery } = useQueryParameter('searchQuery');
   const router = useRouter();
 
   const { resetDiscount } = useDiscount();
@@ -105,7 +105,7 @@ export function TestCheckOut({ disabled }: Props) {
       setCustomers(response.data);
     };
     fetchcustomers();
-  }, [query]);
+  }, [searchQuery, query]);
 
   const { getTotal, clearCart } = useCartStore();
   const { calculateDiscount } = useDiscount();
