@@ -98,7 +98,7 @@ export function TestCheckOut({ disabled }: Props) {
 
   useEffect(() => {
     const fetchcustomers = async () => {
-      const response = await getSimpleCustomers({ search: searchQuery! });
+      const response = await getSimpleCustomers({ search: query });
       if (!response.success) {
         return;
       }
