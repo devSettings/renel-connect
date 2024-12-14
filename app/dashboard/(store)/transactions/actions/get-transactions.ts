@@ -15,7 +15,7 @@ type FilterOptions = {
 const getTransactions = async (
   options: FilterOptions = {}
 ): Promise<ActionResponse<Transaction[]>> => {
-  const { type, search, pageSize = 100, currentPage = 1 } = options;
+  const { type, search, pageSize = 10, currentPage = 1 } = options;
   const skip = (currentPage - 1) * pageSize;
 
   try {
@@ -44,7 +44,7 @@ const getTransactions = async (
         },
         where: {
           ...(type && { typeOfTransaction: type }),
-          ...(search && { title: { contains: search } }),
+          ...(search && { title: { contains: search, mode: 'insensitive' } }),
         },
         skip,
         take: adjustedPageSize + remainder,
@@ -65,7 +65,7 @@ const getTransactions = async (
         },
         where: {
           ...(type && { typeOfTransaction: type }),
-          ...(search && { title: { contains: search } }),
+          ...(search && { title: { contains: search, mode: 'insensitive' } }),
         },
         skip,
         take: adjustedPageSize,
@@ -97,6 +97,9 @@ const getTransactions = async (
         },
         where: {
           ...(type && { typeOfTransaction: type }),
+          ...(search && {
+            product: { name: { contains: search, mode: 'insensitive' } },
+          }),
         },
         skip,
         take: adjustedPageSize,
@@ -104,13 +107,13 @@ const getTransactions = async (
       prisma.expense.count({
         where: {
           ...(type && { typeOfTransaction: type }),
-          ...(search && { title: { contains: search } }),
+          ...(search && { title: { contains: search, mode: 'insensitive' } }),
         },
       }),
       prisma.income.count({
         where: {
           ...(type && { typeOfTransaction: type }),
-          ...(search && { title: { contains: search } }),
+          ...(search && { title: { contains: search, mode: 'insensitive' } }),
         },
       }),
       prisma.lost.count({
