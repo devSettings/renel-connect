@@ -15,7 +15,7 @@ type FilterOptions = {
 const getTransactions = async (
   options: FilterOptions = {}
 ): Promise<ActionResponse<Transaction[]>> => {
-  const { type, search, pageSize = 10, currentPage = 1 } = options;
+  const { type, search, pageSize = 150, currentPage = 1 } = options;
   const skip = (currentPage - 1) * pageSize;
 
   try {
