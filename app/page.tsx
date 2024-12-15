@@ -1,7 +1,9 @@
 'use client';
 
+import { redirect } from 'next/navigation';
+
 const HomePage = () => {
-  // redirect('/dashboard');
+  redirect('/dashboard');
   return <div>{/* <PosReceipt /> */}</div>;
 };
 
