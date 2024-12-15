@@ -24,16 +24,24 @@ import { useState } from 'react';
 import CreateInventoryProductForm from './create-inventory-product-form';
 import CreateNonInventoryProductForm from './create-non-inventory-product-form';
 import CreateServicesProductForm from './create-service-product-form';
+import useUserRole from '@/lib/use-user-role';
 
 const CreateProductFormDialog = () => {
   const [open, setOpen] = useState(false);
+  const role = useUserRole();
 
   const [selectedProductType, setSelectedProductType] =
     useState<ProductType>('INVENTORY');
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DialogTrigger asChild>
-        <Button className='font-normal bg-blue-700 hover:bg-blue-800 text-white transition-colors ease-in-out duration-300'>
+        <Button
+          disabled={role !== 'ADMIN'}
+          className='font-normal bg-blue-700 hover:bg-blue-800 text-white transition-colors ease-in-out duration-300'
+        >
           <IoMdAddCircle />
           New product
         </Button>

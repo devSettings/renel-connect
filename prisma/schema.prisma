@@ -67,7 +67,6 @@ model Permission {
 enum Role {
   CUSTOMER
   CASHIER
-  MANAGER
   SUPERVISOR
   ADMIN
   DEVELOPER

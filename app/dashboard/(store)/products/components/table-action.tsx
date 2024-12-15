@@ -21,6 +21,7 @@ import ProductDeleteModal from '../[id]/components/product-delete-dialog';
 import { useState } from 'react';
 import EditProductFormDialog from '../[id]/components/edit-product-dialog';
 import { ProductType } from '@prisma/client';
+import useUserRole from '@/lib/use-user-role';
 
 interface Props {
   id: string;
@@ -28,8 +29,8 @@ interface Props {
 }
 
 const TableAction = ({ id, type }: Props) => {
+  const role = useUserRole();
   const [open, setOpen] = useState(false);
-
   const [isEditing, setEditing] = useState(false);
 
   const handleDelete = () => {
@@ -49,9 +50,9 @@ const TableAction = ({ id, type }: Props) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className='min-w-[11rem]'>
-          <DropdownMenuLabel className='text-center'>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel className='text-center'>Action</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem disabled={role !== 'ADMIN'}>
             <ChartNoAxesColumnDecreasing />
             <Link href={`/dashboard/products/${id}`}> View Analytics</Link>
           </DropdownMenuItem>
@@ -62,7 +63,7 @@ const TableAction = ({ id, type }: Props) => {
           <DropdownMenuItem
             className='cursor-pointer'
             onClick={handleEdit}
-            disabled={type === 'NON_INVENTORY'}
+            disabled={type === 'NON_INVENTORY' || role !== 'ADMIN'}
           >
             <FilePenLine />
             Edit
@@ -71,6 +72,7 @@ const TableAction = ({ id, type }: Props) => {
           <DropdownMenuItem
             className='cursor-pointer'
             onClick={handleDelete}
+            disabled={role !== 'ADMIN'}
           >
             <Trash />
             Delete

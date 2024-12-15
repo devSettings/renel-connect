@@ -2,6 +2,7 @@ import Search from '@/components/search';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Suspense } from 'react';
+import getReportMetrics from './actions/get-report-metrics';
 import getSaleByCategory from './actions/get-sale-by-category';
 import getSaleItems from './actions/get-sale-items';
 import getSales from './actions/get-sales';
@@ -31,6 +32,13 @@ export default async function ReportPage() {
   const topSellingProductResponse = await getTopSellingProduct();
   if (!topSellingProductResponse.success) return;
 
+  const reponse = await getReportMetrics();
+  if (!reponse.success) {
+    return null;
+  }
+
+  const { totalNewCustomers, totalSales, averageSaleValue, totalIncome } =
+    reponse.data;
   const saleCategory = await getSaleByCategory();
 
   if (!saleCategory.success) return null;
@@ -67,6 +75,18 @@ export default async function ReportPage() {
                   <Suspense fallback={<div>Loading search...</div>}>
                     <Search />
                   </Suspense>
+                  {/* <Button
+                    size='lg'
+                    // className='gap-2 bg-blue-600 text-white'
+                    variant='secondary'
+                  >
+                    <PrinterIcon className='w-4 h-4' />
+                    Print report
+                  </Button> */}
+                  {/* <PosReceipt
+                    topSellingItems={topSellingProductResponse.data}
+                    summary={salesResponse.data}
+                  /> */}
                   {/* <OrderPaymentMethodFilter /> */}
                   {/* <OrderCashierFilter /> */}
                 </div>
