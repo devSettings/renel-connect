@@ -8,7 +8,10 @@ import { OrderData, OrderItemData } from '../types/order';
 import SaleReference from './create-order-reference';
 import { currentUser } from '@clerk/nextjs/server';
 
-const OrderDate = format(new Date(), 'yyyy-MM-dd');
+const OrderDate = format(
+  new Date(new Date().setHours(new Date().getHours() - 6)),
+  'yyyy-MM-dd'
+);
 
 const createOrder = async (
   orderData: OrderData,
