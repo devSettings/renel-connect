@@ -101,7 +101,7 @@ model User {
   birthDate         DateTime?         @map("birth_date") @db.Date
   gender            Gender
   preferredLanguage Language          @default(ENGLISH) @map("preferred_language")
-  status            UserStatus        @default(INACTIVE)
+  status            UserStatus        @default(ACTIVE)
   lastLogin         DateTime?         @map("last_login")
   customer          Customer?
   idProvided        AcceptedTypeOfID? @map("id_provided")

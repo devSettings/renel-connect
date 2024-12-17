@@ -39,12 +39,14 @@ async function createUserCustomer(data: FormData): Promise<ActionResponse> {
   try {
     const [existingUser, existingPhoneNumber, existingId] = await Promise.all([
       prisma.user.findUnique({ where: { fullNameSlug } }),
+
       prisma.customer.findUnique({
         where: { phoneNumber: formattedPhoneNumber },
       }),
+
       typeOfId && idNumber
         ? prisma.user.findFirst({
-            where: { idProvided: typeOfId },
+            where: { idProvided: typeOfId, AND: { idNumber: idNumber } },
           })
         : null,
     ]);
