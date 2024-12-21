@@ -23,7 +23,7 @@ export default async function ReportMetrics() {
 
   const metrics: ReportMetric[] = [
     {
-      title: 'Total Sale',
+      title: 'Total Vente',
       count: totalSales,
       icon: <Package className='h-5 w-5' />,
       gradientFrom: 'from-blue-700',
@@ -32,7 +32,7 @@ export default async function ReportMetrics() {
         ' text-blue-600 border-blue-500/50 hover:bg-blue-500/30 hover:border-blue-400',
     },
     {
-      title: 'Total Income',
+      title: 'Total Revenu',
       count: totalIncome,
       icon: <BadgeDollarSign className='h-5 w-5' />,
       gradientFrom: 'from-blue-700',
@@ -42,7 +42,7 @@ export default async function ReportMetrics() {
     },
 
     {
-      title: 'Average Sale',
+      title: 'Moyenne de vente',
       count: averageSaleValue,
       icon: <Coins className='h-5 w-5' />,
       gradientFrom: 'from-red-700',
@@ -51,7 +51,7 @@ export default async function ReportMetrics() {
         ' text-purple-600 border-purle-500/50 hover: hover:border-purle-400',
     },
     {
-      title: 'New Customers',
+      title: 'Nouveaux clients',
       count: totalNewCustomers,
       icon: <Contact className='h-5 w-5' />,
       gradientFrom: 'from-yellow-700',
@@ -66,7 +66,10 @@ export default async function ReportMetrics() {
   return (
     <div className='grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
       {metrics.map((metric, index) => (
-        <Card key={index} className='bg-[#0a0a0a] border-[0.1px]  shadow-none'>
+        <Card
+          key={index}
+          className='border-[0.1px]  shadow-none'
+        >
           <CardHeader className='flex flex-row items-center justify-between pb-2 space-y-0'>
             <CardTitle className='text-sm font-medium'>
               {metric.title}

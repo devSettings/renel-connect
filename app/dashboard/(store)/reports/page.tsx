@@ -13,11 +13,19 @@ import SaleReportItemTable from './components/sale-items-report-table';
 import SaleReportTable from './components/sale-report-table';
 import { TopBestSellingProducts } from './components/top-best-selling-product';
 
-export default async function ReportPage() {
+interface ReportPageProps {
+  searchParams: {
+    date: string;
+  };
+}
+
+export default async function ReportPage({ searchParams }: ReportPageProps) {
   const [salesResponse, itemsResponse] = await Promise.all([
     getSales(),
     getSaleItems(),
   ]);
+
+  console.log(searchParams);
 
   if (!salesResponse.success) {
     return null;
@@ -64,8 +72,8 @@ export default async function ReportPage() {
 
       <Tabs defaultValue='Sales'>
         <TabsList>
-          <TabsTrigger value='Sales'>Sale Report</TabsTrigger>
-          <TabsTrigger value='Items'>Sale Items Report</TabsTrigger>
+          <TabsTrigger value='Sales'>Rapport de vente</TabsTrigger>
+          <TabsTrigger value='Items'>Rapport d'articles vendus</TabsTrigger>
         </TabsList>
         <TabsContent value='Sales'>
           <Card className='shadow-none flex-1 overflow-hidden border-[0.1px] bg-[#0a0a0a]'>

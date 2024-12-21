@@ -134,8 +134,6 @@ const createOrder = async (
       return newOrder;
     });
 
-    console.log('Prisma transaction result:', JSON.stringify(result, null, 2));
-
     revalidatePath('/dashboard/orders');
     revalidatePath('/dashboard/reports');
 

@@ -24,7 +24,7 @@ const Search = ({ placeholder, className }: Props) => {
           'placeholder:text-muted-foreground',
           className
         )}
-        placeholder={placeholder || 'Enter your Query'}
+        placeholder={placeholder || 'Recherche'}
       />
     </div>
   );

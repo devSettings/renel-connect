@@ -13,6 +13,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import useQueryParameter from '@/hooks/use-query-parameter';
 
 export default function DatePickerWithRange({
   className,
@@ -30,10 +31,15 @@ export default function DatePickerWithRange({
     setOpen(false);
   };
 
+  const { handleQuery } = useQueryParameter('date');
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Here you would typically send the date range to your backend or perform some action
-    console.log('Submitted date range:', date);
+    handleQuery(
+      `${format(date?.from!, 'yyyy-MM-dd') || ''}x${
+        format(date?.to!, 'yyyy-MM-dd') || ''
+      }`
+    );
   };
 
   return (
@@ -44,12 +50,11 @@ export default function DatePickerWithRange({
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
           <Popover
-            open={false}
+            open={open}
             onOpenChange={setOpen}
           >
             <PopoverTrigger asChild>
               <Button
-                disabled
                 id='date-range'
                 variant={'outline'}
                 className={cn(
@@ -91,8 +96,19 @@ export default function DatePickerWithRange({
                   className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(3)}
+                  disabled
                 >
-                  3 Months
+                  Aujourd'hui
+                </Button>
+                <Button
+                  type='button'
+                  variant='outline'
+                  className='border-dashed'
+                  size='sm'
+                  onClick={() => handleRangeSelect(3)}
+                  disabled
+                >
+                  3 Mois
                 </Button>
                 <Button
                   type='button'
@@ -100,8 +116,9 @@ export default function DatePickerWithRange({
                   className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(6)}
+                  disabled
                 >
-                  6 Months
+                  6 Mois
                 </Button>
                 <Button
                   type='button'
@@ -109,8 +126,9 @@ export default function DatePickerWithRange({
                   className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(9)}
+                  disabled
                 >
-                  9 Months
+                  9 Mois
                 </Button>
                 <Button
                   type='button'
@@ -118,8 +136,9 @@ export default function DatePickerWithRange({
                   className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(12)}
+                  disabled
                 >
-                  1 Year
+                  1 An
                 </Button>
                 <Button
                   type='button'
@@ -127,8 +146,9 @@ export default function DatePickerWithRange({
                   className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(24)}
+                  disabled
                 >
-                  2 Years
+                  2 Ans
                 </Button>
                 <Button
                   type='button'
@@ -136,17 +156,18 @@ export default function DatePickerWithRange({
                   className='border-dashed'
                   size='sm'
                   onClick={() => handleRangeSelect(36)}
+                  disabled
                 >
-                  3 Years
+                  3 Ans
                 </Button>
               </div>
             </PopoverContent>
           </Popover>
           <Button
+            disabled={!date?.from && !date?.to}
             type='submit'
-            disabled
           >
-            Submit
+            Soumettre
           </Button>
         </div>
       </div>

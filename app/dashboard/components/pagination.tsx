@@ -19,7 +19,7 @@ const Pagination = ({ totalPages, currentPage }: Props) => {
           onClick={() => handlePageQuery((currentPage - 1).toString())}
           disabled={currentPage <= 1}
         >
-          Previous
+          Précédent
         </Button>
 
         <Button
@@ -27,7 +27,7 @@ const Pagination = ({ totalPages, currentPage }: Props) => {
           disabled={currentPage >= totalPages}
           onClick={() => handlePageQuery((currentPage + 1).toString())}
         >
-          Next
+          Suivant
         </Button>
       </div>
     </div>

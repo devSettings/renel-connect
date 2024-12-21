@@ -27,9 +27,9 @@ import {
 
 const data = {
   user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg',
+    name: 'renel',
+    email: 'renel@renel.com',
+    avatar: '/avatars/renel.png',
   },
   navMain: [
     {
@@ -38,43 +38,43 @@ const data = {
       icon: FaStoreAlt,
       isActive: true,
       items: [
-        { title: 'Sell', url: '/dashboard/sell' },
+        { title: 'Vendre', url: '/dashboard/sell' },
         {
-          title: 'Products',
+          title: 'Produits',
           url: '/dashboard/products',
         },
         {
-          title: 'Customers',
+          title: 'Clients',
           url: '/dashboard/customers',
         },
         {
-          title: 'Orders',
+          title: 'Commandes',
           url: '/dashboard/orders',
         },
-        { title: 'Reports', url: '/dashboard/reports' },
+        { title: 'Rapports', url: '/dashboard/reports' },
         { title: 'Transactions', url: '/dashboard/transactions' },
       ],
     },
 
     {
-      title: 'Settings',
+      title: 'Paramètres',
       url: '#',
       icon: Settings2,
       items: [
         {
-          title: 'Users',
+          title: 'Utilisateurs',
           url: '/dashboard/users',
         },
         {
-          title: 'Team',
+          title: 'Equipe',
           url: '#',
         },
         {
-          title: 'Billing',
+          title: 'Facturation',
           url: '#',
         },
         {
-          title: 'Limits',
+          title: 'Limites',
           url: '#',
         },
       ],
@@ -94,12 +94,12 @@ const data = {
   ],
   projects: [
     {
-      name: 'Design Engineering',
+      name: 'Ingénierie',
       url: '#',
       icon: Frame,
     },
     {
-      name: 'Sales & Marketing',
+      name: 'Marketing',
       url: '#',
       icon: PieChart,
     },
@@ -108,11 +108,17 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar variant='inset' {...props}>
+    <Sidebar
+      variant='inset'
+      {...props}
+    >
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size='lg' asChild>
+            <SidebarMenuButton
+              size='lg'
+              asChild
+            >
               <a href='#'>
                 <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-700 text-primary'>
                   <Command className='size-4' />
@@ -129,7 +135,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className='mt-auto' />
+        <NavSecondary
+          items={data.navSecondary}
+          className='mt-auto'
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

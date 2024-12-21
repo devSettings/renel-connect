@@ -43,7 +43,7 @@ const CreateProductFormDialog = () => {
           className='font-normal bg-blue-700 hover:bg-blue-800 text-white transition-colors ease-in-out duration-300'
         >
           <IoMdAddCircle />
-          New product
+          Nouveau produit
         </Button>
       </DialogTrigger>
 
@@ -68,9 +68,9 @@ const CreateProductFormDialog = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='INVENTORY'>Inventory</SelectItem>
-              <SelectItem value='NON_INVENTORY'>Non Inventory</SelectItem>
-              <SelectItem value='SERVICE'>Services</SelectItem>
+              <SelectItem value='INVENTORY'>Inventaire</SelectItem>
+              <SelectItem value='NON_INVENTORY'>Non Inventaire</SelectItem>
+              <SelectItem value='SERVICE'>Service</SelectItem>
               <SelectItem value='DIGITAL'>Digital</SelectItem>
             </SelectContent>
           </Select>

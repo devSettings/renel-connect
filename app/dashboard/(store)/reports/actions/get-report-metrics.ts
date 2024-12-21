@@ -5,7 +5,17 @@ import prisma from '@/prisma/client';
 import { ReportMetrics } from '../types/report';
 import { format } from 'date-fns';
 
-const currentDate = format(new Date(), 'yyyy-MM-dd');
+const currentDate = format(
+  new Date(new Date().setHours(new Date().getHours() - 6)),
+  'yyyy-MM-dd'
+);
+
+type FilterOptions = {
+  date: {
+    from: string;
+    to: string;
+  };
+};
 
 const getReportMetrics = async (): Promise<ActionResponse<ReportMetrics>> => {
   try {

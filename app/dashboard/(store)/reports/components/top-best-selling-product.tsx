@@ -45,12 +45,15 @@ export function TopBestSellingProducts({ data }: Props) {
   return (
     <Card className='border-[0.1px]'>
       <CardHeader>
-        <CardTitle>Top 5 Best Selling Products</CardTitle>
-        <CardDescription>Displaying product revenue</CardDescription>
+        <CardTitle>Top 5 Meilleurs Produits Vendus</CardTitle>
+        <CardDescription>Affichage du revenu des produits</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={data}>
+          <BarChart
+            accessibilityLayer
+            data={data}
+          >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey='name'
@@ -62,7 +65,11 @@ export function TopBestSellingProducts({ data }: Props) {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey='revenue' strokeWidth={2} radius={8}>
+            <Bar
+              dataKey='revenue'
+              strokeWidth={2}
+              radius={8}
+            >
               {data.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
@@ -75,10 +82,10 @@ export function TopBestSellingProducts({ data }: Props) {
       </CardContent>
       <CardFooter className='flex-col items-start gap-2 text-sm'>
         <div className='flex gap-2 font-medium leading-none'>
-          Trending up by 5.2% this month <TrendingUp className='h-4 w-4' />
+          Augmentation de 5.2% ce mois-ci <TrendingUp className='h-4 w-4' />
         </div>
         <div className='leading-none text-muted-foreground'>
-          Showing revenue for the top 5 products
+          Affichage du revenu des 5 meilleurs produits
         </div>
       </CardFooter>
     </Card>

@@ -5,7 +5,10 @@ import { ItemReport } from '../types/report';
 import prisma from '@/prisma/client';
 import { format } from 'date-fns';
 
-const currentDate = format(new Date(), 'yyyy-MM-dd');
+const currentDate = format(
+  new Date(new Date().setHours(new Date().getHours() - 6)),
+  'yyyy-MM-dd'
+);
 
 const getSaleItems = async (): Promise<ActionResponse<ItemReport[]>> => {
   try {

@@ -71,8 +71,8 @@ export function SaleCategoryChart({ food, drink, other, room }: Props) {
   return (
     <Card className='flex flex-col border-[0.1px]'>
       <CardHeader className='items-center pb-0'>
-        <CardTitle>Pie Chart - Donut with Text</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Diagramme circulaire - Donut avec texte</CardTitle>
+        <CardDescription></CardDescription>
       </CardHeader>
       <CardContent className='flex-1 pb-0'>
         <ChartContainer
@@ -126,10 +126,10 @@ export function SaleCategoryChart({ food, drink, other, room }: Props) {
       </CardContent>
       <CardFooter className='flex-col gap-2 text-sm'>
         <div className='flex items-center gap-2 font-medium leading-none'>
-          Trending up by 5.2% this month <TrendingUp className='h-4 w-4' />
+          Augmentation de 5.2% ce mois-ci <TrendingUp className='h-4 w-4' />
         </div>
         <div className='leading-none text-muted-foreground'>
-          Showing total revenue for the last 6 months
+          Affichage du revenu total pour les 6 derniers mois
         </div>
       </CardFooter>
     </Card>

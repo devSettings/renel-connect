@@ -26,11 +26,11 @@ interface Props {
 }
 
 const tableHeads = [
-  'Product',
+  'Produit',
   'Type',
-  'Selling Price',
-  'Category',
-  'Status',
+  'Prix de vente',
+  'Catégorie',
+  'Statut',
   'Stock',
   'Action',
 ];
@@ -43,8 +43,8 @@ export default function ProductsTable({
   if (products.length === 0) {
     return (
       <EmptyTable
-        heading='No products found!'
-        description='there is no products in the database -  add one so i can show up here'
+        heading='Aucun produit trouvé!'
+        description="Il n'y a pas de produits dans la base de données - ajoutez un produit pour qu'il apparaisse ici"
       />
     );
   }
@@ -92,7 +92,10 @@ export default function ProductsTable({
                   </TableCell>
                   <TableCell>{product.quantityInStock}</TableCell>
                   <TableCell aria-disabled={true}>
-                    <TableAction id={product.id} type={product.type} />
+                    <TableAction
+                      id={product.id}
+                      type={product.type}
+                    />
                   </TableCell>
                 </TableRow>
               ))}
@@ -101,7 +104,10 @@ export default function ProductsTable({
         </CardContent>
         <CardFooter className='overflow-hidden'>
           <Suspense fallback={<div>Loading pagination...</div>}>
-            <Pagination totalPages={totalPages} currentPage={currentPage} />
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+            />
           </Suspense>
         </CardFooter>
       </Card>

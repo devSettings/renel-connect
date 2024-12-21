@@ -6,7 +6,10 @@ import { Sale } from '../types/report';
 import { format } from 'date-fns';
 import { Collection } from '@prisma/client';
 
-const currentDate = format(new Date(), 'yyyy-MM-dd');
+const currentDate = format(
+  new Date(new Date().setHours(new Date().getHours() - 6)),
+  'yyyy-MM-dd'
+);
 
 const getSales = async (): Promise<ActionResponse<Sale[]>> => {
   const categoryFormatter = (category: Collection) => {
