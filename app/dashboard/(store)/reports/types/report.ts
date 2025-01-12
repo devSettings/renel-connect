@@ -19,9 +19,10 @@ export type ItemReport = {
   id: string;
   name: string;
   quantitySold: number;
+  totalSalesCount: number;
   averageSalePrice: number;
   totalRevenue: number;
-  salesCountribution: number;
-  QuantityInStock: number;
   lastPurchaseDate: string;
+  salesContribution: number;
+  quantityInStock: number;
 };

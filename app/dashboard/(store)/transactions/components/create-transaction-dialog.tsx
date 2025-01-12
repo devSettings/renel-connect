@@ -26,16 +26,25 @@ import CreateAquisitionForm from './create-aquisition-form';
 import CreateExpenseForm from './create-expense-form';
 import CreateIncomeForm from './create-income-form';
 import { CreateLostForm } from './create-lost-form';
+import useUserRole from '@/lib/use-user-role';
 
 const CreateTransactionFormDialog = () => {
+  const role = useUserRole();
+  const hasPermission = role === 'ADMIN' || role === 'DEVELOPER' ? true : false;
   const [open, setOpen] = useState(false);
   const [selectedTransactionType, setSelectedTransactionType] =
     useState<TypeOfTransaction>('EXPENSE');
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DialogTrigger asChild>
-        <Button className='font-normal bg-blue-700 hover:bg-blue-800 text-white transition-colors ease-in-out duration-300'>
+        <Button
+          disabled={!hasPermission}
+          className='font-normal bg-blue-700 hover:bg-blue-800 text-white transition-colors ease-in-out duration-300'
+        >
           <IoMdAddCircle />
           New Transaction
         </Button>

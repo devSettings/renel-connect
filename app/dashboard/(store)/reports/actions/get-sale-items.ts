@@ -1,16 +1,25 @@
 'use server';
 
 import { ActionResponse } from '@/app/types/action-reponse';
-import { ItemReport } from '../types/report';
 import prisma from '@/prisma/client';
-import { format } from 'date-fns';
+import { ItemReport } from '../types/report';
 
-const currentDate = format(
-  new Date(new Date().setHours(new Date().getHours() - 6)),
-  'yyyy-MM-dd'
-);
+type FilterOption = {
+  date: { start: string; end: string };
+};
 
-const getSaleItems = async (): Promise<ActionResponse<ItemReport[]>> => {
+const getSaleItems = async (
+  filterOption?: FilterOption
+): Promise<ActionResponse<ItemReport[]>> => {
+  if (!filterOption) {
+    console.error('No filter option provided');
+    return {
+      success: false,
+      error: 'No filter option provided. Please provide a valid date range.',
+    };
+  }
+
+  const { date } = filterOption; // Destructure the date object from filterOption
   try {
     // Group sales data by product
     const items = await prisma.orderItem.groupBy({
@@ -20,7 +29,7 @@ const getSaleItems = async (): Promise<ActionResponse<ItemReport[]>> => {
       _max: { createdAt: true },
       _count: { _all: true },
       where: {
-        orderDate: currentDate,
+        orderDate: date.start, // Use the start date from filterOption
       },
     });
 
@@ -77,8 +86,8 @@ const getSaleItems = async (): Promise<ActionResponse<ItemReport[]>> => {
         averageSalePrice,
         totalRevenue: totalRevenueForProduct,
         lastPurchaseDate: item._max.createdAt?.toDateString() || 'N/A',
-        salesCountribution: parseFloat(salesContribution.toFixed(2)),
-        QuantityInStock: productDetails.quantityInStock,
+        salesContribution: parseFloat(salesContribution.toFixed(2)), // Corrected property name
+        quantityInStock: productDetails.quantityInStock, // Corrected property name
       };
     });
 

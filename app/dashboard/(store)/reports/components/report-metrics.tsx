@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { BadgeDollarSign, Coins, Contact, Package } from 'lucide-react';
 import getReportMetrics from '../actions/get-report-metrics';
+import { format } from 'date-fns';
 
 interface ReportMetric {
   title: string;
@@ -12,8 +13,14 @@ interface ReportMetric {
   badge: string;
 }
 
-export default async function ReportMetrics() {
-  const reponse = await getReportMetrics();
+interface ReportMetricsProps {
+  date: { start: string; end: string };
+}
+
+export default async function ReportMetrics({ date }: ReportMetricsProps) {
+  const reponse = await getReportMetrics({
+    date: { start: date.start, end: date.end },
+  });
   if (!reponse.success) {
     return null;
   }

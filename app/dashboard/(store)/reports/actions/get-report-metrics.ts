@@ -10,14 +10,22 @@ const currentDate = format(
   'yyyy-MM-dd'
 );
 
-type FilterOptions = {
-  date: {
-    from: string;
-    to: string;
-  };
+type FilterOption = {
+  date: { start: string; end: string };
 };
 
-const getReportMetrics = async (): Promise<ActionResponse<ReportMetrics>> => {
+const getReportMetrics = async (
+  filterOption: FilterOption
+): Promise<ActionResponse<ReportMetrics>> => {
+  if (!filterOption) {
+    console.error('No filter option provided');
+    return {
+      success: false,
+      error: 'No filter option provided. Please provide a valid date range.',
+    };
+  }
+
+  const { date } = filterOption; // Destructure the date object from filterOption
   try {
     const [aggregation, customerCount] = await Promise.all([
       prisma.order.aggregate({
@@ -25,12 +33,18 @@ const getReportMetrics = async (): Promise<ActionResponse<ReportMetrics>> => {
         _count: { id: true },
         _avg: { totalPrice: true },
         where: {
-          orderDate: currentDate,
+          orderDate: {
+            gte: date.start,
+            lte: date.end,
+          },
         },
       }),
       prisma.customer.count({
         where: {
-          createdDate: currentDate,
+          createdDate: {
+            gte: date.start,
+            lte: date.end,
+          },
         },
       }),
     ]);

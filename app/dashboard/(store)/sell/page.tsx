@@ -17,6 +17,7 @@ interface ProductSectionProps {
 }
 
 const ProductSection = async ({ searchQuery }: ProductSectionProps) => {
+  
   const reponse = await getItems({ search: searchQuery, pageSize: 25 });
 
   if (!reponse.success) return '';

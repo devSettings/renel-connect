@@ -9,19 +9,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import useUserRole from '@/lib/use-user-role';
+import { ProductType } from '@prisma/client';
 import {
   ChartNoAxesColumnDecreasing,
+  EditIcon,
   EllipsisIcon,
   FilePenLine,
   GitCompare,
   Trash,
 } from 'lucide-react';
 import Link from 'next/link';
-import ProductDeleteModal from '../[id]/components/product-delete-dialog';
 import { useState } from 'react';
 import EditProductFormDialog from '../[id]/components/edit-product-dialog';
-import { ProductType } from '@prisma/client';
-import useUserRole from '@/lib/use-user-role';
+import ProductDeleteModal from '../[id]/components/product-delete-dialog';
 
 interface Props {
   id: string;
@@ -29,9 +30,11 @@ interface Props {
 }
 
 const TableAction = ({ id, type }: Props) => {
-  const role = useUserRole();
   const [open, setOpen] = useState(false);
   const [isEditing, setEditing] = useState(false);
+
+  const role = useUserRole();
+  const hasPermission = role === 'ADMIN' || role === 'DEVELOPER' ? true : false;
 
   const handleDelete = () => {
     setOpen(!open);
@@ -50,32 +53,37 @@ const TableAction = ({ id, type }: Props) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className='min-w-[11rem]'>
-          <DropdownMenuLabel className='text-center'>Action</DropdownMenuLabel>
+          <DropdownMenuLabel className='text-center'>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem disabled={role !== 'ADMIN'}>
+          <DropdownMenuItem disabled={!hasPermission}>
             <ChartNoAxesColumnDecreasing />
-            <Link href={`/dashboard/products/${id}`}> View Analytics</Link>
+            <Link href={`/dashboard/products/${id}`}>Voir les analyses</Link>
           </DropdownMenuItem>
           <DropdownMenuItem disabled>
             <GitCompare />
-            Compare
+            Comparer
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className='cursor-pointer'
-            onClick={handleEdit}
-            disabled={type === 'NON_INVENTORY' || role !== 'ADMIN'}
-          >
-            <FilePenLine />
-            Edit
-          </DropdownMenuItem>
+          {type === 'INVENTORY' && (
+            <DropdownMenuItem disabled={!hasPermission}>
+              <FilePenLine />
+              Réapprovisionner
+            </DropdownMenuItem>
+          )}
+          {type !== 'NON_INVENTORY' && (
+            <DropdownMenuItem disabled={!hasPermission}>
+              <EditIcon />
+              Modifier
+            </DropdownMenuItem>
+          )}
+
           <DropdownMenuSeparator />
           <DropdownMenuItem
             className='cursor-pointer'
             onClick={handleDelete}
-            disabled={role !== 'ADMIN'}
+            disabled={!hasPermission}
           >
             <Trash />
-            Delete
+            Supprimer
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

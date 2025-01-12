@@ -3,15 +3,17 @@
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { Sale } from '../types/report';
-import { format } from 'date-fns';
 import { Collection } from '@prisma/client';
 
-const currentDate = format(
-  new Date(new Date().setHours(new Date().getHours() - 6)),
-  'yyyy-MM-dd'
-);
+type FilterOption = {
+  date: { start: string; end: string };
+};
 
-const getSales = async (): Promise<ActionResponse<Sale[]>> => {
+const getSales = async (
+  option: FilterOption
+): Promise<ActionResponse<Sale[]>> => {
+  const { date } = option;
+
   const categoryFormatter = (category: Collection) => {
     if (category === 'DRINK') return 'Drink';
     if (category === 'FOOD') return 'Food';
@@ -35,7 +37,10 @@ const getSales = async (): Promise<ActionResponse<Sale[]>> => {
         },
       },
       where: {
-        orderDate: currentDate,
+        orderDate: {
+          gte: date.start,
+          lte: date.end,
+        },
       },
     });
 
@@ -48,7 +53,6 @@ const getSales = async (): Promise<ActionResponse<Sale[]>> => {
       items: order.totalItems || 0,
       date: order.orderDate || 'Unknown',
       method: order.paymentMethod || 'Unknown',
-
       cashier: order.cashier
         ? `${order.cashier.firstName} ${order.cashier.lastName}`
         : 'Unassigned',
