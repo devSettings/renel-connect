@@ -26,11 +26,11 @@ interface Props {
 }
 
 const tableHeads = [
-  'Produit',
+  'Product',
   'Type',
-  'Prix de vente',
-  'Catégorie',
-  'Statut',
+  'Selling Price',
+  'Category',
+  'Status',
   'Stock',
   'Action',
 ];
@@ -43,8 +43,8 @@ export default function ProductsTable({
   if (products.length === 0) {
     return (
       <EmptyTable
-        heading='Aucun produit trouvé!'
-        description="Il n'y a pas de produits dans la base de données - ajoutez un produit pour qu'il apparaisse ici"
+        heading='No product found!'
+        description='There are no products in the database - add a product to appear here'
       />
     );
   }

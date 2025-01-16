@@ -16,17 +16,20 @@ const CreateCustomerFormDialog = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DialogTrigger asChild>
-        <Button variant='outline' className='text-blue-700 border-[0.1px]'>
+        <Button
+          variant='outline'
+          className='text-blue-700 border-[0.1px]'
+        >
           <IoMdAddCircle />
         </Button>
       </DialogTrigger>
       <DialogContent className='max-w-[65vw] bg-black'>
-        <DialogHeader>
-          {/* <DialogTitle className='text-2xl font-bold'></DialogTitle> */}
-          {/* <DialogDescription></DialogDescription> */}
-        </DialogHeader>
+        <DialogHeader></DialogHeader>
         <Card className='border-[0.1px] '>
           <CardContent className='pt-8'>
             <CreateUserCustomerForm

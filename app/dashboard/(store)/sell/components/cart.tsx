@@ -1,11 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import CartItem from './cart-items';
 import { useCartStore } from '../hooks/use-cart-store';
 import { useDiscount } from '../hooks/use-discount';
+import CartItem from './cart-items';
 import DiscountModal from './discount-modal';
-import { CheckoutDialog } from './check-out-dialog';
 import { TestCheckOut } from './test-checkout';
 
 const Cart = () => {
@@ -51,11 +50,11 @@ const Cart = () => {
       <div className='space-y-4 pb-2'>
         <DiscountModal />
         <div className='flex justify-between text-muted-foreground text-sm font-semibold'>
-          <span>Sous-total ({totals.itemCount} items)</span>
+          <span>Subtotal ({totals.itemCount} items)</span>
           <span>{totals.subtotal.toFixed(0)} G</span>
         </div>
         <div className='flex justify-between text-sm font-semibold text-green-600'>
-          <span>Rabais</span>
+          <span>Discount</span>
           <span>
             {totals.discount > 0 ? `-${totals.discount.toFixed(2)}` : '0'} G
           </span>
@@ -66,7 +65,6 @@ const Cart = () => {
         </div>
 
         <div className='mt-5'>
-          {/* <CheckoutDialog disabled={items.length === 0} /> */}
           <TestCheckOut disabled={items.length === 0} />
         </div>
       </div>

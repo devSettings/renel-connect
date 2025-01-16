@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { BadgeDollarSign, Coins, Contact, Package } from 'lucide-react';
 import getReportMetrics from '../actions/get-report-metrics';
-import { format } from 'date-fns';
 
 interface ReportMetric {
   title: string;

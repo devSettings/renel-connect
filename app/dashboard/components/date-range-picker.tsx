@@ -98,7 +98,7 @@ export default function DatePickerWithRange({
                   onClick={() => handleRangeSelect(3)}
                   disabled
                 >
-                  Aujourd'hui
+                  Today
                 </Button>
                 <Button
                   type='button'
@@ -108,7 +108,7 @@ export default function DatePickerWithRange({
                   onClick={() => handleRangeSelect(3)}
                   disabled
                 >
-                  3 Mois
+                  3 Months
                 </Button>
                 <Button
                   type='button'
@@ -118,7 +118,7 @@ export default function DatePickerWithRange({
                   onClick={() => handleRangeSelect(6)}
                   disabled
                 >
-                  6 Mois
+                  6 Months
                 </Button>
                 <Button
                   type='button'
@@ -128,7 +128,7 @@ export default function DatePickerWithRange({
                   onClick={() => handleRangeSelect(9)}
                   disabled
                 >
-                  9 Mois
+                  9 Months
                 </Button>
                 <Button
                   type='button'
@@ -138,7 +138,7 @@ export default function DatePickerWithRange({
                   onClick={() => handleRangeSelect(12)}
                   disabled
                 >
-                  1 An
+                  1 Year
                 </Button>
                 <Button
                   type='button'
@@ -148,7 +148,7 @@ export default function DatePickerWithRange({
                   onClick={() => handleRangeSelect(24)}
                   disabled
                 >
-                  2 Ans
+                  2 Years
                 </Button>
                 <Button
                   type='button'
@@ -158,7 +158,7 @@ export default function DatePickerWithRange({
                   onClick={() => handleRangeSelect(36)}
                   disabled
                 >
-                  3 Ans
+                  3 Years
                 </Button>
               </div>
             </PopoverContent>
@@ -167,7 +167,7 @@ export default function DatePickerWithRange({
             disabled={!date?.from && !date?.to}
             type='submit'
           >
-            Soumettre
+            Submit
           </Button>
         </div>
       </div>

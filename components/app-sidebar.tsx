@@ -38,43 +38,43 @@ const data = {
       icon: FaStoreAlt,
       isActive: true,
       items: [
-        { title: 'Vendre', url: '/dashboard/sell' },
+        { title: 'Sell', url: '/dashboard/sell' },
         {
-          title: 'Produits',
+          title: 'Products',
           url: '/dashboard/products',
         },
         {
-          title: 'Clients',
+          title: 'Customers',
           url: '/dashboard/customers',
         },
         {
-          title: 'Commandes',
+          title: 'Orders',
           url: '/dashboard/orders',
         },
-        { title: 'Rapports', url: '/dashboard/reports' },
+        { title: 'Reports', url: '/dashboard/reports' },
         { title: 'Transactions', url: '/dashboard/transactions' },
       ],
     },
 
     {
-      title: 'Paramètres',
+      title: 'Settings',
       url: '#',
       icon: Settings2,
       items: [
         {
-          title: 'Utilisateurs',
+          title: 'Users',
           url: '/dashboard/users',
         },
         {
-          title: 'Equipe',
+          title: 'Team',
           url: '#',
         },
         {
-          title: 'Facturation',
+          title: 'Billing',
           url: '#',
         },
         {
-          title: 'Limites',
+          title: 'Limits',
           url: '#',
         },
       ],
@@ -94,7 +94,7 @@ const data = {
   ],
   projects: [
     {
-      name: 'Ingénierie',
+      name: 'Engineering',
       url: '#',
       icon: Frame,
     },

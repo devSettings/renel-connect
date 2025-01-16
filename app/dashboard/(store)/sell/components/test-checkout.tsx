@@ -470,7 +470,7 @@ export function TestCheckOut({ disabled }: Props) {
                                           (customer) =>
                                             customer.id === field.value
                                         )?.firstName
-                                      : 'liste des clients'}
+                                      : 'customer list'}
                                     <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                                   </Button>
                                 </FormControl>
@@ -482,15 +482,13 @@ export function TestCheckOut({ disabled }: Props) {
                               <Command>
                                 <div className='m-2'>
                                   <Input
-                                    placeholder='recherche client...'
+                                    placeholder='search customer...'
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
                                   />
                                 </div>
                                 <CommandList className='border-[0.1px] mx-2 mb-2 rounded-lg '>
-                                  <CommandEmpty>
-                                    aucun client trouvé
-                                  </CommandEmpty>
+                                  <CommandEmpty>No customer found</CommandEmpty>
                                   <CommandGroup>
                                     {customers.map((customer) => (
                                       <CommandItem
@@ -538,10 +536,10 @@ export function TestCheckOut({ disabled }: Props) {
                         name='roomNumber'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Le numéro de la chambre</FormLabel>
+                            <FormLabel>Room Number</FormLabel>
                             <FormControl>
                               <Input
-                                placeholder='Entrez le numéro de la chambre'
+                                placeholder='Enter room number'
                                 {...field}
                               />
                             </FormControl>
@@ -557,17 +555,15 @@ export function TestCheckOut({ disabled }: Props) {
                     <h2 className='font-semibold mb-4'>Cart Summary</h2>
                     <div className='space-y-3'>
                       <div className='flex justify-between'>
-                        <span className='text-muted-foreground'>
-                          Sous-total
-                        </span>
+                        <span className='text-muted-foreground'>Subtotal</span>
                         <span>{getTotal().toFixed(1)} G</span>
                       </div>
                       <div className='flex justify-between text-green-600'>
-                        <span>Rabais</span>
+                        <span>Discount</span>
                         <span>-{discount} G</span>
                       </div>
                       <div className='flex justify-between'>
-                        <span className='text-muted-foreground'>TCA</span>
+                        <span className='text-muted-foreground'>Tax</span>
                         <span>$0.00</span>
                       </div>
                       <Separator />
@@ -583,7 +579,7 @@ export function TestCheckOut({ disabled }: Props) {
                         transition={{ duration: 0.3 }}
                         className='flex justify-between text-lg font-semibold text-blue-700'
                       >
-                        <span>Monnaie</span>
+                        <span>Change</span>
                         <span>{customerChange} G</span>
                       </motion.div>
                     </div>
