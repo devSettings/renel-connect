@@ -17,7 +17,6 @@ interface ProductSectionProps {
 }
 
 const ProductSection = async ({ searchQuery }: ProductSectionProps) => {
-  
   const reponse = await getItems({ search: searchQuery, pageSize: 25 });
 
   if (!reponse.success) return '';
@@ -29,7 +28,7 @@ const PosPage = async ({ searchParams }: Props) => {
   const query = (await searchParams).searchQuery;
 
   return (
-    <div className='container mx-auto h-full'>
+    <div className='h-full'>
       <div className='grid grid-cols-[1fr_auto] gap-4'>
         <div className='space-y-6 rounded-lg h-full p-4 border-[0.1px] bg-card shadow-sm'>
           <div className='flex items-center gap-2'>
