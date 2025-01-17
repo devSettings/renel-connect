@@ -64,13 +64,16 @@ const TableAction = ({ id, type }: Props) => {
             Comparer
           </DropdownMenuItem>
           {type === 'INVENTORY' && (
-            <DropdownMenuItem disabled={!hasPermission}>
+            <DropdownMenuItem disabled={true}>
               <FilePenLine />
               Réapprovisionner
             </DropdownMenuItem>
           )}
           {type !== 'NON_INVENTORY' && (
-            <DropdownMenuItem disabled={!hasPermission}>
+            <DropdownMenuItem
+              disabled={!hasPermission}
+              onClick={() => setEditing(true)}
+            >
               <EditIcon />
               Modifier
             </DropdownMenuItem>
