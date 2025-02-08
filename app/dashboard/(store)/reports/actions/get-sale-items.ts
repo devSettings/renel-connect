@@ -11,11 +11,12 @@ type FilterOption = {
 const getSaleItems = async (
   filterOption?: FilterOption
 ): Promise<ActionResponse<ItemReport[]>> => {
-  if (!filterOption) {
-    console.error('No filter option provided');
+  if (!filterOption || !filterOption.date.start || !filterOption.date.end) {
+    console.error('Invalid or incomplete date range provided');
     return {
       success: false,
-      error: 'No filter option provided. Please provide a valid date range.',
+      error:
+        'Invalid or incomplete date range provided. Please provide a valid start and end date.',
     };
   }
 
@@ -29,7 +30,10 @@ const getSaleItems = async (
       _max: { createdAt: true },
       _count: { _all: true },
       where: {
-        orderDate: date.start, // Use the start date from filterOption
+        orderDate: {
+          gte: date.start,
+          lte: date.end,
+        },
       },
     });
 
@@ -86,8 +90,8 @@ const getSaleItems = async (
         averageSalePrice,
         totalRevenue: totalRevenueForProduct,
         lastPurchaseDate: item._max.createdAt?.toDateString() || 'N/A',
-        salesContribution: parseFloat(salesContribution.toFixed(2)), // Corrected property name
-        quantityInStock: productDetails.quantityInStock, // Corrected property name
+        salesContribution: parseFloat(salesContribution.toFixed(2)),
+        quantityInStock: productDetails.quantityInStock,
       };
     });
 

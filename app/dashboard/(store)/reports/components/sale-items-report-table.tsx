@@ -48,7 +48,10 @@ export default function SaleReportItemTable({ items }: Props) {
                 <Checkbox className='border-[0.1px] rounded-md shadow-none'></Checkbox>
               </TableHead>
               {tableHeads.map((head) => (
-                <TableHead key={head} className={cn('text-sm   font-normal')}>
+                <TableHead
+                  key={head}
+                  className={cn('text-sm   font-normal')}
+                >
                   {head}
                 </TableHead>
               ))}
@@ -67,10 +70,10 @@ export default function SaleReportItemTable({ items }: Props) {
                 </TableCell>
                 <TableCell>{item.name}</TableCell>
                 <TableCell>{item.quantitySold}</TableCell>
-                <TableCell>{item.averageSalePrice}</TableCell>
-                <TableCell>{item.totalRevenue}</TableCell>
-                <TableCell>{item.salesCountribution}</TableCell>
-                <TableCell>{item.QuantityInStock}</TableCell>
+                <TableCell>{item.averageSalePrice.toFixed(0)}</TableCell>
+                <TableCell>{item.totalRevenue.toFixed(0)}</TableCell>
+                <TableCell>{item.salesContribution}</TableCell>
+                <TableCell>{item.quantityInStock}</TableCell>
                 {/* <TableCell>{item.lastPurchaseDate}</TableCell> */}
                 <TableCell aria-disabled={true}>
                   <EllipsisIcon className='w-4 h-4' />
@@ -82,7 +85,10 @@ export default function SaleReportItemTable({ items }: Props) {
       </CardContent>
       <CardFooter className='overflow-hidden'>
         <Suspense fallback={<div>Loading pagination...</div>}>
-          <Pagination totalPages={10} currentPage={1} />
+          <Pagination
+            totalPages={10}
+            currentPage={1}
+          />
         </Suspense>
       </CardFooter>
     </Card>

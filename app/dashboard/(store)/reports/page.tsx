@@ -46,7 +46,9 @@ export default async function ReportPage({ searchParams }: ReportPageProps) {
   const topSellingProductResponse = await getTopSellingProduct();
   if (!topSellingProductResponse.success) return;
 
-  const saleCategory = await getSaleByCategory();
+  const saleCategory = await getSaleByCategory({
+    date: { start: startDate, end: endDate },
+  });
 
   if (!saleCategory.success) return null;
 
@@ -55,6 +57,15 @@ export default async function ReportPage({ searchParams }: ReportPageProps) {
       <Suspense fallback={'Loading Metrics'}>
         <ReportMetrics date={{ start: startDate, end: endDate }} />
       </Suspense>
+
+      <div className='grid grid-cols-2 gap-4'>
+        <Suspense fallback={'Loading'}>
+          <SaleCategoryChart data={saleCategory.data} />
+        </Suspense>
+        <Suspense fallback={'Lading'}>
+          <TopBestSellingProducts data={[]} />
+        </Suspense>
+      </div>
 
       <Tabs defaultValue='Sales'>
         <TabsList>

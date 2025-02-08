@@ -32,36 +32,40 @@ const chartConfig = {
     label: 'Revenue',
   },
   chrome: {
-    label: 'Food',
+    label: 'Nouriture',
     color: stunningColors[0],
   },
   drink: {
-    label: 'Drink',
+    label: 'Boisson',
     color: stunningColors[1],
   },
   other: {
-    label: 'Other',
+    label: 'Autre',
     color: stunningColors[2],
   },
   room: {
-    label: 'Room',
+    label: 'Chambre',
     color: stunningColors[3],
   },
 } satisfies ChartConfig;
 
-interface Props {
+interface DataProps {
   food: number;
   drink: number;
   room: number;
   other: number;
 }
 
-export function SaleCategoryChart({ food, drink, other, room }: Props) {
+interface Data {
+  data: DataProps;
+}
+
+export function SaleCategoryChart({ data }: Data) {
   const chartData = [
-    { browser: 'food', revenue: food, fill: stunningColors[0] },
-    { browser: 'drink', revenue: drink, fill: stunningColors[1] },
-    { browser: 'other', revenue: other, fill: stunningColors[2] },
-    { browser: 'room', revenue: room, fill: stunningColors[3] },
+    { browser: 'food', revenue: data.food, fill: stunningColors[0] },
+    { browser: 'drink', revenue: data.drink, fill: stunningColors[1] },
+    { browser: 'other', revenue: data.other, fill: stunningColors[2] },
+    { browser: 'room', revenue: data.room, fill: stunningColors[3] },
   ];
 
   const totalrevenue = React.useMemo(() => {
@@ -71,8 +75,11 @@ export function SaleCategoryChart({ food, drink, other, room }: Props) {
   return (
     <Card className='flex flex-col border-[0.1px]'>
       <CardHeader className='items-center pb-0'>
-        <CardTitle>Diagramme circulaire - Donut avec texte</CardTitle>
-        <CardDescription></CardDescription>
+        <CardTitle>Sales Breakdown by Category</CardTitle>
+        <CardDescription>
+          Explore the distribution of sales across different categories within
+          the selected timeframe.
+        </CardDescription>
       </CardHeader>
       <CardContent className='flex-1 pb-0'>
         <ChartContainer
@@ -127,9 +134,6 @@ export function SaleCategoryChart({ food, drink, other, room }: Props) {
       <CardFooter className='flex-col gap-2 text-sm'>
         <div className='flex items-center gap-2 font-medium leading-none'>
           Augmentation de 5.2% ce mois-ci <TrendingUp className='h-4 w-4' />
-        </div>
-        <div className='leading-none text-muted-foreground'>
-          Affichage du revenu total pour les 6 derniers mois
         </div>
       </CardFooter>
     </Card>
