@@ -24,89 +24,100 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-
-const data = {
-  user: {
-    name: 'renel',
-    email: 'renel@renel.com',
-    avatar: '/avatars/renel.png',
-  },
-  navMain: [
-    {
-      title: 'Store',
-      url: '#',
-      icon: FaStoreAlt,
-      isActive: true,
-      items: [
-        { title: 'Sell', url: '/dashboard/sell' },
-        {
-          title: 'Products',
-          url: '/dashboard/products',
-        },
-        {
-          title: 'Customers',
-          url: '/dashboard/customers',
-        },
-        {
-          title: 'Orders',
-          url: '/dashboard/orders',
-        },
-        { title: 'Reports', url: '/dashboard/reports' },
-        { title: 'Transactions', url: '/dashboard/transactions' },
-      ],
-    },
-
-    {
-      title: 'Settings',
-      url: '#',
-      icon: Settings2,
-      items: [
-        {
-          title: 'Users',
-          url: '/dashboard/users',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: 'Support',
-      url: '#',
-      icon: LifeBuoy,
-    },
-    {
-      title: 'Feedback',
-      url: '#',
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: 'Engineering',
-      url: '#',
-      icon: Frame,
-    },
-    {
-      name: 'Marketing',
-      url: '#',
-      icon: PieChart,
-    },
-  ],
-};
+import useUserRole from '@/lib/use-user-role';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const role = useUserRole();
+
+  const data = {
+    user: {
+      name: 'renel',
+      email: 'renel@renel.com',
+      avatar: '/avatars/renel.png',
+    },
+    navMain: [
+      {
+        title: 'Store',
+        url: '#',
+        icon: FaStoreAlt,
+        isActive: true,
+        items: [
+          { title: 'Sell', url: '/dashboard/sell' },
+          ...(role === 'ADMIN'
+            ? [{ title: 'Products', url: '/dashboard/products' }]
+            : []),
+          {
+            title: 'Customers',
+            url: '/dashboard/customers',
+          },
+          {
+            title: 'Orders',
+            url: '/dashboard/orders',
+          },
+          { title: 'Reports', url: '/dashboard/reports' },
+          ...(role === 'ADMIN'
+            ? [{ title: 'Transactions', url: '/dashboard/transactions' }]
+            : []),
+        ],
+      },
+      {
+        title: 'Management',
+        url: '#',
+        icon: FaStoreAlt,
+        isActive: true,
+        items: [{ title: 'Returns', url: '/dashboard/returns' }],
+      },
+
+      {
+        title: 'Settings',
+        url: '#',
+        icon: Settings2,
+        items: [
+          {
+            title: 'Users',
+            url: '/dashboard/users',
+          },
+          {
+            title: 'Team',
+            url: '#',
+          },
+          {
+            title: 'Billing',
+            url: '#',
+          },
+          {
+            title: 'Limits',
+            url: '#',
+          },
+        ],
+      },
+    ],
+    navSecondary: [
+      {
+        title: 'Support',
+        url: '#',
+        icon: LifeBuoy,
+      },
+      {
+        title: 'Feedback',
+        url: '#',
+        icon: Send,
+      },
+    ],
+    projects: [
+      {
+        name: 'Engineering',
+        url: '#',
+        icon: Frame,
+      },
+      {
+        name: 'Marketing',
+        url: '#',
+        icon: PieChart,
+      },
+    ],
+  };
+
   return (
     <Sidebar
       variant='inset'

@@ -21,8 +21,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import OrderReturnRequest from '../../orders/components/order-return-request';
 import EditProductFormDialog from '../[id]/components/edit-product-dialog';
-import ProductDeleteModal from '../[id]/components/product-delete-dialog';
 
 interface Props {
   id: string;
@@ -97,7 +97,7 @@ const TableAction = ({ id, type }: Props) => {
         onClose={handleEdit}
         id={id}
       />
-      <ProductDeleteModal
+      <OrderReturnRequest
         isOpen={open}
         onClose={handleDelete}
         id={id}

@@ -9,6 +9,7 @@ import OrderPaymentMethodFilter from './components/order-payment-method-filter';
 import OrdersTable from './components/orders-table';
 import { RevenueChart } from './components/revenue-chart';
 import OrderError from './error';
+import { hasPendingRequest } from '../../(management)/returns/action';
 
 export default async function OrdersPage() {
   const [ordersResponse, revenueResponse] = await Promise.all([
@@ -49,9 +50,7 @@ export default async function OrdersPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className='block lg:hidden'>
-            {/* TODO: Implement mobile view */}
-          </div>
+          <div className='block lg:hidden'></div>
           <div className='hidden lg:block'>
             <Suspense fallback={<div>Loading orders...</div>}>
               <OrdersTable orders={ordersResponse.data} />

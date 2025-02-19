@@ -115,6 +115,7 @@ model User {
   Lost              Lost[]
   Aquisition        Aquisition[]
   permissions       Permission[]
+  Return            Return[]
 
   @@unique([idProvided, idNumber])
   @@unique([firstName, lastName])
@@ -197,6 +198,7 @@ model Product {
   OrderItem        OrderItem[]
   Lost             Lost[]
   Aquisition       Aquisition[]
+  ReturnItem       ReturnItem[]
 
   @@index([slug])
   @@index([name])
@@ -302,7 +304,6 @@ model OrderItem {
   discount   Float?   @default(0) @map("discount")
   createdAt  DateTime @default(now()) @map("created_at")
   productId  String   @map("product_id")
-  // roomNumber Int?     @map("room_number")
 }
 
 enum TypeOfTransaction {
@@ -386,4 +387,34 @@ model Aquisition {
   createdAt            DateTime          @default(now()) @map("created_at")
   updatedAt            DateTime          @updatedAt @map("updated_at")
   userId               String
+}
+
+enum ReturnStatus {
+  APPROVED
+  PENDING
+  REJECTED
+}
+
+model Return {
+  id         String       @id @default(cuid())
+  reference  String       @unique @db.VarChar(12)
+  totalItems Int          @map("total_items")
+  returnDate String       @map("return_date")
+  moderator  User?        @relation(fields: [userId], references: [id])
+  reason     String
+  userId     String?
+  ReturnItem ReturnItem[]
+  status     ReturnStatus @default(PENDING)
+}
+
+model ReturnItem {
+  id         String  @id @default(cuid())
+  return     Return  @relation(fields: [returnId], references: [id])
+  product    Product @relation(fields: [productId], references: [id])
+  quantity   Int     @map("quantity")
+  unitPrice  Decimal @map("unit_price") @db.Decimal(10, 2)
+  totalPrice Decimal @map("total_cost") @db.Decimal(10, 2)
+  returnDate String  @map("return_date")
+  returnId   String
+  productId  String
 }

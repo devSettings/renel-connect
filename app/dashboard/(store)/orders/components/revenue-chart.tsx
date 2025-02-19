@@ -18,10 +18,6 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { Revenue } from '../types/order';
-// const chartData = [
-//   { date: '2024-04-01', revenue: 222 },
-//   { date: '2024-04-02', revenue: 97 },
-// ];
 
 const chartConfig = {
   visitors: {
@@ -55,7 +51,13 @@ export function RevenueChart({ data }: Props) {
         >
           <AreaChart data={data}>
             <defs>
-              <linearGradient id='fillRevenue' x1='0' y1='0' x2='0' y2='1'>
+              <linearGradient
+                id='fillRevenue'
+                x1='0'
+                y1='0'
+                x2='0'
+                y2='1'
+              >
                 <stop
                   offset='5%'
                   stopColor='var(--color-revenue)'

@@ -73,7 +73,6 @@ const ProductPage = async ({ searchParams }: Props) => {
                 <Search className='bg-black' />
               </Suspense>
               <Suspense fallback={'Matrics Loading....'}>
-                {/* <ProductCategoryFilter /> */}
                 <ProductStatusFilter />
                 <ProductTypeFilter />
               </Suspense>

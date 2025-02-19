@@ -25,8 +25,6 @@ const tableHeads = [
   'Average Sale Price',
   'Total Revenue',
   'Sales Contribution',
-  'Stock',
-  // 'Last Purchase Date',
   'Action',
 ];
 
@@ -73,8 +71,7 @@ export default function SaleReportItemTable({ items }: Props) {
                 <TableCell>{item.averageSalePrice.toFixed(0)}</TableCell>
                 <TableCell>{item.totalRevenue.toFixed(0)}</TableCell>
                 <TableCell>{item.salesContribution}</TableCell>
-                <TableCell>{item.quantityInStock}</TableCell>
-                {/* <TableCell>{item.lastPurchaseDate}</TableCell> */}
+                {/* <TableCell>{item.quantityInStock}</TableCell> */}
                 <TableCell aria-disabled={true}>
                   <EllipsisIcon className='w-4 h-4' />
                 </TableCell>
