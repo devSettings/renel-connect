@@ -34,7 +34,7 @@ const SalesItemsReceipt = ({ items }: SalesItemsReceiptProps) => {
     <div className=''>
       <div
         ref={contentRef}
-        className='px-7 py-4 space-y-4 w-[80mm] h-auto border-none shadow-none screen-only print:block print-only'
+        className='px-7 py-4 space-y-4 w-[80mm] h-auto border-none shadow-none screen-only print:block print-only text-sm'
       >
         <div className='text-center border-b border-dashed border-gray-400 pb-2 mb-2'>
           <div className='font-bold'>Sale Item Receipt</div>
@@ -52,7 +52,7 @@ const SalesItemsReceipt = ({ items }: SalesItemsReceiptProps) => {
               key={item.id}
               className='flex justify-between'
             >
-              <span className='w-1/2 truncate text-black'>{item.name}</span>
+              <span className='w-1/2  truncate text-black'>{item.name}</span>
               <span className='w-1/6 text-right text-black'>
                 {item.quantitySold}
               </span>
