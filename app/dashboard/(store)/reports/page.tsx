@@ -13,6 +13,7 @@ import SaleReportItemTable from './components/sale-items-report-table';
 import SaleReportTable from './components/sale-report-table';
 import { TopBestSellingProducts } from './components/top-best-selling-product';
 import { format } from 'date-fns';
+import SalesItemsReceipt from '@/components/sales-items-receipt';
 
 interface ReportPageProps {
   searchParams: {
@@ -104,6 +105,8 @@ export default async function ReportPage({ searchParams }: ReportPageProps) {
                     <Search />
                   </Suspense>
                 </div>
+
+                <SalesItemsReceipt items={itemsResponse.data} />
               </div>
             </CardHeader>
             <CardContent>
