@@ -3,12 +3,8 @@
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { ReportMetrics } from '../types/report';
-import { format } from 'date-fns';
-
-const currentDate = format(
-  new Date(new Date().setHours(new Date().getHours() - 6)),
-  'yyyy-MM-dd'
-);
+import { currentUser } from '@clerk/nextjs/server';
+import getUserById from '@/app/dashboard/action/get-user-by-id';
 
 type FilterOption = {
   date: { start: string; end: string };
@@ -25,8 +21,20 @@ const getReportMetrics = async (
     };
   }
 
-  const { date } = filterOption; // Destructure the date object from filterOption
+  const { date } = filterOption;
   try {
+    const user = await currentUser();
+    if (!user) {
+      return { success: false, error: 'User not found' };
+    }
+
+    const userRole = await getUserById(user.id);
+    if (!userRole.success) {
+      return { success: false, error: 'User role not found' };
+    }
+
+    const isAdmin = userRole.data.Role === 'ADMIN';
+
     const [aggregation, customerCount] = await Promise.all([
       prisma.order.aggregate({
         _sum: { totalPrice: true },
@@ -37,6 +45,7 @@ const getReportMetrics = async (
             gte: date.start,
             lte: date.end,
           },
+          ...(isAdmin ? {} : { cashierId: user.id }),
         },
       }),
       prisma.customer.count({

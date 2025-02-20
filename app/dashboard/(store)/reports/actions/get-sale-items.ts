@@ -3,6 +3,8 @@
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { ItemReport } from '../types/report';
+import { currentUser } from '@clerk/nextjs/server';
+import getUserById from '@/app/dashboard/action/get-user-by-id';
 
 type FilterOption = {
   date: { start: string; end: string };
@@ -22,7 +24,20 @@ const getSaleItems = async (
 
   const { date } = filterOption; // Destructure the date object from filterOption
   try {
-    // Group sales data by product
+    const user = await currentUser();
+
+    if (!user) {
+      return { success: false, error: 'User not found' };
+    }
+
+    const userRole = await getUserById(user.id);
+
+    if (!userRole.success) {
+      return { success: false, error: 'User role not found' };
+    }
+
+    const isAdmin = userRole.data.Role === 'ADMIN';
+
     const items = await prisma.orderItem.groupBy({
       by: ['productId'],
       _sum: { quantity: true },
@@ -34,6 +49,7 @@ const getSaleItems = async (
           gte: date.start,
           lte: date.end,
         },
+        ...(isAdmin ? {} : { order: { cashierId: user.id } }),
       },
     });
 

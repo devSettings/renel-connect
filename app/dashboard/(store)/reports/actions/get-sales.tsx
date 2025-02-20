@@ -4,6 +4,8 @@ import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
 import { Sale } from '../types/report';
 import { Collection } from '@prisma/client';
+import { currentUser } from '@clerk/nextjs/server';
+import getUserById from '@/app/dashboard/action/get-user-by-id';
 
 type FilterOption = {
   date: { start: string; end: string };
@@ -21,6 +23,18 @@ const getSales = async (
     return 'Other';
   };
   try {
+    const user = await currentUser();
+    if (!user) {
+      return { success: false, error: 'User not found' };
+    }
+
+    const userRole = await getUserById(user.id);
+    if (!userRole.success) {
+      return { success: false, error: 'User role not found' };
+    }
+
+    const isAdmin = userRole.data.Role === 'ADMIN';
+
     const rawOrders = await prisma.order.findMany({
       select: {
         reference: true,
@@ -41,6 +55,7 @@ const getSales = async (
           gte: date.start,
           lte: date.end,
         },
+        ...(isAdmin ? {} : { cashierId: user.id }),
       },
     });
 

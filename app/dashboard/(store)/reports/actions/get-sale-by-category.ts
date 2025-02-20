@@ -1,6 +1,8 @@
 'use server';
+import getUserById from '@/app/dashboard/action/get-user-by-id';
 import { ActionResponse } from '@/app/types/action-reponse';
 import prisma from '@/prisma/client';
+import { currentUser } from '@clerk/nextjs/server';
 
 type FilterOption = {
   date: { start: string; end: string };
@@ -10,6 +12,18 @@ const getSaleByCategory = async (
   option: FilterOption
 ): Promise<ActionResponse> => {
   try {
+    const user = await currentUser();
+    if (!user) {
+      return { success: false, error: 'User not found' };
+    }
+
+    const userRole = await getUserById(user.id);
+    if (!userRole.success) {
+      return { success: false, error: 'User role not found' };
+    }
+
+    const isAdmin = userRole.data.Role === 'ADMIN';
+
     const initialData = {
       room: 0,
       drink: 0,
@@ -25,6 +39,7 @@ const getSaleByCategory = async (
           gte: option.date.start,
           lte: option.date.end,
         },
+        ...(isAdmin ? {} : { cashierId: user.id }),
       },
     });
 
