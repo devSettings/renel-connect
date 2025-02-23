@@ -43,9 +43,9 @@ const SalesItemsReceipt = ({ items }: SalesItemsReceiptProps) => {
 
         <div className='border-b border-dashed border-gray-400 pb-2 mb-2'>
           <div className='flex justify-between'>
-            <span className='w-1/2'>Item</span>
-            <span className='w-1/6 text-right'>Qty</span>
-            <span className='w-1/3 text-right'>Revenue</span>
+            <span className='w-1/2'>Article</span>
+            <span className='w-1/6 text-right'>Stock</span>
+            {/* <span className='w-1/3 text-right'>Revenue</span> */}
           </div>
           {items.map((item) => (
             <div
@@ -54,17 +54,17 @@ const SalesItemsReceipt = ({ items }: SalesItemsReceiptProps) => {
             >
               <span className='w-1/2  truncate text-black'>{item.name}</span>
               <span className='w-1/6 text-right text-black'>
-                {item.quantitySold}
+                {item.quantityInStock}
               </span>
-              <span className='w-1/3 text-right text-black'>
+              {/* <span className='w-1/3 text-right text-black'>
                 ${item.totalRevenue.toFixed(2)}
-              </span>
+              </span> */}
             </div>
           ))}
         </div>
 
         <div className='text-center text-xs text-black'>
-          *** End of Sale Report ***
+          *** End of Stock Report ***
         </div>
       </div>
 
