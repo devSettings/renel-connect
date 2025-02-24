@@ -116,6 +116,7 @@ model User {
   Aquisition        Aquisition[]
   permissions       Permission[]
   Return            Return[]
+  Adjustment        Adjustment[]
 
   @@unique([idProvided, idNumber])
   @@unique([firstName, lastName])
@@ -199,6 +200,7 @@ model Product {
   Lost             Lost[]
   Aquisition       Aquisition[]
   ReturnItem       ReturnItem[]
+  Adjustment       Adjustment[]
 
   @@index([slug])
   @@index([name])
@@ -311,6 +313,7 @@ enum TypeOfTransaction {
   INCOME
   LOST
   AQUISITION
+  ADJUSTMENT
 }
 
 model ExpenseCategory {
@@ -417,4 +420,17 @@ model ReturnItem {
   returnDate String  @map("return_date")
   returnId   String
   productId  String
+}
+
+model Adjustment {
+  id                String            @id @default(cuid())
+  product           Product           @relation(fields: [productId], references: [id])
+  productId         String            @map("product_id")
+  quantityAdjusted  Int               @map("quantity_adjusted")
+  adjustmentDate    String            @map("adjustment_date")
+  typeOfTransaction TypeOfTransaction @default(ADJUSTMENT) @map("type_of_transaction")
+  madeBy            User              @relation(fields: [userId], references: [id])
+  userId            String            @map("user_id")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
 }

@@ -27,7 +27,7 @@ import CreateExpenseForm from './create-expense-form';
 import CreateIncomeForm from './create-income-form';
 import { CreateLostForm } from './create-lost-form';
 import useUserRole from '@/lib/use-user-role';
-
+import { CreateAdjustmentForm } from './create-adjustment-form';
 const CreateTransactionFormDialog = () => {
   const role = useUserRole();
   const hasPermission = role === 'ADMIN' || role === 'DEVELOPER' ? true : false;
@@ -70,6 +70,7 @@ const CreateTransactionFormDialog = () => {
               <SelectItem value='INCOME'>Income</SelectItem>
               <SelectItem value='LOST'>Lost</SelectItem>
               <SelectItem value='AQUISITION'>Acquisition</SelectItem>
+              <SelectItem value='ADJUSTMENT'>Adjustment</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -87,6 +88,9 @@ const CreateTransactionFormDialog = () => {
             )}
             {selectedTransactionType === 'LOST' && (
               <CreateLostForm onSubmitSuccess={() => setOpen(!open)} />
+            )}
+            {selectedTransactionType === 'ADJUSTMENT' && (
+              <CreateAdjustmentForm onSubmitSuccess={() => setOpen(!open)} />
             )}
           </CardContent>
         </Card>

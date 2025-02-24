@@ -51,6 +51,11 @@ const transactions = [
     label: 'Aquisition',
     icon: ShoppingCart,
   },
+  {
+    value: 'ADJUSTMENT',
+    label: 'Adjustment',
+    icon: ShoppingCart,
+  },
 ];
 
 export default function TransactionTypeFilter() {
@@ -62,7 +67,10 @@ export default function TransactionTypeFilter() {
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+      open={open}
+      onOpenChange={setOpen}
+    >
       <PopoverTrigger asChild>
         <div className='flex items-center gap-1 border border-dashed rounded-sm h-10 px-1 py-2.5'>
           <Button
@@ -95,7 +103,10 @@ export default function TransactionTypeFilter() {
       </PopoverTrigger>
       <PopoverContent className='w-fit p-0'>
         <Command>
-          <CommandInput placeholder='Search transaction type' className='h-9' />
+          <CommandInput
+            placeholder='Search transaction type'
+            className='h-9'
+          />
           <CommandList>
             <CommandEmpty>transaction type not found.</CommandEmpty>
             <CommandGroup>
