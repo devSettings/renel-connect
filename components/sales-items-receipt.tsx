@@ -56,7 +56,7 @@ const SalesItemsReceipt = ({ items }: SalesItemsReceiptProps) => {
 								{item.name}
 							</span>
 							<span className='w-1/6 text-right text-black'>
-								{item.totalSalesCount}
+								{item.quantitySold}
 							</span>
 							<span className='w-1/3 text-right text-black'>
 								{item.quantityInStock}
